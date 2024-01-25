@@ -1,0 +1,234 @@
+== Message Protocol
+Message Protocol supports a variety of system management and control tasks and 
+provides a message interface for such tasks. Each message which does a specific 
+task is called Service. Multiple messages or Services are grouped into Service 
+Groups like Clock, Voltage, Power management, etc. A service call results in a 
+message request being sent to the Platform micro-controller for a specific 
+purpose. Each service may have an associated response message which enables the 
+Platform micro-controller to provide the status or information for that request.
+
+.Service Groups and Services
+image::servicegroups-service.png[400,400]
+
+=== Message Types
+A message can either be a request or an acknowledgement in response to a request
+received by an client.
+
+==== REQUEST
+Messages which convey a command to the other entity/client, usually from the AP 
+from either S-Mode/M-mode client to Platform Microcontroller (it may also send 
+REQUESTs to AP, but there are no use cases yet). Each command will have a 
+certain action that the Platform Microcontroller will take and it may 
+acknowledge the AP with another message in return which may contain some data or
+just the status code.
+
+Not every request needs to be acknowledged because the action taken by the 
+Platform Microcontroller may leave the AP in a state where it is not able to 
+wait for the acknowledgment. For example, in the case when the AP asks the 
+Platform Microcontroller to perform a Reset, where an acknowledgment would not 
+be meaningful.
+
+* *Normal Requests*: Requests with Acknowledgement
+* *Posted Requests*: Requests without Acknowledgement
+
+==== ACKNOWLEDGEMENT
+Messages sent from Platform Microcontroller to AP (or vice-versa) in a response 
+to any previous message request. Acknowledgment is dependent on the service and 
+each service dictates if acknowledgment is mandatory or not.
+
+==== NOTIFICATIONS
+Notifications are messages which are sent asynchronously from PuC to AP to 
+notify about the events happening in the system related to various service 
+groups. Notifications are covered in detail in below section <<ADD LINK HERE>>
+
+=== Message Format
+On the AP side, each call to a service results in a message request to the PuC. 
+The type of message depends upon the type of service and to which group that 
+particular service belongs. Each message, whether its Request or 
+Acknowledgement,  consists of two main parts - Message Header and Data.
+
+Size of message header is fixed, but size of data is implementation defined, 
+based on the transport queues layout.  All fields in the request and 
+acknowledgment must follow byte ordering defined by the RPMI transport.
+
+==== Message Header
+Message header has a fixed size of `12-byte` which further contains three 
+fields each of `4-byte`. Each message gets a unique identity in a RPMI instance
+through its header.
+
+Both REQUEST and ACKNOWLEDGEMENT messages have the same message format.
+
+image::message-format.png[700,900]
+
+[#table_message_header]
+.Message Header
+[cols="1,1,15a", width=100%, align="center", options="header"]
+|===
+| Word	| Name		| Description
+| 1	| *TOKEN*	| Message identifier. Unique to each 
+request - acknowledgement transaction for a RPMI implementation instance. 
+In case of Notifications, `SERVICE_ID` and `MESSAGE_TYPE` for notification 
+messages are fixed which will contribute to the unique identity of the message 
+in that RPMI instance implementation.
+| 2	| *MESSAGE_ID*	|
+[cols="1,7a"]
+!===
+! *Bits* !  *Description*
+! *[31:28]*  ! *FLAGS*
+
+	FLAGS[3]: RESERVED.
+
+	FLAGS[2]: DOORBELL
+	0: Doorbell interrupt enabled.
+	1: Doorbell interrupt disabled. PuC will not ring the doorbell to AP.
+	This can be used by AP software in case of doorbell interrupts causing spurious interrupts while its also being polled.
+
+	FLAGS[1:0]: MESSAGE_TYPE
+	0b00: NORMAL_REQUEST
+	0b01: POSTED_REQUEST
+	0b10: ACKNOWLEDGEMENT
+	0b11: NOTIFICATION
+! *[27:8]* ! *SERVICEGROUP_ID* +
+Services alike are grouped into Service Groups and each group is identified by `SERVICEGROUP_ID` which is a `20-bit` identifier.
+! *[7:0]* ! *SERVICE_ID* +
+`8-bit` identifier from LSB in the message identifier word, Services are the 
+functions which, when called, result in different message requests for different control and management tasks meant for Platform Microcontroller. Each service is identified by a `SERVICE_ID`
+!===
+| 3	| *DATALEN*		| Encodes the size of the data in the message, data will also be in `32-bit` chunks. 
+If there is no data, then it must be initialized to zero. 
+|===
+
+Once a message request has been serviced and that service is of type Normal 
+Request which requires an acknowledgement, PuC must preserve the `TOKEN`, 
+`SERVICEGROUP_ID`, `SERVICE_ID` from the normal request message header and use 
+these fields in acknowledgement message header. PuC must mark the message type 
+in the `FLAGS` and also according to the data expected in the acknowledgement it
+may change `DATALEN` in the message header. In case of notifications, PuC will 
+generate the `TOKEN` and set the `SERVICEGROUP_ID` and fixed `SERVICE_ID=0x00` 
+assigned for each notification message in every service group and set the 
+`FLAGS` with notification `MESSAGE_TYPE` marked. Notification messages do not 
+require any acknowledgement and how data from notification messages is utilized 
+is dependent on the implementation.
+
+==== Message Data
+Request message data format and acknowledgement data format depends on each 
+service and details are present with each service section below in their 
+respective service groups. Size of data each message can accommodate depends on 
+the transport queues slot size. This specification already defines the data 
+layout for each size. For few services where the data exceeds the size which a 
+single message can accommodate, multipart messages are used.
+
+Message data formats in this specification are tabulated with a list of `32-bit` 
+wide Word in each of the service groups section as depicted below.
+
+[#table_message_hdr_data_layout]
+.Message Header & Data Layout
+[cols="3, 2, 4, 4", width=100%, align="center", options="header"]
+|===
+| Word			| Name	| Type	| Description
+| Word index in message DATA field | Name of field | Type of field, eg: int32 or uint32, etc | Description and interpretation of field
+|===
+
+The data in acknowledgment at least should contain a `32-bit` `STATUS` code. 
+Apart from status code, an acknowledgement may encode more data as response to 
+the request message and details are subsequently present in each service section 
+below.
+
+
+=== Notifications
+Notifications are the messages from Platform Microcontroller to Application 
+Processor to notify about events taking place in the system. Notifications are 
+posted messages which do not require acknowledgement from the recipient. Events 
+can include the system states, power states, errors/faults in the system etc. 
+Action taken on behalf of any event notification is completely dependent on the 
+AP and they can be ignored. Platform Microcontroller may combine multiple events
+into a single message depending on the available space in the message data. 
+Individual events may also have additional data associated. _Figure 3.4_ shows 
+the notification message format.
+
+Each service group will have a notification service with fixed `SERVICE_ID=0x00`
+across every service group. Notifications are sent from PuC to AP with events 
+and associated data if any. AP has to subscribe to the supported events in each 
+service group to receive these notification messages. A notification message may
+have one or more events with their associated data. 
+This service with `SERVICE_ID=0x00` is reserved in each service group even if 
+the service group does not support notifications or need to support any events. 
+These notifications will only be sent for those events only for which the AP 
+subscribes. When there are multiple events supported in each service group, AP 
+has to subscribe to each event and has to make multiple calls to notification 
+enable service. 
+
+Notifications enable service is also present in each service group even if that 
+service group does not support notifications or implement any event support.
+
+Every event will have an Event Header which consists of two fields to identify 
+an event - `EVENT_ID (12-bit)` and `EVENT_DATALEN (20-bit)`. Events may have 
+data associated, if present, must be multiple of 4 bytes. 
+
+The number of events which can be accommodated in the message data depends on 
+the message data field size. The `DATALEN` field in the message header will 
+encode how much size data is present in the message which is the aggregate of 
+all events. Then AP must parse each event and its data according to the Event 
+header.
+
+Event data and its format depend on the service group and details are present in
+respective service group sections.
+
+image::notification-format.png[500,600]
+
+[#table_notification_message_format]
+.Notification Message Format
+[cols="5,2,15a", width=100%, align="center", options="header"]
+|===
+| Word	| Name		| Description
+| 1	| *EVENT_HDR*	| Event Header is a `32-bit` field which represents a
+single event metadata
+[cols="1,7a"]
+!===
+! *Bits* !  *Description*
+! *[31:20]*  ! *EVENT_ID* + 
+Unique identifier for an event in a service group.
+
+! *[19:0]* ! *EVENT_DATALEN* +
+20-bit field to encode the number words(`32-bit`) chunks of event data.
+!===
+| 1 : (*EVENT_DATALEN* - 1)	| *EVENT_DATA*	| Event Data
+|===
+
+Above table represents the format for one event with its data. Subsequent events
+will be packed in the same manner. This spec does not define any ordering of 
+packing of multiple events and its implementation defined.
+
+=== Return Status Codes
+Below table lists all the error codes which can be returned by any service. Few 
+probable error codes for each service are also provided in each service response
+message format. AP must check for each error code and action based on that is 
+dependent on the AP.
+
+[#table_error_codes]
+.Return Status Codes
+[cols="4, 2, 6", width=100%, align="center", options="header"]
+|===
+| Name				| Status Code | Description
+| RPMI_SUCCESS 			| 0 | Successful operation
+| RPMI_ERROR_FAILED 		| -1 | Failed due to general error
+| RPMI_ERROR_NOT_SUPPORTED	| -2 | Service or feature not supported
+| RPMI_ERROR_INVALID_PARAMETER 	| -3 | One or more parameters passed are 
+invalid
+| RPMI_ERROR_DENIED		| -4 | Requested operation denied due to insufficient permissions
+| RPMI_ERROR_NOT_FOUND 		| -5 | Requested resource not found
+| RPMI_ERROR_OUT_OF_RANGE	| -6 | Index out of range
+| RPMI_ERROR_OUT_OF_RESOURCE 	| -7 | Resource limit reached
+| RPMI_ERROR_HW_FAULT 		| -8 | Operation failed due to hardware fault.
+| RPMI_ERROR_BUSY 		| -9 | System is currently busy and cannot 
+respond to request
+| RPMI_ERROR_TIMEOUT 		| -10 | Operation timed out
+| RPMI_ERROR_COMMS		| -11 | Error in communication
+| RPMI_ERROR_ALREADY		| -12 | Operation already in progress or state
+changed already for which the operation was carried out.
+| RPMI_ERROR_EXTENSION	| -13 | Error in extension implementation that
+violates the extension specification or the extension version mismatch
+|	| -14 to -127 	| Reserved
+|	| > -127	| Vendor Specific
+|===
+

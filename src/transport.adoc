@@ -1,0 +1,154 @@
+:stem: latexmath
+== Transport
+RPMI Transport is the abstraction over a physical medium used to send and 
+receive messages between an Application Processor and Platform Microcontroller 
+enabling bidirectional communication. 
+
+A RPMI transport instance provides a bidirectional communication channel between
+a privilege level of a set of APs and one PuC. There can be multiple RPMI 
+transport instances between a set of  APs and one PuC. For example: there can 
+be a separate transport instance between each privilege level of APs and one 
+PuC. A platform can also have multiple PuCs with each having its own set of 
+RPMI transport to communicate with APs. The _Figure 1.2_ above shows different 
+topologies of RPMI transport.
+
+The physical medium of a RPMI transport can be shared memory or I2C or SPI or 
+some other medium. This specification only defines a shared memory based RPMI 
+transport but a platform can define its own RPMI transport.
+
+RISC-V S-Mode/M-Mode clients are responsible for the packing of the messages as 
+per the message binary format requirements described later and sharing the 
+message via the transport layer. The transport layer abstracts the mechanism of 
+how the message is physically delivered between Application Processor and 
+Platform Microcontroller or vice versa.
+
+.Bidirectional Commmunication
+image::transport-bidirectional.png[400,400]
+
+=== Doorbell Interrupt
+A RPMI transport may also provide doorbell interrupts for either Application 
+Processors or Platform Microcontrollers or both to signal new messages. 
+The doorbell mechanism is optional for a RPMI transport and implementations can
+ always use a polling mechanism for checking the arrival of messages. 
+
+The doorbell interrupt from APs to PuC can be a MSI or a wired interrupt with a 
+RPMI transport specific way to trigger the interrupt.
+
+The doorbell interrupt from PuC to APs can be either a wired interrupt or 
+message signaled interrupt (MSI). If the doorbell interrupt from PuC to APs is 
+a wired interrupt then RPMI transport must define a way to trigger the 
+interrupt. If the doorbell interrupt from PuC to APs is a MSI then RPMI messages
+can be used by APs to configure the MSI.
+
+=== Shared Memory Transport
+The physical memory of the RPMI shared memory transport can be either a device 
+memory or dedicated SRAM or some portion of DRAM. The RPMI shared memory 
+transport does not specify where the shared memory resides, but it should be 
+accessible from both Application Processor and Platform Microcontroller and 
+all necessary configuration needs to be done to make sure that side effects 
+related to caching or anything else do not happen.
+
+NOTE: To avoid the caching side effects, the platform can configure the shared 
+memory as IO or non-cacheable memory for both APs and PuC.
+
+All data sent/received through RPMI shared memory MUST follow Little-Endian byte
+ ordering, unless, optionally, the byte-ordering is discovered during the 
+transport discovery phase.
+
+The doorbell interrupt from APs to PuC is optional for RPMI shared memory 
+transport and if available then it MUST be supported through a read-modify-write
+sequence to a memory mapped register. This read-modify-write mechanism can be 
+discovered by APs via DT or ACPI using properties such as register physical 
+address, mask, and value.
+
+The doorbell interrupt from PuC to APs for RPMI shared memory transport is 
+platform specific.
+
+The subsequent sections describe the layout and attributes of shared memory 
+which should be consistent across both Application Processor and Platform 
+Microcontroller. These attributes can be static for the Platform Microcontroller
+and discoverable via DT or ACPI for the Application Processor. 
+
+
+==== Attributes of Shared Memory
+* `BASE_ADDRESS`: Aligned to `4096 bytes`
+* `SIZE`: Aligned to `4096 bytes`
+* `SLOT_SIZE`: `>=` 64 bytes
+
+```
+N bytes : Total Shared Memory Size
+M = (N/4) bytes : Single Queue Shared Memory Size
+(M-8)/SLOT_SIZE : No. of Slots in Single Queue
+
+where SLOT_SIZE >= Maximum Message Size
+and
+8 = No. of Bytes for Head + Tail Slots
+```
+
+==== Layout of Shared Memory
+The shared memory RPMI Transport defines four shared memory based queues for 
+bidirectional synchronous/asynchronous communication between an AP and PuC. 
+The detailed layout of shared memory and queues is shown in Figure 2.1. All 
+queues in shared memory are contiguous and of equal size. Sequence of queues is 
+arranged such that queues which enable Request-Acknowledgement for a side either
+AP to PuC or vice versa are together.
+
+.Memory Layout of Shared Memory
+image::shmem-layout.png[600,600]
+
+==== Shared Memory Queues
+===== AP to PuC Request (*A2P REQ*)
+This queue is to transmit REQUEST messages from AP to PuC.
+
+===== PuC to AP Acknowledgement (*P2A ACK*)
+This queue is to transmit the ACKNOWLEDGEMENT messages from PuC to AP for the 
+request messages received by PuC on A2P REQ Queue.
+
+===== PuC to AP Request (*P2A REQ*)
+This queue is to transmit REQUEST messages from PuC to AP.
+
+===== AP to PuC Acknowledgement (*A2P ACK*)
+This queue is to transmit the ACKNOWLEDGEMENT messages from AP to PuC for the 
+request messages received by the AP on P2A REQ Queue.
+
+.Transport Queues
+image::highlevel-flow.png[500,500]
+
+.Transport Architecture
+image::highlevel-arch-queues.png[]
+
+Each queue contains *M* number of slots and each slot stores a single message. 
+Slot size must be sufficient to store the biggest message in the framework. 
+Shared memory also contains the head and tail for the enqueuing and dequeuing 
+of the messages for each queue. The RPMI specification expects a minimum size of
+`64 bytes` for each slot but bigger slots may also work depending on the 
+implementation.
+
+.Queue Internals
+image::queue-internals.png[900,900]
+
+Slots can be accessed using head and tail which will store the indices. 
+Head will be used to dequeue the message and Tail will enqueue. 
+
+Head and Tail will be owned and incremented by only a single entity depending on
+the role of that entity, whether that entity is enqueuing or dequeuing. 
+For example, on the A2P channel, Application Processor will enqueue the message 
+so it will own and increment the Tail, similarly, Platform Microcontroller will 
+own the head to dequeue the messages and only Platform Microcontroller will 
+increment the head.  
+
+Once the reader dequeues a message from the slot, it has to mark that slot to be
+usable by the writer to enqueue further messages into that slot. Message header 
+flags are used to mark a message as invalid which makes that slot free to use. 
+
+Like a normal circular queue, it can either be empty, full or have valid 
+messages. Enqueue operation will check if the queue is not full by checking if 
+the head is equal to the tail and the slot referenced by the current tail has a 
+valid message. Similarly, the dequeue operation will check for the empty state 
+by validating if the slot referenced by the current head has an invalid message.
+
+Messages which are not consumed yet should not be overwritten and the sender 
+must block until the slot is available for the sending messages. 
+
+.Queue Slots
+image::queue-operation.png[500,500]

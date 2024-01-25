@@ -1,7 +1,6 @@
-= RISC-V Example Specification Document (Zexmpl)
-Authors: Author 1, Author 2
-:docgroup: RISC-V Task Group
-:description: RISC-V Example Specification Document (Zexmpl)
+= RISC-V Platform Management Interface Specification (RPMI)
+:docgroup: RISC-V RPMI Task Group
+:description: RISC-V Platform Management Interface Specification Document (RPMI)
 :company: RISC-V.org
 :revdate: 1/2023
 :revnumber: 1.0
@@ -12,14 +11,14 @@ Authors: Author 1, Author 2
 :preface-title: Preamble
 :colophon:
 :appendix-caption: Appendix
-:imagesdir: docs-resources/images
+:imagesdir: images
 :title-logo-image: image:risc-v_logo.png[pdfwidth=3.25in,align=center]
 // Settings:
 :experimental:
 :reproducible:
 //:WaveDromEditorApp: app/wavedrom-editor.app
 :imagesoutdir: docs-resources/images
-:bibtex-file: example.bib
+:bibtex-file: src/rpmi.bib
 :bibtex-order: alphabetical
 :bibtex-style: apa
 :icons: font
@@ -56,11 +55,22 @@ https://creativecommons.org/licenses/by/4.0/.
 Copyright 2023 by RISC-V International.
 
 [preface]
-include::contributors.adoc[]
+include::src/contributors.adoc[]
 
-include::intro.adoc[]
-include::chapter2.adoc[]
+include::src/intro.adoc[]
+include::src/transport.adoc[]
+include::src/message-protocol.adoc[]
+include::src/srvgrp-base.adoc[]
+include::src/srvgrp-system-reset.adoc[]
+include::src/srvgrp-system-suspend.adoc[]
+include::src/srvgrp-hart-state-management.adoc[]
+include::src/srvgrp-cppc.adoc[]
+include::src/srvgrp-voltage.adoc[]
+include::src/srvgrp-clock.adoc[]
+include::src/srvgrp-device-power.adoc[]
+include::src/srvgrp-performance.adoc[]
+include::src/srvgrp-management.adoc[]
 
 // The index must precede the bibliography
-include::index.adoc[]
-include::bibliography.adoc[]
+include::src/index.adoc[]
+include::src/bibliography.adoc[]

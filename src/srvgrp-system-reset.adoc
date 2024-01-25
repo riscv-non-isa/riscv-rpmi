@@ -1,0 +1,139 @@
+
+===  Service Group - *SYSTEM_RESET* (servicegroup_id: 0x00002)
+This service group provides services to reset or shutdown the system. System 
+Shutdown or System Cold Reset are Architectural System Reset types. 
+
+System Shutdown causes every component/device in the system to lose power. 
+Currently, AP is the only entity to request the system shutdown, which means 
+for Platform Microcontroller it is not important to categorize it as graceful 
+or forceful shutdown. In case of shutdown request it is implicit for the 
+Platform micro-controller that AP has prepared itself for the successful 
+shutdown.
+
+System Cold Reset also called Power-On-Reset is the power cycling of the 
+complete system. On the successful system cold reset, all devices will be power 
+cycled in a implementation defined sequence similar to the first power on of the
+system.
+
+Below table lists the services in this group:
+[#table_sysreset_services]
+.System Reset Services
+[cols="1, 3, 2", width=100%, align="center", options="header"]
+|===
+| Service ID	| Service Name 			| Request Type
+| 0x01		| ENABLE_NOTIFICATION		| NORMAL_REQUEST
+| 0x02		| GET_SYSTEM_RESET_ATTRIBUTES	| NORMAL_REQUEST
+| 0x03		| SYSTEM_RESET			| POSTED_REQUEST
+|===
+
+==== System Reset Notifications
+This service group does not support any event for notifications.
+
+==== Service: *ENABLE_NOTIFICATION*
+This service allows AP to subscribe to system reset service group notifications.
+Platform can optionally support notifications of events which might occur in the
+platform. PuC can send these notification messages to AP if they are 
+implemented and AP has subscribed to these. Events supported are described above
+in System Reset Notifications. 
+[#table_sysreset_ennotification_request_data]
+.Request Data
+[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| EVENT_ID	| uint32	| Event to be subscribed for 
+notification.
+|===
+
+[#table_sysreset_ennotification_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Notifications are subscribed successfully.
+! RPMI_ERROR_NOT_FOUND ! EVENT_ID is not supported or invalid.
+! RPMI_ERROR_NOT_SUPPORTED ! Notifications not supported.
+!===
+- Other errors <<table_error_codes>>
+|===
+
+==== Service: *GET_SYSTEM_RESET_ATTRIBUTES*
+This service is used to discover system reset types supported by the platform. 
+*System Shutdown* and *System Cold Reset* are mandatory and assumed to be 
+supported. *System Warm Reset* is a qualified reset type which can be discovered
+using this service. Space is reserved for more reset types to be added later as 
+required.
+[#table_sysreset_getsysresetattrs_request_data]
+.Request Data
+[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name         	| Type		| Description
+| 0     | RESET_TYPE	| uint32	| Reset type value
+[cols="2,5"]
+!===
+! *Value* 	!  *Description*
+! 0x0	! System Shutdown
+! 0x1 	! System Cold Reset
+! 0x2	! System Warm Reset
+! 0x3 - 0xEFFFFFFF ! _Reserved_
+! 0xF0000000 - 0xFFFFFFFF ! _Implementation specific reset types_.
+!===
+|===
+
+[#table_sysreset_getsysresetattrs_response_data]
+.Response Data
+[cols="1, 1, 1, 9a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5a"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Attributes returned successfully.
+!===
+- Other errors <<table_error_codes>>
+| 1	| FLAGS		| uint32	| Attributes of RESET_TYPE
+[cols="2,5a"]
+!===
+! *Bits* 	!  *Description*
+! [31]		! Reset type support.
+
+	0b0: RESET_TYPE not supported.
+	0b1: RESET_TYPE supported.
+! [30:0]	! _Reserved, must be initialized to_ `0`.
+!===
+|===
+
+==== Service: *SYSTEM_RESET*
+This service is used to initiate the system shutdown or reset the system with 
+the provided type.
+*System Shutdown* and *System Cold Reset* are supported implicitly but 
+*System Warm Reset* and other implementation specific reset types are optional 
+and discoverable.
+
+AP must only request for supported reset types which are discovered using the 
+attributes service. If an unsupported or invalid state is requested the system 
+might enter into non-functional state
+[#table_sysreset_sysreset_request_data]
+.Request Data
+[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name         	| Type		| Description
+| 0     | RESET_TYPE	| uint32	|
+[cols="2,5a"]
+!===
+! *Value* 	!  *Description*
+! 0x0	! System Shutdown
+! 0x1 	! System Cold Reset
+! 0x2	! System Warm Reset
+! 0x3 - 0xEFFFFFFF ! _Reserved_
+! 0xF0000000 - 0xFFFFFFFF ! _Implementation specific reset types_.
+!===
+|===
+
+[#table_sysreset_sysreset_response_data]
+.Response Data
+- NA

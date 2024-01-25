@@ -1,0 +1,329 @@
+
+== Service Groups
+A service group is a collection of services which are logically grouped according to the functionality they provide. For example, all voltage related services/messages are collectively referred to as Voltage Service Group.
+
+This specification defines standard service groups and services with provision to add more service groups as per requirement in the future. 
+
+Following table lists the service group
+
+[#table_service_groups]
+.Service Groups
+[cols="2, 4", width=100%, align="center", options="header"]
+|===
+| Service Group ID	| Service Group Name
+| 0x00001		| BASE
+| 0x00002		| SYSTEM_RESET
+| 0x00003		| SYSTEM_SUSPEND
+| 0x00004		| HART_STATE_MANAGEMENT
+| 0x00005		| CPPC
+| 0x00006		| VOLTAGE
+| 0x00007		| CLOCK
+| 0x00008		| DEVICE_POWER
+| 0x00009		| PERFORMANCE
+| 0x0000A		| MM_SERVICE
+| 0x0000B		| RAS_AGENT
+| 0x0000B - 0x7FFFF 	| _Reserved for Future Use_
+| 0x80000 - 0xFFFFF	| _Implementation Specific Service Groups_
+|===
+NOTE: The services listed in each service group do not follow any sequence and 
+are not defined in any specific order. It's possible that any particular service
+in any service group inherently requires to be called first before other defined services before that.
+
+=== Service Group - *BASE* (servicegroup_id: 0x00001)
+Base service group is mandatory and provides services for:
+
+* Initial handshaking between the Application processor and Platform 
+micro-controller.
+
+* Querying the message framework implementation version information.
+
+* Discovering the implementation and version of a specific service group or any specific service in any service group.
+
+* Gathering allowed system information from the firmware. 
+
+* Status of the transport and if the Platform Microcontroller is ready for 
+accepting messages.
+
+Below table lists the services in this group:
+
+[#table_base_services]
+.Base Services
+[cols="1, 3, 2", width=100%, align="center", options="header"]
+|===
+| Service ID	| Service Name 			| Request Type
+| 0x01		| ENABLE_NOTIFICATION		| NORMAL_REQUEST
+| 0x02		| GET_IMPLEMENTATION_VERSION	| NORMAL_REQUEST
+| 0x03		| GET_IMPLEMENTATION_ID		| NORMAL_REQUEST
+| 0x04		| GET_SPEC_VERSION		| NORMAL_REQUEST
+| 0x05		| GET_HW_INFO			| NORMAL_REQUEST
+| 0x06		| PROBE_SERVICE_GROUP		| NORMAL_REQUEST
+| 0x07		| GET_BASE_ATTRIBUTES		| NORMAL_REQUEST
+| 0x08		| SET_MSI			| NORMAL_REQUEST
+|===
+
+==== Base Notifications
+Platform Microcontroller can send asynchronous notifications to AP via this 
+service. There can be multiple types of events classified in the Base service 
+group which can be combined into a single message as depicted in _Figure 3.5_. 
+If Platform Microcontroller has multiple events for the same type, Platform Microcontroller can send the single instance of that event that was received 
+last.
+[#table_base_srvgroup_events]
+.Base Service Group Events
+[cols="1, 2, 1, 4", width=100%, align="center", options="header"]
+|===
+| Event ID	| Event Name	| Event Data	| Description
+| 0x001		| REQUEST_HANDLE_ERROR	| NA	| This event indicates that the Platform Microcontroller is unable to serve the message requests anymore and 
+this event may send the list of messages which the Platform Microcontroller was processing when the failure took place. No event data is necessary for this 
+notification
+|===
+
+=== Service: *ENABLE_NOTIFICATION*
+This service allows AP to subscribe to Base service group notifications. +
+Platform can optionally support notifications of errors which might occur in the platform. PuC can send these notification messages to AP if they are implemented
+and AP has subscribed to these. Events supported are described above in Base Notifications. 
+[#table_base_ennotification_request_data]
+.Request Data
+[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| EVENT_ID	| uint32	| Event to be subscribed for 
+notification.
+|===
+
+[#table_base_ennotification_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Notifications are subscribed successfully.
+! RPMI_ERROR_NOT_FOUND ! EVENT_ID is not supported or invalid.
+! RPMI_ERROR_NOT_SUPPORTED ! Notifications not supported.
+!===
+- Other errors <<table_error_codes>>
+|===
+
+=== Service: *GET_IMPLEMENTATION_VERSION*
+Get the implementation version of the message framework from Platform Microcontroller. Versioning is also done for the spec but it's possible that for a single version of spec there may be multiple implementation versions and based on that any lowest supported implementation version can be mandated to ensure the stability and support. Version returned using this service is a 32-Bit composite number which contains both Major and Minor numbers.
+
+[#table_base_getimplversion_request_data]
+.Request Data
+- NA
+
+[#table_base_getimplversion_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name          | Type          | Description
+| 0     | STATUS	| int32		| Return Status Code
+[cols="2,5a"]
+!===
+! *Error Code*  !  *Description*
+! RPMI_SUCCESS  ! Implementation version returned successfully.
+!===
+- Other errors <<table_error_codes>>
+| 1	| VERSION	| uint32	| Implementation Version
+[cols="2,5a"]
+!===
+! *Bits*	!  *Description*
+! [31:16]  	! Major Number
+! [15:0]   	! Minor Number
+!===
+|===
+
+==== Service: *GET_IMPLEMENTATION_ID*
+Get the RPMI Implementation ID assigned to the Operating system or Firmware or any other software host which implements the RPMI specification.
+[#table_base_getimplid_request_data]
+.Request Data
+- NA
+
+[#table_base_getimplid_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name          | Type          | Description
+| 0     | STATUS	| int32		| Return Status Code
+[cols="2,5a"]
+!===
+! *Error Code*  !  *Description*
+! RPMI_SUCCESS  ! Implementation ID returned successfully.
+!===
+- Other errors <<table_error_codes>>
+| 1	| IMPL_ID	| uint32	| Implementation ID
+|===
+
+==== Service: *GET_SPEC_VERSION*
+Get version of the implemented RPMI specification
+[#table_base_getspecversion_request_data]
+.Request Data
+- NA
+
+[#table_base_getspecversion_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name          | Type          | Description
+| 0     | STATUS	| int32		| Return Status Code
+[cols="2,5a"]
+!===
+! *Error Code*  !  *Description*
+! RPMI_SUCCESS  ! RPMI specification version returned successfully.
+!===
+- Other errors <<table_error_codes>>
+| 1	| VERSION	| uint32	| RPMI Specification Version
+[cols="2,5a"]
+!===
+! *Bits*	!  *Description*
+! [31:16]  	! Major Number
+! [15:0]   	! Minor Number
+!===
+|===
+
+==== Service: *GET_HW_INFO*
+This service is used to retrieve the Vendor ID and Name of the Vendor having a 
+RPMI implementation on PuC. Each vendor will be assigned a unique Vendor ID.
+[#table_base_gethwinfo_request_data]
+.Request Data
+- NA
+
+[#table_base_gethwinfo_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name          | Type          | Description
+| 0     | STATUS	| int32		| Return Status Code
+[cols="2,5a"]
+!===
+! *Error Code*  !  *Description*
+! RPMI_SUCCESS  ! Vendor info returned successfully.
+!===
+- Other errors <<table_error_codes>>
+| 1	| VENDOR_ID	| uint32	| Vendor Identifier
+[cols="2,9a"]
+!===
+! *Bits*	!  *Description*
+! [31:16]  	! *SUB_VENDOR_ID* _(optional)_ +
+		It is an additional numeric value used to further differentiate 
+		between different sub-vendors or product lines within the same 
+		hardware vendor.
+
+	0x0: Not Supported
+	
+! [15:0]   	! *VENDOR_ID* +
+	Hardware Vendor ID is a numeric value that uniquely identifies the 
+	manufacturer or vendor of the hardware platform or device.
+!===
+| 2 	| HW_ID_LEN	| uint32		| HW_ID field length in bytes.
+| 3	| HW_ID		| uint8[HW_ID_LEN]	| Hardware Identifier String +
+			Up to HW_ID_LEN bytes NULL terminated ASCII string. 
+			It can be used to convey details such as the specific product model, revision, or configuration of the 
+			hardware.
+|===
+
+==== Service: *PROBE_SERVICE_GROUP*
+Probe the implementation of any service group by its service group id. Except 
+BASE, rest of the service groups are optional but if a service group is 
+implemented then it has to be implemented completely with all services in that group. The notifications in that service group are still optional which will be implemented by the PuC.
+
+[#table_base_probesrvgrp_request_data]
+.Request Data
+[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| SERVICEGROUP_ID | uint32	| `24 bit` ID assigned to each service 
+					group.
+|===
+
+[#table_base_probesrvgrp_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name          | Type          | Description
+| 0     | STATUS	| int32		| Return Status Code
+[cols="2,5a"]
+!===
+! *Error Code*  !  *Description*
+! RPMI_SUCCESS  ! Service completed successfully. Status of Service group
+		represented by *SERVICEGROUP_ID* is identified by field
+		*SERVICE_GROUP_STATUS*. 
+!===
+- Other errors <<table_error_codes>>
+| 1	| SERVICE_GROUP_STATUS	| uint32 | Service group implementation 
+					 status.
+
+	0: Service group not implemented by platform.
+	1: Service group implemented by platform.
+|===
+
+==== Service: *GET_BASE_ATTRIBUTES*
+This service is used to discover additional features supported by the base service group.
+[#table_base_getbaseattrs_request_data]
+.Request Data
+- NA
+
+[#table_base_getbaseattrs_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name          | Type          | Description
+| 0     | STATUS	| int32		| Return Status Code
+[cols="2,5a"]
+!===
+! *Error Code*  !  *Description*
+! RPMI_SUCCESS  ! Attributes returned successfully.
+!===
+- Other errors <<table_error_codes>>
+| 1	| FLAGS0 | uint32	| Vendor Identifier
+[cols="2,9a"]
+!===
+! *Bits*	!  *Description*
+! [31]  	! *EVENT_NOTIFICATION* +
+
+	0b0: Notifications are not supported
+	0b1: Notifications are supported
+	
+! [30]   	! *MSI* +
+
+	0b0: Not Supported
+	0b1: Supported
+! [29:0]	! _Reserved_
+!===
+| 2 	| FLAGS1	| uint32	| _Reserved, initialized to_ `0`
+| 3 	| FLAGS2	| uint32	| _Reserved, initialized to_ `0`
+| 4 	| FLAGS3	| uint32	| _Reserved, initialized to_ `0`
+|===
+
+==== Service: *SET_MSI*
+Configure the MSI address and data which the Platform Microcontroller can use as a doorbell to AP.
+
+The PuC to AP MSI can be used for both sending MSI or injecting wired interrupts. If the MSI target address is IMSIC then AP will take MSI whereas if the MSI target address is "setipnum" of APLIC then AP will take wired interrupt.
+
+In case of platforms with PLIC, the platform need to provide a MMIO register to inject a edge-triggered interrupt.
+
+[#table_base_setmsi_request_data]
+.Request Data
+[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+|===
+| Word  | Name          	| Type          | Description
+| 0     | MSI_ADDRESS_LOW	| uint32	| Lower `32 bit` of MSI address
+| 1     | MSI_ADDRESS_HIGH	| uint32	| Higher `32 bit` of MSI address
+| 2	| MSI_DATA		| uint32	| `32 bit` MSI data
+|===
+
+[#table_base_setmsi_response_data]
+.Response Data
+[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word  | Name          | Type          | Description
+| 0     | STATUS	| int32		| Return Status Code 
+[cols="2,5"]
+!===
+! *Error Code*  !  *Description*
+! RPMI_SUCCESS  ! MSI address and data are configured successfully.
+! RPMI_ERROR_NOT_SUPPORTED ! MSI not supported. Implementation must use base attributes to discover this capability and then use this service..
+!===
+- Other errors <<table_error_codes>>
+|===

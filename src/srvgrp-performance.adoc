@@ -1,0 +1,468 @@
+
+===  Service Group - *PERFORMANCE* (servicegroup_id: 0x00009)
+This performance domain extension is designed for managing the performance of a 
+group of devices or application processors that operate in the same performance domain. Unlike legacy performance control mechanisms where the OS was 
+responsible to directly control the voltage and clocks this mechanism instead 
+operates on an metric less integer performance scale. Each integer value on this
+scale represents a performance operating point. What this scale represents and 
+the metric is completely platform dependent. Values on this scale are discrete 
+and the platform is given complete control over mapping these performance 
+operating points to performance states which eventually gets converted into 
+hardware parameters like voltage and frequency, etc. The mapping between levels 
+and frequencies can be as simple as using a multiplication factor of 1000.
+
+CPPC service group is also meant for performance control but it's only for the application processors. This service group is primarily meant for devices like 
+GPUs, Accelerators, etc but can also be used for application processors.
+
+It is important to note that performance domains should not be confused with 
+power domains. A performance domain is defined as a set of devices that must 
+always run at the same performance level, while a power domain is defined as a 
+set of devices that can be turned on or off together for power management 
+purposes.
+
+The Performance service groups provide a set of services for managing 
+performance domains. These services include retrieving performance domain 
+information, setting the performance level, obtaining the current performance 
+level of a performance domain, and performing other related operations. These operations are described in more detail in the following section.
+
+[#table_perf_services]
+.Performance Services
+[cols="1, 3, 2", width=100%, align="center", options="header"]
+|===
+| Service ID	| Service Name 				| Request Type
+| 0x01		| ENABLE_NOTIFICATION			| NORMAL_REQUEST
+| 0x02		| GET_PERF_DOMAINS			| NORMAL_REQUEST
+| 0x03		| GET_PERF_DOMAIN_ATTRIBUTES		| NORMAL_REQUEST
+| 0x04		| GET_PERF_DOMAIN_LEVELS		| NORMAL_REQUEST
+| 0x05		| GET_PERF_LEVEL			| NORMAL_REQUEST
+| 0x06		| SET_PERF_LEVEL			| NORMAL_REQUEST
+| 0x07		| GET_PERF_LIMIT			| NORMAL_REQUEST
+| 0x08		| SET_PERF_LIMIT			| NORMAL_REQUEST
+| 0x09		| GET_PERF_DOMAIN_FAST_CHANNEL_ADDR	| NORMAL_REQUEST
+|===
+
+==== Performance Notifications
+When a client registers for performance change notifications, the platform will 
+send notification to the client whenever there is a change in the performance 
+level, performance limit or the performance power of a specific performance 
+domain. This notification is typically sent by the platform control processor to inform clients in the system about changes in the performance domain.
+
+[#table_perf_notification_events]
+.Performance Notification Events
+[cols="1, 2, 5a, 2", width=100%, align="center", options="header"]
+|===
+| Event ID 	| Name 		| Event Data	| Description
+| 0x001	| PERF_POWER_CHANGE	| 
+[cols="2,2,5"]
+!===
+! *Word* 	! Type 		!	 *Description*
+! 0		! uint32	! Performance domain ID whose power changed.
+! 1		! uint32	! New Power value(uW)
+!===		
+| Performance power changed notification.
+
+| 0x002	| PERF_LIMIT_CHANGE	| 
+[cols="2,2,5"]
+!===
+! *Word* 	! Type 		!	 *Description*
+! 0		! uint32	! Performance domain ID whose performance limit 
+changed.
+! 1		! uint32	! New Max Perf Level.
+! 2		! uint32	! New Min Perf Level.
+!===		
+| Performance limit changed notification.
+
+| 0x003	| PERF_LEVEL_CHANGE	| 
+[cols="2,2,5"]
+!===
+! *Word* 	! Type 		!	 *Description*
+! 0		! uint32	! Performance domain ID whose performance level changed.
+! 1		! uint32	! New Perf Level.
+!===		
+| Performance level changed notification.
+|===
+
+==== Service: *ENABLE_NOTIFICATION*
+This service is to enable or disable the performance changed notification event.
+This notification is sent from the PuC when the performance level, performance 
+limit or performance power of a performance domain has changed. This allows the 
+system to adjust its behavior in response to performance changes and ensure that
+it is operating within its desired performance level.
+
+[#table_perf_ennotification_request_data]
+.Request Data
+[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| EVENT_ID	| uint32	| Event to be subscribed for 
+notification.
+|===
+
+[#table_perf_ennotification_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Notifications are subscribed successfully.
+! RPMI_ERROR_NOT_FOUND ! EVENT_ID is not supported or invalid.
+! RPMI_ERROR_NOT_SUPPORTED ! Notifications not supported.
+!===
+- Other errors <<table_error_codes>>
+|===
+
+
+==== Service: *GET_PERF_DOMAINS*
+Returns the number of performance domains supported by the system.
+The number of performance domains can vary depending on the hardware platform 
+and implementation. In general, performance domains are used to group related 
+hardware components, such as CPUs, GPUs, memory, and peripherals, into separate 
+domains that can be independently controlled and managed. This allows for more 
+fine-grained control over the performance of specific components, which can be 
+important for optimizing system performance and power consumption.
+
+[#table_perf_getdomains_request_data]
+.Request Data
+- NA
+
+[#table_perf_getdomains_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Service completed successfully.
+!===
+- Other errors <<table_error_codes>>
+| 1	| NUM_DOMAINS	| uint32 	| Number of domains
+|===
+
+
+==== Service: *GET_PERF_DOMAIN_ATTRIBUTES*
+This service is used to retrieve the attributes of a specific performance 
+domain. These attributes provide information about the performance capabilities 
+and constraints of the domain, such as the performance limit and performance 
+level.
+
+[#table_perf_getattrs_request_data]
+.Request Data
+[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| DOMAIN_ID	| uint32	| Performance domain ID
+|===
+
+[#table_perf_getattrs_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Service completed successfully.
+! RPMI_ERROR_NOT_FOUND ! Performance domain not found
+!===
+- Other errors <<table_error_codes>>
+| 1	| FLAGS			| uint32	|
+[cols="2,5a"]
+!===
+! *Bits* 	!  *Description*
+! [31]		! PERF_LIMIT_SETTING +
+This attribute indicates whether the platform allows software to set the 
+performance limit/range for a specific performance domain.
+
+	0b0: Performance limit change not allowed.
+	0b1: Performance limit change allowed.
+! [30]		! PERF_LEVEL_SETTING +
+This attribute indicates whether the platform allows software to set the 
+performance level for a specific performance domain.
+
+	0b0: Performance level change not allowed.
+	0b1: Performance level change allowed.
+! [29]		! FAST_CHANNEL_SUPPORT +
+This attribute indicates whether the platform supports low latency communication
+channels for performance domain management.
+
+	0b0: Not supported
+	0b1: Supported
+! [28:21]	! TOTAL_NUM_PERF_LEVELS +
+Total number of performance levels supported.
+! [20:0]	! _Reserved_
+!===
+| 2	| RATE_LIMIT_US	| uint32 	| Minimum amount of time that needs to 
+pass between two consecutive requests, in microsecond(us).
+| 3:6	| PERF_DOMAIN_NAME | uint8[16]	| A NULL-terminated string for performance domain name. Up to 16-Bytes.
+|===
+
+==== Service: *GET_PERF_DOMAIN_LEVELS*
+This service provides a list of the available Performance levels or also called Operating performance points (OPPs) for a specific performance domain. These 
+represent different performance levels that can be set for the components in the domain, and are defined by a combination of frequency, power cost and other parameters. By utilizing this information, the OS can choose the optimal 
+performance level for the system workload and power constraints.
+
+```c
+/* Pseudocode to retrieve the list of the supported OPP */
+
+index = 0;
+num = 0;
+/* Allocate a buffer based on the value returned from the flags[28:21] */
+total_num_levels = perf_domain_attributes.flags[28:21];
+
+loop:
+	list = get_domain_opp_list(index, domain_id);
+	entry_num = 0;
+
+	for (i = 0; i < list.returned; i++, num++) {
+		opp[num].level = list.entry[entry_num++];
+		opp[num].power = list.entry[entry_num++];
+		opp[num].rate_limit = list.entry[entry_num++];
+	}
+
+	/* Check if there are remaining OPP to be read */
+	if (list.remaining) {
+		index += list.returned;
+		goto loop;
+	}
+
+
+```
+The pseudocode above demonstrates the process for retrieving the level information for a specific performance domain. First, the number of performance levels is determined by checking the FLAGS[28:21] parameter returned by the GET_PERF_DOMAIN_ATTRIBUTES service. 
+
+Total words required for the number of performance levels according to the format in one message cannot exceed the total words available in one message DATA field. If they exceed then PuC will return the number of levels which can be accommodated in one message and set the REMAINING field accordingly. AP, when REMAINING field is not 0 must call this service again with appropriate PERF_LEVEL_INDEX set to get the remaining levels. It's possible that multiple service calls may be required to get all the levels.
+
+[#table_perf_getdomainlevels_request_data]
+.Request Data
+[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| DOMAIN_ID	| uint32	| Performance Domain ID. This field 
+specifies the identifier of the performance domain whose OPPs are being 
+described.
+| 1	| PERF_LEVEL_INDEX | uint32	| Start array index to read.
+First index starts from zero.
+|===
+
+[#table_perf_getdomainlevels_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Service completed successfully.
+! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
+! RPMI_ERROR_INVALID_PARAM	! PERF_LEVEL_INDEX is invalid.
+!===
+- Other errors <<table_error_codes>>
+| 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.
+| 2	| REMAINING	| uint32	| Remaining number of levels.
+| 3	| RETURNED	| uint32	| Number of levels returned. Each level
+comprimises of three 32 bit words.
+| 4	| LEVEL[0]	| uint32	| Performance Level
+[cols="1,5"]
+!===
+! *Word* 	!  *Description*
+! 0	! OPP-level, a unique ID representing the performance level within the 
+OPP table.
+! 1 	! Power Cost in microwatt (uW). This is an optional parameter. 
+Set to value of zero to indicate that power cost is not returned by the 
+platform.
+! 2	! Transition latency in microsecond(us).
+!===
+| 5	| LEVEL[1]	| uint32	| Performance Level
+| ...	| LEVEL[N-1]	| uint32	| Performance Level
+|===
+
+
+==== Service: *GET_PERF_LEVEL*
+This service is used to obtain the current performance level of a specific 
+performance domain in the system.
+
+[#table_perf_getlevel_request_data]
+.Request Data
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
+|===
+
+[#table_perf_getlevel_response_data]
+.Response Data
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Service completed successfully.
+! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
+!===
+- Other errors <<table_error_codes>>
+| 1	| LEVEL	| uint32	| Current performance level of the domain
+|===
+
+
+==== Service: *SET_PERF_LEVEL*
+This service is used to set the current performance level of a specific 
+performance domain in the system.
+
+[#table_perf_setlevel_request_data]
+.Request Data
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
+| 1	| LEVEL		| uint32	| Performance level
+|===
+
+[#table_perf_setlevel_response_data]
+.Response Data
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Service completed successfully.
+! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
+! RPMI_ERROR_INVALID_PARAMETER	! Invalid performance level.
+! RPMI_ERROR_NOT_SUPPORTED	! Performance level change not allowed.
+! RPMI_ERROR_DENIED	! Client does not have permission to change the
+performance level.
+! RPMI_ERROR_HW		! Operation failed due to hardware error.
+!===
+- Other errors <<table_error_codes>>
+|===
+
+
+==== Service: *GET_PERF_LIMIT*
+This service is used to obtain the current performance limit of a specific 
+performance domain in the system.
+
+[#table_perf_getlimit_request_data]
+.Request Data
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
+|===
+
+[#table_perf_getlimit_response_data]
+.Response Data
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Service completed successfully.
+! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
+!===
+- Other errors <<table_error_codes>>
+| 1	| MAX_PERF_LEVEL | uint32	| Max allowed performance level.
+| 2	| MIN_PERF_LEVEL | uint32	| Min allowed performance level.
+|===
+
+
+==== Service: *SET_PERF_LIMIT*
+This service is used to set the current performance limit of a specific 
+performance domain in the system.
+
+[#table_perf_setlimit_request_data]
+.Request Data
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
+| 1	| MAX_PERF_LEVEL	| uint32 | Max allowed performance level
+| 1	| MIN_PERF_LEVEL	| uint32 | Min allowed performance level
+|===
+
+[#table_perf_setlimit_response_data]
+.Response Data
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Service completed successfully.
+! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
+! RPMI_ERROR_INVALID_PARAMETER	! Invalid performance level.
+! RPMI_ERROR_NOT_SUPPORTED	! Performance limit change not allowed.
+! RPMI_ERROR_DENIED	! Client does not have permission to change the
+performance level.
+! RPMI_ERROR_HW		! Operation failed due to hardware error.
+!===
+- Other errors <<table_error_codes>>
+|===
+
+
+==== Service: *GET_PERF_DOMAIN_FAST_CHANNEL_ADDR*
+This service allows clients to query attributes of the fast channel for the specific performance domain and the specific function.
+
+[#table_perf_getfastchanaddr_request_data]
+.Request Data
+[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| DOMAIN_ID	| uint32	| Performance domain ID
+|===
+
+[#table_perf_getfastchanaddr_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word	| Name 		| Type		| Description
+| 0	| STATUS	| int32		| Return Status Code
+[cols="2,5"]
+!===
+! *Error Code* 	!  *Description*
+! RPMI_SUCCESS	! Service completed successfully.
+! RPMI_ERROR_NOT_FOUND ! Performance domain not found
+! RPMI_ERROR_NOT_SUPPORTED ! Fast channel not implemented
+!===
+- Other errors <<table_error_codes>>
+| 1	| FLAGS		| uint32	| 
+[cols="2,5a"]
+!===
+! *Bits* 	!  *Description*
+! [31:3]	! _Reserved_
+! [2:1]		! Doorbell Register Width
+
+	0b00: 8 bit
+	0b01: 16 bit
+	0b10: 32 bit
+	0b11: 64 bit
+! [0]	!
+
+	0b0: Doorbell not supported
+	0b1: Doorbell supported
+!===
+| 2	|PHYS_ADDR_LOW	 | uint32	| Low `32 bit` of physical address
+| 3	|PHYS_ADDR_HIGH  | uint32	| High `32 bit` of physical address
+| 4	|DB_ADDR_LOW	 | uint32	| Low `32 bit` of doorbell address
+| 5	|DB_ADDR_HIGH	 | uint32	| High `32 bit` of doorbell address
+| 6	|DB_ID_LOW	 | uint32	| Low `32 bit` of doorbell ID
+| 7	|DB_ID_HIGH	 | uint32	| High `32 bit` of doorbell ID
+| 8	|DB_PRESERVED_LOW | uint32	| A lower `32 bit` doorbell preserved 
+mask to apply for this service before ring the doorbell. This field is unused 
+if FLAGS[0] is zero.
+| 9	|DB_PRESERVED_HIGH | uint32	| An upper `32 bit` doorbell preserved 
+mask to apply for this service before ring the doorbell. This field is only 
+valid if the doorbell register width is 64 bits. This field is unused if 
+FLAGS[0] is zero.
+|===
