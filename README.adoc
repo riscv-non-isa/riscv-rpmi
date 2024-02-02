@@ -1,0 +1,54 @@
+= RISC-V RPMI Specification
+
+RPMI (RISC-V Platform Management Interface) is an extensible messaging 
+interface between Application Processors and Platform microcontrollers for
+management and control of system.
+
+= Licensing
+
+The files in this repository are licensed under the Creative Commons
+Attribution 4.0 International License (CC-BY 4.0).  The full license
+text is available at https://creativecommons.org/licenses/by/4.0/.
+
+= Dependencies
+The PDF built in this project uses AsciiDoctor (Ruby). For more information 
+on AsciiDoctor, specification guidelines, or building locally, see the 
+https://github.com/riscv/docs-dev-guide[RISC-V Documentation Developer Guide].
+
+
+= Discussion Forum
+Discussion on RPMI occurs on 
+https://lists.riscv.org/g/tech-rpmi[RPMI mailing list].
+
+
+= Dependencies
+The PDF built in this project uses AsciiDoctor (Ruby). For more information
+on AsciiDoctor, specification guidelines, or building locally, see the
+https://github.com/riscv/docs-dev-guide[RISC-V Documentation Developer Guide].
+
+= Build Documents
+This project uses
+https://git-scm.com/book/en/v2/Git-Tools-Submodules[GitHub Submodules] to
+include the RISC-V
+https://github.com/riscv/docs-resources[docs-resources project] to achieve a
+common look and feel.
+
+When cloning this repository for the first time, you must either use
+`git clone --recurse-submodules` or execute `git submodule init` and
+`git submodule update` after the clone to populate the `docs-resources`
+directory. Failure to clone the submodule, will result in the PDF build
+fail with an error message.
+
+The final specification in form of PDF and HTML can be generated using
+`make` command. The `makefile` internally uses asciidoctor so the packages
+required by the `makefile` need to be installed on the build system using
+`make install-debs` or `make install-rpms`.
+
+[,bash]
+----
+git clone https://github.com/riscv-non-isa/riscv-rpmi
+
+git submodule init && git submodule update
+
+make
+----
