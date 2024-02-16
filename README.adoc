@@ -4,6 +4,9 @@ RPMI (RISC-V Platform Management Interface) is an extensible messaging
 interface between Application Processors and Platform microcontrollers for
 management and control of system.
 
+This specification is based on an earlier draft located here:
+https://docs.google.com/document/d/199ar3Ddd-FlzP1FR3HOkbBf1BNvLUPvJ/edit
+
 = Licensing
 
 The files in this repository are licensed under the Creative Commons
