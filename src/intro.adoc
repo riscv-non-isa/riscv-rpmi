@@ -51,7 +51,7 @@ security.
 .Transport for M-Mode and S-Mode
 image::transport-topologies.png[width=800,height=800]
 
-RPMI is designed to work with a single or multi-tenant topology as depicted 
+RPMI is designed to work with a single or multi-tenant topology as depicted
 above.
 
 NOTE: The discovery of the transport itself is out of scope for this document. Which can either be described in firmware through DT or ACPI.
