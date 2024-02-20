@@ -13,6 +13,13 @@ The files in this repository are licensed under the Creative Commons
 Attribution 4.0 International License (CC-BY 4.0).  The full license
 text is available at https://creativecommons.org/licenses/by/4.0/.
 
+= Contributors
+Contributors to this specification are contained in the 
+link:src/contributors.adoc[contributors] file.
+
+For instructions on how to contribute please see the 
+link:CONTRIBUTING.md[CONTRIBUTING] file.
+
 = Dependencies
 The PDF built in this project uses AsciiDoctor (Ruby). For more information 
 on AsciiDoctor, specification guidelines, or building locally, see the 
