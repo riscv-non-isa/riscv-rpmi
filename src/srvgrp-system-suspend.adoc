@@ -108,15 +108,15 @@ executes WFI instruction.
 |===
 | Word  | Name         	| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID of the calling hart.
-| 0     | SUSPEND_TYPE	| uint32	|
+| 1     | SUSPEND_TYPE	| uint32	|
 [cols="2,5a"]
 !===
 ! *Value* 	!  *Description*
 ! 0x0	! Suspend to RAM
 ! 0x1 - 0xFFFFFFFF ! _Reserved_
 !===
-| RESUME_ADDR_LOW	| uint32	| Lower `32 bit` address
-| RESUME_ADDR_HIGH	| uint32	| High `32 bit` address
+| 2	| RESUME_ADDR_LOW	| uint32	| Lower `32 bit` address
+| 3	| RESUME_ADDR_HIGH	| uint32	| High `32 bit` address
 |===
 
 [#table_syssuspend_syssuspend_response_data]
