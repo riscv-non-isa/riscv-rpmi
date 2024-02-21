@@ -22,7 +22,7 @@ Following table lists the service group
 | 0x00009		| PERFORMANCE
 | 0x0000A		| MM_SERVICE
 | 0x0000B		| RAS_AGENT
-| 0x0000B - 0x7FFFF 	| _Reserved for Future Use_
+| 0x0000C - 0x7FFFF 	| _Reserved for Future Use_
 | 0x80000 - 0xFFFFF	| _Implementation Specific Service Groups_
 |===
 NOTE: The services listed in each service group do not follow any sequence and 
