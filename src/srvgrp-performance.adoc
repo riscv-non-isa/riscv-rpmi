@@ -278,7 +278,7 @@ Set to value of zero to indicate that power cost is not returned by the
 platform.
 ! 2	! Transition latency in microsecond(us).
 !===
-| 5	| LEVEL[1]	| uint32	| Performance Level
+| 7	| LEVEL[1]	| uint32	| Performance Level
 | ...	| LEVEL[N-1]	| uint32	| Performance Level
 |===
 
