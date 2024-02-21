@@ -260,7 +260,7 @@ First index starts from zero.
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
-! RPMI_ERROR_INVALID_PARAM	! PERF_LEVEL_INDEX is invalid.
+! RPMI_ERROR_INVALID_PARAMETER	! PERF_LEVEL_INDEX is invalid.
 !===
 - Other errors <<table_error_codes>>
 | 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.

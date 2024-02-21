@@ -183,7 +183,7 @@ voltage levels.
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully and voltage levels returned.
 ! RPMI_ERROR_NOT_FOUND ! Voltage DOMAIN_ID not found.
-! RPMI_ERROR_INVALID_PARAM	! VOLTAGE_LEVEL_INDEX is not valid
+! RPMI_ERROR_INVALID_PARAMETER	! VOLTAGE_LEVEL_INDEX is not valid
 !===
 - Other errors <<table_error_codes>>
 | 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.
