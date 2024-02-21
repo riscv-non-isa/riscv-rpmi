@@ -30,7 +30,7 @@ and AP has subscribed to these. Events supported are described above in
 Hart State Management Notifications. 
 [#table_hsm_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -43,7 +43,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -63,7 +63,7 @@ Implementation should return proper error code in the status field accordingly.
 
 [#table_hsm_hartstart_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID of the hart to be started.
@@ -73,11 +73,11 @@ Implementation should return proper error code in the status field accordingly.
 
 [#table_hsm_hartstart_response_data]
 .Response Data
-[cols="1, 2, 1, 9a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully and hart is started.
@@ -98,7 +98,7 @@ processor.
 
 [#table_hsm_hartstop_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID of the calling hart.
@@ -106,11 +106,11 @@ processor.
 
 [#table_hsm_hartstop_response_data]
 .Response Data
-[cols="1, 2, 1, 9a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully and hart is started.
@@ -126,7 +126,7 @@ success, the calling hart is suspended only after it executes WFI instruction.
 
 [#table_hsm_hartsuspend_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID of the calling hart.
@@ -140,11 +140,11 @@ _Only used for non-retentive suspend types._
 
 [#table_hsm_hartsuspend_response_data]
 .Response Data
-[cols="1, 2, 1, 9a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully and hart is started.
@@ -158,7 +158,7 @@ This service gets the running status of a Hart.
 
 [#table_hsm_gethartstatus_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID.
@@ -170,7 +170,7 @@ This service gets the running status of a Hart.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -196,7 +196,7 @@ This service gets the list of harts with a specified Hart ID start index
 
 [#table_hsm_gethartlist_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| START_INDEX	| uint32	| Starting index of Hart ID.
@@ -208,7 +208,7 @@ This service gets the list of harts with a specified Hart ID start index
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -228,7 +228,7 @@ list must be ordered based on increasing power savings.
 
 [#table_hsm_getsuspendtypes_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| START_INDEX	| uint32	| Starting index of Hart ID list. + 
@@ -242,7 +242,7 @@ items.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -261,7 +261,7 @@ Get attributes of a suspend type.
 
 [#table_hsm_getsuspendinfo_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| SUSPEND_TYPE	| uint32	| Suspend type.
@@ -273,7 +273,7 @@ Get attributes of a suspend type.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.

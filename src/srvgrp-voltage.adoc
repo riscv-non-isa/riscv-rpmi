@@ -32,7 +32,7 @@ and AP has subscribed to these. Events supported are described above in Voltage 
 
 [#table_voltage_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -45,7 +45,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -90,7 +90,7 @@ Linear, Multi-Linear and Discrete range. More voltage formats can be supported
 in future if required.
 [#table_voltage_getdomainattrs_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
@@ -98,11 +98,11 @@ in future if required.
 
 [#table_voltage_getdomainattrs_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -165,7 +165,7 @@ voltage levels.
 
 [#table_voltage_getdomainlevels_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
@@ -174,11 +174,11 @@ voltage levels.
 
 [#table_voltage_getdomainlevels_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully and voltage levels returned.
@@ -235,7 +235,7 @@ CONFIG field encodes these discrete settings which do not require AP to know
 the voltage level
 [#table_voltage_setdomainconfig_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
@@ -258,7 +258,7 @@ the voltage level
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -274,7 +274,7 @@ Get voltage config message request for the configuration of the voltage domain
 currently set.
 [#table_voltage_getdomainconfig_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
@@ -282,11 +282,11 @@ currently set.
 
 [#table_voltage_getdomainconfig_response_data]
 .Response Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -308,7 +308,7 @@ Set the voltage level in microvolts(uV) of a voltage domain
 
 [#table_voltage_setdomainlevel_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
@@ -317,11 +317,11 @@ Set the voltage level in microvolts(uV) of a voltage domain
 
 [#table_voltage_setdomainlevel_response_data]
 .Response Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -338,7 +338,7 @@ Get the current voltage level in microvolts(uV) of a voltage domain.
 
 [#table_voltage_getdomainlevel_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
@@ -346,11 +346,11 @@ Get the current voltage level in microvolts(uV) of a voltage domain.
 
 [#table_voltage_getdomainlevel_response_data]
 .Response Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.

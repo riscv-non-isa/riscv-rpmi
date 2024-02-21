@@ -48,7 +48,7 @@ and AP has subscribed to these. Events supported are described above in Clock No
  
 [#table_clock_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -61,7 +61,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -108,7 +108,7 @@ can be supported if required.
 
 [#table_clock_getattrs_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| CLOCK_ID	| uint32	| Clock ID
@@ -116,11 +116,11 @@ can be supported if required.
 
 [#table_clock_getattrs_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="4,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -173,7 +173,7 @@ In case the CLOCK_FORMAT is a linear range the RETURNED field will be set to `3`
 
 [#table_clock_getsupprates_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| CLOCK_ID	| uint32	| Clock ID
@@ -182,11 +182,11 @@ In case the CLOCK_FORMAT is a linear range the RETURNED field will be set to `3`
 
 [#table_clock_getsupprates_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -207,7 +207,7 @@ Set clock config, enable or disable the clock.
 
 [#table_clock_setconfig_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| CLOCK_ID	| uint32	| Clock ID
@@ -230,7 +230,7 @@ Set clock config, enable or disable the clock.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -246,7 +246,7 @@ Get the current status of a clock, if it's enabled or disabled.
 
 [#table_clock_getconfig_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| CLOCK_ID	| uint32	| Clock ID
@@ -254,11 +254,11 @@ Get the current status of a clock, if it's enabled or disabled.
 
 [#table_clock_getconfig_response_data]
 .Response Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -279,7 +279,7 @@ Set clock rate.
 
 [#table_clock_setrate_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| CLOCK_ID	| uint32	| Clock ID
@@ -304,11 +304,11 @@ Set clock rate.
 
 [#table_clock_setrate_response_data]
 .Response Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -323,7 +323,7 @@ Get the current clock rate value.
 
 [#table_clock_getrate_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| CLOCK_ID	| uint32	| Clock ID
@@ -331,11 +331,11 @@ Get the current clock rate value.
 
 [#table_clock_getrate_response_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.

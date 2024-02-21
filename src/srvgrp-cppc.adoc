@@ -50,7 +50,7 @@ and AP has subscribed to these. Events supported are described above in CPPC Not
 
 [#table_cppc_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -63,7 +63,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -81,7 +81,7 @@ implemented, REG_LENGTH returned will be zero.
 
 [#table_cppc_probereg_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID
@@ -95,7 +95,7 @@ https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully and probing details returned.
@@ -112,7 +112,7 @@ Read CPPC register value
 
 [#table_cppc_readreg_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID
@@ -126,7 +126,7 @@ https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -146,7 +146,7 @@ Write a CPPC register
 
 [#table_cppc_writereg_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID
@@ -162,7 +162,7 @@ https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -182,7 +182,7 @@ Performance Register].
 
 [#table_cppc_getfastchanaddr_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID
@@ -194,7 +194,7 @@ Performance Register].
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -234,7 +234,7 @@ any.
 
 [#table_cppc_pokefastchan_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 - NA
 
 [#table_cppc_pokefastchan_response_data]
@@ -258,7 +258,7 @@ This service gets the list of a hart with a specified hart ID start index.
 
 [#table_cppc_gethartlist_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| START_INDEX	| uint32	| Starting index of Hart ID
@@ -270,7 +270,7 @@ This service gets the list of a hart with a specified hart ID start index.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===	
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.

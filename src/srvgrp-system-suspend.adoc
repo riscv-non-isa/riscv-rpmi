@@ -25,7 +25,7 @@ and AP has subscribed to these. Events supported are described above in System
 Suspend Notifications. 
 [#table_syssuspend_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -38,7 +38,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -54,7 +54,7 @@ Each supported system suspend type is identified by SUSPEND_TYPE.
 
 [#table_syssuspend_getsyssuspendattrs_request_data]
 .Request Data
-[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name         	| Type		| Description
 | 0     | SUSPEND_TYPE	| uint32	| Suspend type value
@@ -68,11 +68,11 @@ Each supported system suspend type is identified by SUSPEND_TYPE.
 
 [#table_syssuspend_getsysuspendattrs_response_data]
 .Response Data
-[cols="1, 1, 1, 9a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5a"]
+[cols="5,5a"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Attributes returned successfully.
@@ -104,7 +104,7 @@ executes WFI instruction.
 
 [#table_syssuspend_syssuspend_request_data]
 .Request Data
-[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name         	| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID of the calling hart.
@@ -121,11 +121,11 @@ executes WFI instruction.
 
 [#table_syssuspend_syssuspend_response_data]
 .Response Data
-[cols="1, 2, 1, 9a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_ERROR_NOT_SUPPORTED ! SUSPEND_TYPE not supported. AP must use the

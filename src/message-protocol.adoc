@@ -62,7 +62,7 @@ image::message-format.png[700,900]
 
 [#table_message_header]
 .Message Header
-[cols="1,1,15a", width=100%, align="center", options="header"]
+[cols="2,3,15a", width=100%, align="center", options="header"]
 |===
 | Word	| Name		| Description
 | 1	| *TOKEN*	| Message identifier. Unique to each 
@@ -126,7 +126,7 @@ wide Word in each of the service groups section as depicted below.
 [cols="3, 2, 4, 4", width=100%, align="center", options="header"]
 |===
 | Word			| Name	| Type	| Description
-| Word index in message DATA field | Name of field | Type of field, eg: int32 or uint32, etc | Description and interpretation of field
+| Word index in message DATA field | Name of field | Type of field, eg: int32 or uint32, etc | Description and interpretation of the field
 |===
 
 The data in acknowledgment at least should contain a `32 bits` `STATUS` code.
@@ -178,7 +178,7 @@ image::notification-format.png[500,600]
 
 [#table_notification_message_format]
 .Notification Message Format
-[cols="5,2,15a", width=100%, align="center", options="header"]
+[cols="3,2,7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name		| Description
 | 0	| *EVENT_HDR*	| Event Header is a `32 bits` field which represents a
@@ -229,6 +229,6 @@ changed already for which the operation was carried out.
 | RPMI_ERROR_EXTENSION	| -13 | Error in extension implementation that
 violates the extension specification or the extension version mismatch
 |	| -14 to -127 	| Reserved
-|	| > -127	| Vendor Specific
+|	| > -127	| Vendor specific
 |===
 

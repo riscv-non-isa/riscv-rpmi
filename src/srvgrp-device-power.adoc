@@ -18,7 +18,7 @@ value and the context preserved or lost information corresponding to that state.
 
 [#table_devpower_powerstate_data]
 .Power States Encoding
-[cols="1, 2, 5a", width=100%, align="center", options="header"]
+[cols="2, 2, 5a", width=100%, align="center", options="header"]
 |===
 | POWER_STATE(uint32)	| Field 	| Description
 | POWER_STATE[31]	| CONTEXT	|
@@ -62,7 +62,7 @@ Power Notifications.
  
 [#table_devpower_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -75,7 +75,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -116,7 +116,7 @@ This service is used to query the attributes of a device power domain.
 
 [#table_devpower_getattrs_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 4, 1, 6", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Device power domain ID
@@ -124,11 +124,11 @@ This service is used to query the attributes of a device power domain.
 
 [#table_devpower_getattrs_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 4, 1, 6a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -148,7 +148,7 @@ This service is used to change the power state of a device power domain.
 
 [#table_devpower_setstate_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Device power domain ID
@@ -164,7 +164,7 @@ See Power States table in the service group description
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -181,7 +181,7 @@ This service is used to get the current power state of a device power domain.
 
 [#table_devpower_getstate_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Device power domain ID
@@ -193,7 +193,7 @@ This service is used to get the current power state of a device power domain.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="4,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.

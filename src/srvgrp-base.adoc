@@ -83,7 +83,7 @@ Platform can optionally support notifications of errors which might occur in the
 and AP has subscribed to these. Events supported are described above in Base Notifications. 
 [#table_base_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -96,7 +96,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -191,7 +191,7 @@ RPMI implementation on PuC. Each vendor will be assigned a unique Vendor ID.
 
 [#table_base_gethwinfo_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 2, 3, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name          | Type          | Description
 | 0     | STATUS	| int32		| Return Status Code
@@ -230,7 +230,7 @@ implemented then it has to be implemented completely with all services in that g
 
 [#table_base_probesrvgrp_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| SERVICEGROUP_ID | uint32	| `24 bits` ID assigned to each service
@@ -239,7 +239,7 @@ implemented then it has to be implemented completely with all services in that g
 
 [#table_base_probesrvgrp_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name          | Type          | Description
 | 0     | STATUS	| int32		| Return Status Code
@@ -305,7 +305,7 @@ In case of platforms with PLIC, the platform need to provide a MMIO register to 
 
 [#table_base_setmsi_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word  | Name          	| Type          | Description
 | 0     | MSI_ADDRESS_LOW	| uint32	| Lower `32 bits` of MSI address
@@ -315,11 +315,11 @@ In case of platforms with PLIC, the platform need to provide a MMIO register to 
 
 [#table_base_setmsi_response_data]
 .Response Data
-[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name          | Type          | Description
 | 0     | STATUS	| int32		| Return Status Code 
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code*  !  *Description*
 ! RPMI_SUCCESS  ! MSI address and data are configured successfully.

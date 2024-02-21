@@ -49,7 +49,7 @@ domain. This notification is typically sent by the platform control processor to
 
 [#table_perf_notification_events]
 .Performance Notification Events
-[cols="1, 2, 5a, 2", width=100%, align="center", options="header"]
+[cols="1, 3, 5a, 2", width=100%, align="center", options="header"]
 |===
 | Event ID 	| Name 		| Event Data	| Description
 | 0x001	| PERF_POWER_CHANGE	| 
@@ -91,7 +91,7 @@ it is operating within its desired performance level.
 
 [#table_perf_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -104,7 +104,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -152,7 +152,7 @@ level.
 
 [#table_perf_getattrs_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Performance domain ID
@@ -160,11 +160,11 @@ level.
 
 [#table_perf_getattrs_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -239,7 +239,7 @@ Total words required for the number of performance levels according to the forma
 
 [#table_perf_getdomainlevels_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Performance Domain ID. This field 
@@ -255,7 +255,7 @@ First index starts from zero.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -301,7 +301,7 @@ performance domain in the system.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -318,7 +318,7 @@ performance domain in the system.
 
 [#table_perf_setlevel_request_data]
 .Request Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Performance Domain ID
@@ -327,11 +327,11 @@ performance domain in the system.
 
 [#table_perf_setlevel_response_data]
 .Response Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -364,7 +364,7 @@ performance domain in the system.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -392,11 +392,11 @@ performance domain in the system.
 
 [#table_perf_setlimit_response_data]
 .Response Data
-[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -416,7 +416,7 @@ This service allows clients to query attributes of the fast channel for the spec
 
 [#table_perf_getfastchanaddr_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Performance domain ID
@@ -424,11 +424,11 @@ This service allows clients to query attributes of the fast channel for the spec
 
 [#table_perf_getfastchanaddr_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
