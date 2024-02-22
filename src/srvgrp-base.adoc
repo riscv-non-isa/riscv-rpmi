@@ -77,7 +77,7 @@ this event may send the list of messages which the Platform Microcontroller was 
 notification
 |===
 
-=== Service: *ENABLE_NOTIFICATION*
+==== Service: *ENABLE_NOTIFICATION*
 This service allows AP to subscribe to Base service group notifications. +
 Platform can optionally support notifications of errors which might occur in the platform. PuC can send these notification messages to AP if they are implemented
 and AP has subscribed to these. Events supported are described above in Base Notifications. 
@@ -106,7 +106,7 @@ notification.
 - Other errors <<table_error_codes>>
 |===
 
-=== Service: *GET_IMPLEMENTATION_VERSION*
+==== Service: *GET_IMPLEMENTATION_VERSION*
 Get the implementation version of the message framework from Platform Microcontroller. Versioning is also done for the spec but it's possible that for a single version of spec there may be multiple implementation versions and based on that any lowest supported implementation version can be mandated to ensure the stability and support. Version returned using this service is a 32-Bit composite number which contains both Major and Minor numbers.
 
 [#table_base_getimplversion_request_data]
