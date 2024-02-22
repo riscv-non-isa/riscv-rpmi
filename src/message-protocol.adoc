@@ -65,12 +65,12 @@ image::message-format.png[700,900]
 [cols="2,3,15a", width=100%, align="center", options="header"]
 |===
 | Word	| Name		| Description
-| 1	| *TOKEN*	| Message identifier. Unique to each 
+| 0	| *TOKEN*	| Message identifier. Unique to each
 request - acknowledgement transaction for a RPMI implementation instance. 
 In case of Notifications, `SERVICE_ID` and `MESSAGE_TYPE` for notification 
 messages are fixed which will contribute to the unique identity of the message 
 in that RPMI instance implementation.
-| 2	| *MESSAGE_ID*	|
+| 1	| *MESSAGE_ID*	|
 [cols="1,7a"]
 !===
 ! *Bits* !  *Description*
@@ -94,7 +94,7 @@ Services alike are grouped into Service Groups and each group is identified by `
 `8-bits` identifier from LSB in the message identifier word, Services are the
 functions which, when called, result in different message requests for different control and management tasks meant for Platform Microcontroller. Each service is identified by a `SERVICE_ID`
 !===
-| 3	| *DATALEN*		| Encodes the size of the data in the message, data will also be in `32 bits` chunks.
+| 2	| *DATALEN*		| Encodes the size of the data in the message, data will also be in `32 bits` chunks.
 If there is no data, then it must be initialized to zero. 
 |===
 
