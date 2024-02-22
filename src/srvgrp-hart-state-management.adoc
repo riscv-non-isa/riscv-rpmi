@@ -219,7 +219,7 @@ This service gets the list of harts with a specified Hart ID start index
 | 2	| RETURNED	| uint32	| Total number of items returned so far.
 | 3	| HART_ID[0]	| uint32	| HART_ID
 | 4	| HART_ID[1]	| uint32	| HART_ID
-| 5	| HART_ID[N - 1] | uint32	| HART_ID
+| N+2	| HART_ID[N - 1] | uint32	| HART_ID
 |===
 
 ==== Service: *GET_SUSPEND_TYPES*
@@ -253,7 +253,7 @@ items.
 | 2	| RETURNED	| uint32	| Total number of items returned so far.
 | 3	| SUSPEND_TYPE[0] | uint32	| Suspend Type
 | 4	| SUSPEND_TYPE[1] | uint32	| Suspend Type
-| 5	| SUSPEND_TYPE[N - 1]  | uint32	| Suspend Type
+| N+2	| SUSPEND_TYPE[N - 1]  | uint32	| Suspend Type
 |===
 
 ==== Service: *GET_SUSPEND_INFO*
