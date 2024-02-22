@@ -181,7 +181,7 @@ image::notification-format.png[500,600]
 [cols="5,2,15a", width=100%, align="center", options="header"]
 |===
 | Word	| Name		| Description
-| 1	| *EVENT_HDR*	| Event Header is a `32-bit` field which represents a
+| 0	| *EVENT_HDR*	| Event Header is a `32-bit` field which represents a
 single event metadata
 [cols="1,7a"]
 !===
