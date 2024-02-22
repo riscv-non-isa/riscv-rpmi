@@ -267,7 +267,7 @@ First index starts from zero.
 | 2	| REMAINING	| uint32	| Remaining number of levels.
 | 3	| RETURNED	| uint32	| Number of levels returned. Each level
 comprimises of three 32-bit words.
-| 4	| LEVEL[0]	| uint32	| Performance Level
+| 4	| LEVEL[0]	| uint32[3]	| Performance Level
 [cols="1,5"]
 !===
 ! *Word* 	!  *Description*
@@ -278,8 +278,8 @@ Set to value of zero to indicate that power cost is not returned by the
 platform.
 ! 2	! Transition latency in microsecond(us).
 !===
-| 7	| LEVEL[1]	| uint32	| Performance Level
-| ...	| LEVEL[N-1]	| uint32	| Performance Level
+| 7	| LEVEL[1]	| uint32[3]	| Performance Level
+| ...	| LEVEL[N-1]	| uint32[3]	| Performance Level
 |===
 
 
