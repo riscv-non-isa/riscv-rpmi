@@ -115,8 +115,8 @@ executes WFI instruction.
 ! 0x0	! Suspend to RAM
 ! 0x1 - 0xFFFFFFFF ! _Reserved_
 !===
-| 2	| RESUME_ADDR_LOW	| uint32	| Lower `32 bit` address
-| 3	| RESUME_ADDR_HIGH	| uint32	| High `32 bit` address
+| 2	| RESUME_ADDR_LOW	| uint32	| Lower `32 bits` address
+| 3	| RESUME_ADDR_HIGH	| uint32	| Upper `32 bits` address
 |===
 
 [#table_syssuspend_syssuspend_response_data]

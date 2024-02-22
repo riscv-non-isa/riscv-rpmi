@@ -18,7 +18,7 @@ firmware tables (DT/ACPI).
 
 
 ==== Clock rate format
-Each clock rate is a tuple of two `32 bit` values `(uint32, uint32)` represented
+Each clock rate is a tuple of two `32 bits` values `(uint32, uint32)` represented
 as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 `clock_rate_low` is at the lower index than the `clock_rate_high`.
 
@@ -298,8 +298,8 @@ Set clock rate.
 
 ! [29:0]	! _Reserved_ 
 !===
-| 2	| CLOCK_RATE_LOW	| uint32	| Lower 32-bits of the clock rate in Hertz.
-| 3	| CLOCK_RATE_HIGH	| uint32	| Higher 32-bits of the clock rate in Hertz.
+| 2	| CLOCK_RATE_LOW	| uint32	| Lower 32 bits of the clock rate in Hertz.
+| 3	| CLOCK_RATE_HIGH	| uint32	| Upper 32 bits of the clock rate in Hertz.
 |===
 
 [#table_clock_setrate_response_data]
@@ -342,6 +342,6 @@ Get the current clock rate value.
 ! RPMI_ERROR_NOT_FOUND ! CLOCK_ID not found.
 !===
 - Other errors <<table_error_codes>>
-| 1	| CLOCK_RATE_LOW	| uint32	| Lower 32-bits of the clock rate in Hertz.
-| 2	| CLOCK_RATE_HIGH	| uint32	| Higher 32-bits of the clock rate in Hertz.
+| 1	| CLOCK_RATE_LOW	| uint32	| Lower 32 bits of the clock rate in Hertz.
+| 2	| CLOCK_RATE_HIGH	| uint32	| Upper 32 bits of the clock rate in Hertz.
 |===

@@ -266,7 +266,7 @@ First index starts from zero.
 | 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.
 | 2	| REMAINING	| uint32	| Remaining number of levels.
 | 3	| RETURNED	| uint32	| Number of levels returned. Each level
-comprimises of three 32 bit words.
+comprimises of three 32-bit words.
 | 4	| LEVEL[0]	| uint32	| Performance Level
 [cols="1,5"]
 !===
@@ -443,25 +443,25 @@ This service allows clients to query attributes of the fast channel for the spec
 ! [31:3]	! _Reserved_
 ! [2:1]		! Doorbell Register Width
 
-	0b00: 8 bit
-	0b01: 16 bit
-	0b10: 32 bit
-	0b11: 64 bit
+	0b00: 8 bits
+	0b01: 16 bits
+	0b10: 32 bits
+	0b11: 64 bits
 ! [0]	!
 
 	0b0: Doorbell not supported
 	0b1: Doorbell supported
 !===
-| 2	|PHYS_ADDR_LOW	 | uint32	| Low `32 bit` of physical address
-| 3	|PHYS_ADDR_HIGH  | uint32	| High `32 bit` of physical address
-| 4	|DB_ADDR_LOW	 | uint32	| Low `32 bit` of doorbell address
-| 5	|DB_ADDR_HIGH	 | uint32	| High `32 bit` of doorbell address
-| 6	|DB_ID_LOW	 | uint32	| Low `32 bit` of doorbell ID
-| 7	|DB_ID_HIGH	 | uint32	| High `32 bit` of doorbell ID
-| 8	|DB_PRESERVED_LOW | uint32	| A lower `32 bit` doorbell preserved 
+| 2	|PHYS_ADDR_LOW	 | uint32	| Lower `32 bits` of physical address
+| 3	|PHYS_ADDR_HIGH  | uint32	| Upper `32 bits` of physical address
+| 4	|DB_ADDR_LOW	 | uint32	| Lower `32 bits` of doorbell address
+| 5	|DB_ADDR_HIGH	 | uint32	| Upper `32 bits` of doorbell address
+| 6	|DB_ID_LOW	 | uint32	| Lower `32 bits` of doorbell ID
+| 7	|DB_ID_HIGH	 | uint32	| Upper `32 bits` of doorbell ID
+| 8	|DB_PRESERVED_LOW | uint32	| A lower `32 bits` doorbell preserved
 mask to apply for this service before ring the doorbell. This field is unused 
 if FLAGS[0] is zero.
-| 9	|DB_PRESERVED_HIGH | uint32	| An upper `32 bit` doorbell preserved 
+| 9	|DB_PRESERVED_HIGH | uint32	| An upper `32 bits` doorbell preserved
 mask to apply for this service before ring the doorbell. This field is only 
 valid if the doorbell register width is 64 bits. This field is unused if 
 FLAGS[0] is zero.

@@ -107,7 +107,7 @@ notification.
 |===
 
 ==== Service: *GET_IMPLEMENTATION_VERSION*
-Get the implementation version of the message framework from Platform Microcontroller. Versioning is also done for the spec but it's possible that for a single version of spec there may be multiple implementation versions and based on that any lowest supported implementation version can be mandated to ensure the stability and support. Version returned using this service is a 32-Bit composite number which contains both Major and Minor numbers.
+Get the implementation version of the message framework from Platform Microcontroller. Versioning is also done for the spec but it's possible that for a single version of spec there may be multiple implementation versions and based on that any lowest supported implementation version can be mandated to ensure the stability and support. Version returned using this service is a 32 bits composite number which contains both Major and Minor numbers.
 
 [#table_base_getimplversion_request_data]
 .Request Data
@@ -233,7 +233,7 @@ implemented then it has to be implemented completely with all services in that g
 [cols="1, 2, 1, 5", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| SERVICEGROUP_ID | uint32	| `24 bit` ID assigned to each service 
+| 0	| SERVICEGROUP_ID | uint32	| `24 bits` ID assigned to each service
 					group.
 |===
 
@@ -308,9 +308,9 @@ In case of platforms with PLIC, the platform need to provide a MMIO register to 
 [cols="1, 2, 1, 5", width=100%, align="center", options="header"]
 |===
 | Word  | Name          	| Type          | Description
-| 0     | MSI_ADDRESS_LOW	| uint32	| Lower `32 bit` of MSI address
-| 1     | MSI_ADDRESS_HIGH	| uint32	| Higher `32 bit` of MSI address
-| 2	| MSI_DATA		| uint32	| `32 bit` MSI data
+| 0     | MSI_ADDRESS_LOW	| uint32	| Lower `32 bits` of MSI address
+| 1     | MSI_ADDRESS_HIGH	| uint32	| Upper `32 bits` of MSI address
+| 2	| MSI_DATA		| uint32	| `32 bits` MSI data
 |===
 
 [#table_base_setmsi_response_data]

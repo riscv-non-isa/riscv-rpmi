@@ -3,7 +3,7 @@
 The complete system can be classified into multiple domains for voltage control. Each domain is the logical group of one or more devices that have a single 
 voltage source. The action corresponding to the messages in this group controls 
 the voltage source which affects the device or the group of devices together 
-since those devices share the same voltage source. Each domain is identified by domain_id which is a `32 bit`` integer starting from `0`.
+since those devices share the same voltage source. Each domain is identified by domain_id which is a `32 bits` integer starting from `0`.
 
 Below table lists the services in this group:
 [#table_voltage_services]
