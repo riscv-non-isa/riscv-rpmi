@@ -264,7 +264,7 @@ the voltage level
 ! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_NOT_FOUND ! Voltage DOMAIN_ID not found.
 ! RPMI_ERROR_INVALID_PARAMETER	! Voltage config is not supported by the
-spefified voltage domain.
+specified voltage domain.
 !===
 - Other errors <<table_error_codes>>
 |===

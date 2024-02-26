@@ -266,7 +266,7 @@ First index starts from zero.
 | 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.
 | 2	| REMAINING	| uint32	| Remaining number of levels.
 | 3	| RETURNED	| uint32	| Number of levels returned. Each level
-comprimises of three 32-bit words.
+compromises of three 32-bit words.
 | 4	| LEVEL[0]	| uint32[3]	| Performance Level
 [cols="1,5"]
 !===

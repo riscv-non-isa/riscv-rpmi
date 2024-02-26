@@ -22,7 +22,7 @@ message via the transport layer. The transport layer abstracts the mechanism of
 how the message is physically delivered between Application Processor and 
 Platform Microcontroller or vice versa.
 
-.Bidirectional Commmunication
+.Bidirectional Communication
 image::transport-bidirectional.png[400,400]
 
 === Doorbell Interrupt
