@@ -281,5 +281,5 @@ This service gets the list of a hart with a specified hart ID start index.
 | 2	| RETURNED	| uint32 | Total number of items returned so far.
 | 3	| HART_ID[0]	| uint32 | Hart ID
 | 4 	| HART_ID[1]	| uint32 | Hart ID
-| 5	| HART_ID[N-1]	| uint32 | Hart ID
+| N+2	| HART_ID[N-1]	| uint32 | Hart ID
 |===
