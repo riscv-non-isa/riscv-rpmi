@@ -1,14 +1,14 @@
 [[intro]]
 == Introduction
-This document describes RISC-V Platform Management Interface (RPMI), which is
+This document describes the RISC-V Platform Management Interface (RPMI), which is
 an extensible interface to manage and control the system using a dedicated microcontroller. Systems today pose challenges in terms of manageability and controllability where the OS may have to support a variety of hardware which
-can be different in design and devices connected. The extra complexity and
+can be different in design and connected devices. The extra complexity and
 demand to manage and control the system along with executing compute workloads
-is challenging for Application Processors running the OS. To mitigate this, 
+is challenging for the Application Processors running the OS. To mitigate this,
 systems today contain one or more Platform Microcontrollers which abstract 
 various platform specific system management and control related tasks. 
 RPMI enables the communication between the application processors and the 
-Platform micro-controllers. It abstracts the system complexity and provides a message based interface for system management and control. 
+Platform micro-controllers. It abstracts the system complexity and provides a message-based interface for system management and control.
 
 RPMI is not limited to a single Application Processor and Platform 
 Microcontroller. It can support multiple Application Processors and multiple Platform Microcontrollers.
@@ -27,7 +27,7 @@ of new features and functions. This feature simplifies the integration of new co
 *Transport*: Describes the mechanism by which the messages are exchanged 
 between the Application Processors and Platform Microcontrollers. 
 
-*Messaging Protocol*: Provides Messaging Interface between Application 
+*Messaging Protocol*: Provides the Messaging Interface between the Application
 Processors and Platform Microcontrollers to communicate with each other via 
 messages to make requests for various services supported by the hardware 
 platform. This is accomplished by grouping each management interface into 
@@ -38,13 +38,13 @@ RPMI currently provides message interfaces to manage power, voltage,
 performance, idle states etc, along with extensibility for vendors to add their 
 own interfaces.
 
-Application Processor and A.P are used interchangeably in this document. 
+Application Processor and A.P are used interchangeably throughout this document.
 Similarly, Platform Microcontroller and PuC are used interchangeably.
 
 .High Level Architecture
 image::highlevel-arch.png[width=800,height=800]
 
-An RPMI agent is an implementation instance of RPMI Messaging Protocol and Transport. It is necessary to implement the AP side RPMI agent for most RPMI services in M-mode. While it may be possible to implement the AP side RPMI 
+An RPMI agent is an implementation instance of the RPMI Messaging Protocol and Transport. It is necessary to implement the AP side RPMI agent for most RPMI services in M-mode. While it may be possible to implement the AP side RPMI
 agent in S-mode for some RPMI services, an M-mode RPMI agent also enhances 
 security.
 
