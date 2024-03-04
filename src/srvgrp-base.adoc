@@ -22,7 +22,7 @@ Following table lists the service group
 | 0x00009		| PERFORMANCE
 | 0x0000A		| MM_SERVICE
 | 0x0000B		| RAS_AGENT
-| 0x0000B - 0x7FFFF 	| _Reserved for Future Use_
+| 0x0000C - 0x7FFFF 	| _Reserved for Future Use_
 | 0x80000 - 0xFFFFF	| _Implementation Specific Service Groups_
 |===
 NOTE: The services listed in each service group do not follow any sequence and 
@@ -77,13 +77,13 @@ this event may send the list of messages which the Platform Microcontroller was 
 notification
 |===
 
-=== Service: *ENABLE_NOTIFICATION*
+==== Service: *ENABLE_NOTIFICATION*
 This service allows AP to subscribe to Base service group notifications. +
 Platform can optionally support notifications of errors which might occur in the platform. PuC can send these notification messages to AP if they are implemented
 and AP has subscribed to these. Events supported are described above in Base Notifications. 
 [#table_base_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -96,7 +96,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -106,8 +106,8 @@ notification.
 - Other errors <<table_error_codes>>
 |===
 
-=== Service: *GET_IMPLEMENTATION_VERSION*
-Get the implementation version of the message framework from Platform Microcontroller. Versioning is also done for the spec but it's possible that for a single version of spec there may be multiple implementation versions and based on that any lowest supported implementation version can be mandated to ensure the stability and support. Version returned using this service is a 32-Bit composite number which contains both Major and Minor numbers.
+==== Service: *GET_IMPLEMENTATION_VERSION*
+Get the implementation version of the message framework from Platform Microcontroller. Versioning is also done for the spec but it's possible that for a single version of spec there may be multiple implementation versions and based on that any lowest supported implementation version can be mandated to ensure the stability and support. Version returned using this service is a 32 bits composite number which contains both Major and Minor numbers.
 
 [#table_base_getimplversion_request_data]
 .Request Data
@@ -191,7 +191,7 @@ RPMI implementation on PuC. Each vendor will be assigned a unique Vendor ID.
 
 [#table_base_gethwinfo_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 2, 3, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name          | Type          | Description
 | 0     | STATUS	| int32		| Return Status Code
@@ -230,16 +230,16 @@ implemented then it has to be implemented completely with all services in that g
 
 [#table_base_probesrvgrp_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| SERVICEGROUP_ID | uint32	| `24 bit` ID assigned to each service 
+| 0	| SERVICEGROUP_ID | uint32	| `24 bits` ID assigned to each service
 					group.
 |===
 
 [#table_base_probesrvgrp_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name          | Type          | Description
 | 0     | STATUS	| int32		| Return Status Code
@@ -305,21 +305,21 @@ In case of platforms with PLIC, the platform need to provide a MMIO register to 
 
 [#table_base_setmsi_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word  | Name          	| Type          | Description
-| 0     | MSI_ADDRESS_LOW	| uint32	| Lower `32 bit` of MSI address
-| 1     | MSI_ADDRESS_HIGH	| uint32	| Higher `32 bit` of MSI address
-| 2	| MSI_DATA		| uint32	| `32 bit` MSI data
+| 0     | MSI_ADDRESS_LOW	| uint32	| Lower `32 bits` of MSI address
+| 1     | MSI_ADDRESS_HIGH	| uint32	| Upper `32 bits` of MSI address
+| 2	| MSI_DATA		| uint32	| `32 bits` MSI data
 |===
 
 [#table_base_setmsi_response_data]
 .Response Data
-[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name          | Type          | Description
 | 0     | STATUS	| int32		| Return Status Code 
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code*  !  *Description*
 ! RPMI_SUCCESS  ! MSI address and data are configured successfully.

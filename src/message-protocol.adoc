@@ -62,15 +62,15 @@ image::message-format.png[700,900]
 
 [#table_message_header]
 .Message Header
-[cols="1,1,15a", width=100%, align="center", options="header"]
+[cols="2,3,15a", width=100%, align="center", options="header"]
 |===
 | Word	| Name		| Description
-| 1	| *TOKEN*	| Message identifier. Unique to each 
+| 0	| *TOKEN*	| Message identifier. Unique to each
 request - acknowledgement transaction for a RPMI implementation instance. 
 In case of Notifications, `SERVICE_ID` and `MESSAGE_TYPE` for notification 
 messages are fixed which will contribute to the unique identity of the message 
 in that RPMI instance implementation.
-| 2	| *MESSAGE_ID*	|
+| 1	| *MESSAGE_ID*	|
 [cols="1,7a"]
 !===
 ! *Bits* !  *Description*
@@ -89,12 +89,12 @@ in that RPMI instance implementation.
 	0b10: ACKNOWLEDGEMENT
 	0b11: NOTIFICATION
 ! *[27:8]* ! *SERVICEGROUP_ID* +
-Services alike are grouped into Service Groups and each group is identified by `SERVICEGROUP_ID` which is a `20-bit` identifier.
+Services alike are grouped into Service Groups and each group is identified by `SERVICEGROUP_ID` which is a `20 bits` identifier.
 ! *[7:0]* ! *SERVICE_ID* +
-`8-bit` identifier from LSB in the message identifier word, Services are the 
+`8-bits` identifier from LSB in the message identifier word, Services are the
 functions which, when called, result in different message requests for different control and management tasks meant for Platform Microcontroller. Each service is identified by a `SERVICE_ID`
 !===
-| 3	| *DATALEN*		| Encodes the size of the data in the message, data will also be in `32-bit` chunks. 
+| 2	| *DATALEN*		| Encodes the size of the data in the message, data will also be in `32 bits` chunks.
 If there is no data, then it must be initialized to zero. 
 |===
 
@@ -118,7 +118,7 @@ the transport queues slot size. This specification already defines the data
 layout for each size. For few services where the data exceeds the size which a 
 single message can accommodate, multipart messages are used.
 
-Message data formats in this specification are tabulated with a list of `32-bit` 
+Message data formats in this specification are tabulated with a list of `32 bits`
 wide Word in each of the service groups section as depicted below.
 
 [#table_message_hdr_data_layout]
@@ -126,10 +126,10 @@ wide Word in each of the service groups section as depicted below.
 [cols="3, 2, 4, 4", width=100%, align="center", options="header"]
 |===
 | Word			| Name	| Type	| Description
-| Word index in message DATA field | Name of field | Type of field, eg: int32 or uint32, etc | Description and interpretation of field
+| Word index in message DATA field | Name of field | Type of field, eg: int32 or uint32, etc | Description and interpretation of the field
 |===
 
-The data in acknowledgment at least should contain a `32-bit` `STATUS` code. 
+The data in acknowledgment at least should contain a `32 bits` `STATUS` code.
 Apart from status code, an acknowledgement may encode more data as response to 
 the request message and details are subsequently present in each service section 
 below.
@@ -162,7 +162,7 @@ Notifications enable service is also present in each service group even if that
 service group does not support notifications or implement any event support.
 
 Every event will have an Event Header which consists of two fields to identify 
-an event - `EVENT_ID (12-bit)` and `EVENT_DATALEN (20-bit)`. Events may have 
+an event - `EVENT_ID (12 bits)` and `EVENT_DATALEN (20 bits)`. Events may have
 data associated, if present, must be multiple of 4 bytes. 
 
 The number of events which can be accommodated in the message data depends on 
@@ -178,10 +178,10 @@ image::notification-format.png[500,600]
 
 [#table_notification_message_format]
 .Notification Message Format
-[cols="5,2,15a", width=100%, align="center", options="header"]
+[cols="3,2,7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name		| Description
-| 1	| *EVENT_HDR*	| Event Header is a `32-bit` field which represents a
+| 0	| *EVENT_HDR*	| Event Header is a `32 bits` field which represents a
 single event metadata
 [cols="1,7a"]
 !===
@@ -190,7 +190,7 @@ single event metadata
 Unique identifier for an event in a service group.
 
 ! *[19:0]* ! *EVENT_DATALEN* +
-20-bit field to encode the number words(`32-bit`) chunks of event data.
+20 bits field to encode the number words (`32 bits`) chunks of event data.
 !===
 | 1 : (*EVENT_DATALEN* - 1)	| *EVENT_DATA*	| Event Data
 |===
@@ -229,6 +229,6 @@ changed already for which the operation was carried out.
 | RPMI_ERROR_EXTENSION	| -13 | Error in extension implementation that
 violates the extension specification or the extension version mismatch
 |	| -14 to -127 	| Reserved
-|	| > -127	| Vendor Specific
+|	| > -127	| Vendor specific
 |===
 

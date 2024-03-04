@@ -1,5 +1,5 @@
 === Service Group - *CPPC* (servicegroup_id: 0x00005)
-This service group defines the services to control CPU performance by managing a set of registers and a dedicated physical memory block, which will define fast channel access to each hart in the system. Hart writes a specific 32-Bit desired performance number in fast channel memory. PuC decodes the request and performs the corresponding CPPC operations.
+This service group defines the services to control CPU performance by managing a set of registers and a dedicated physical memory block, which will define fast channel access to each hart in the system. Hart writes a specific 32 bits desired performance number in fast channel memory. PuC decodes the request and performs the corresponding CPPC operations.
 
 CPPC physical memory will have enough space to accommodate all available harts. Hart can send an RPMI message GET_CPPC_PERF_CHAN_ADDR to query the physical address of that particular hart.
 
@@ -50,7 +50,7 @@ and AP has subscribed to these. Events supported are described above in CPPC Not
 
 [#table_cppc_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -63,7 +63,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -81,7 +81,7 @@ implemented, REG_LENGTH returned will be zero.
 
 [#table_cppc_probereg_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID
@@ -95,7 +95,7 @@ https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully and probing details returned.
@@ -112,7 +112,7 @@ Read CPPC register value
 
 [#table_cppc_readreg_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID
@@ -126,7 +126,7 @@ https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -135,8 +135,8 @@ https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI
 probe the REG_ID before reading.
 !===
 - Other errors <<table_error_codes>>
-| 1	| DATA_LOW	| uint32	| Low `32 bit` of data
-| 2	| DATA_HIGH	| uint32	| High `32 bit` of data
+| 1	| DATA_LOW	| uint32	| Lower `32 bits` of data
+| 2	| DATA_HIGH	| uint32	| Upper `32 bits` of data
 |===
 
 
@@ -146,14 +146,14 @@ Write a CPPC register
 
 [#table_cppc_writereg_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID
 | 1	| REG_ID	| uint32	| Register ID (refer register ids in 
 https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI Spec])
-| 2	| DATA_LOW	| uint32	| Low `32 bit` of data
-| 3	| DATA_HIGH	| uint32	| High `32 bit` of data
+| 2	| DATA_LOW	| uint32	| Lower `32 bits` of data
+| 3	| DATA_HIGH	| uint32	| Upper `32 bits` of data
 |===
 
 [#table_cppc_writereg_response_data]
@@ -162,7 +162,7 @@ https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -182,7 +182,7 @@ Performance Register].
 
 [#table_cppc_getfastchanaddr_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID
@@ -194,7 +194,7 @@ Performance Register].
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -209,21 +209,21 @@ Performance Register].
 ! [31:3]	! _Reserved_
 ! [2:1]		! Doorbell Register Width
 
-	0b00: 8 bit
-	0b01: 16 bit
-	0b10: 32 bit
-	0b11: 64 bit
+	0b00: 8 bits
+	0b01: 16 bits
+	0b10: 32 bits
+	0b11: 64 bits
 ! [0]	!
 
 	0b0: Doorbell not supported
 	0b1: Doorbell supported
 !===
-| 2	|PHYS_ADDR_LOW	 | uint32	| Low `32 bit` of physical address
-| 3	|PHYS_ADDR_HIGH  | uint32	| High `32 bit` of physical address
-| 4	|DB_ADDR_LOW	 | uint32	| Low `32 bit` of doorbell address
-| 5	|DB_ADDR_HIGH	 | uint32	| High `32 bit` of doorbell address
-| 6	|DB_ID_LOW	 | uint32	| Low `32 bit` of doorbell ID
-| 7	|DB_ID_HIGH	 | uint32	| High `32 bit` of doorbell ID 
+| 2	|PHYS_ADDR_LOW	 | uint32	| Lower `32 bits` of physical address
+| 3	|PHYS_ADDR_HIGH  | uint32	| Upper `32 bits` of physical address
+| 4	|DB_ADDR_LOW	 | uint32	| Lower `32 bits` of doorbell address
+| 5	|DB_ADDR_HIGH	 | uint32	| Upper `32 bits` of doorbell address
+| 6	|DB_ID_LOW	 | uint32	| Lower `32 bits` of doorbell ID
+| 7	|DB_ID_HIGH	 | uint32	| Upper `32 bits` of doorbell ID
 |===
 
 
@@ -234,7 +234,7 @@ any.
 
 [#table_cppc_pokefastchan_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 - NA
 
 [#table_cppc_pokefastchan_response_data]
@@ -258,7 +258,7 @@ This service gets the list of a hart with a specified hart ID start index.
 
 [#table_cppc_gethartlist_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| START_INDEX	| uint32	| Starting index of Hart ID
@@ -270,7 +270,7 @@ This service gets the list of a hart with a specified hart ID start index.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="6,5"]
 !===	
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
@@ -281,5 +281,5 @@ This service gets the list of a hart with a specified hart ID start index.
 | 2	| RETURNED	| uint32 | Total number of items returned so far.
 | 3	| HART_ID[0]	| uint32 | Hart ID
 | 4 	| HART_ID[1]	| uint32 | Hart ID
-| 5	| HART_ID[N-1]	| uint32 | Hart ID
+| N+2	| HART_ID[N-1]	| uint32 | Hart ID
 |===

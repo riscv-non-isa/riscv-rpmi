@@ -37,7 +37,7 @@ implemented and AP has subscribed to these. Events supported are described above
 in System Reset Notifications. 
 [#table_sysreset_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 5", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| EVENT_ID	| uint32	| Event to be subscribed for 
@@ -50,7 +50,7 @@ notification.
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+[cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Notifications are subscribed successfully.
@@ -68,7 +68,7 @@ using this service. Space is reserved for more reset types to be added later as
 required.
 [#table_sysreset_getsysresetattrs_request_data]
 .Request Data
-[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name         	| Type		| Description
 | 0     | RESET_TYPE	| uint32	| Reset type value
@@ -85,7 +85,7 @@ required.
 
 [#table_sysreset_getsysresetattrs_response_data]
 .Response Data
-[cols="1, 1, 1, 9a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
 | 0	| STATUS	| int32		| Return Status Code
@@ -119,11 +119,11 @@ attributes service. If an unsupported or invalid state is requested the system
 might enter into non-functional state
 [#table_sysreset_sysreset_request_data]
 .Request Data
-[cols="1, 1, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name         	| Type		| Description
 | 0     | RESET_TYPE	| uint32	|
-[cols="2,5a"]
+[cols="4,5a"]
 !===
 ! *Value* 	!  *Description*
 ! 0x0	! System Shutdown
