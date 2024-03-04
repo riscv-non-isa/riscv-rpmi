@@ -1,36 +1,38 @@
 
-===  Service Group - *MANAGEMENT* (servicegroup_id: 0x0000A)
-This management service extension is designed to be used for software invocation of Management Mode (MM) in a secure execution environment. For general background 
-on Management Mode (MM), review the Platform Initialization (PI) specifications,
-Volume 4: Management Mode Core Interface. Management Mode (MM) provides an 
-environment for implementing OS agnostic services (MM services) like secure 
-variable storage, and firmware updates in system firmware. The services can be 
-invoked synchronously and asynchronously. This service group describes the 
-interfaces for invoking MM services synchronously. 
+===  Service Group - *SECURE_MANAGEMENT_MODE* (servicegroup_id: 0x0000A)
+This secure management mode service group is used for software invocation of 
+Management Mode (MM) in a secure execution environment. PI Management Mode (MM) 
+provides an environment for implementing OS agnostic services (MM services) like
+secure variable storage, and firmware updates in system firmware. The services 
+can be invoked synchronously and asynchronously. This service group describes 
+the interfaces for invoking MM services synchronously. For more information on 
+Management Mode (MM), check the https://uefi.org/sites/default/files/resources/UEFI_PI_Spec_1_8_March3.pdf[Platform Initialization (PI) specifications, 
+Volume 4: Management Mode Core Interface].
 
-[#table_mm_services]
-.Management Services
+[#table_smm_services]
+.Secure Management Mode Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 				| Request Type
 | 0x01		| ENABLE_NOTIFICATION			| NORMAL_REQUEST
-| 0x02		| MM_VERSION				| NORMAL_REQUEST
-| 0x03		| MM_COMMUNICATE			| NORMAL_REQUEST
-| 0x04		| MM_COMPLETE				| NORMAL_REQUEST
-| 0x05		| MM_INITIALIZE				| NORMAL_REQUEST
+| 0x02		| SMM_VERSION				| NORMAL_REQUEST
+| 0x03		| SMM_COMMUNICATE			| NORMAL_REQUEST
+| 0x04		| SMM_COMPLETE				| NORMAL_REQUEST
+| 0x05		| SMM_INITIALIZE			| NORMAL_REQUEST
 |===
 
-==== Management Notifications
+==== Secure Management Mode Notifications
 This service group does not support any event for notification.
 
 ==== Service: *ENABLE_NOTIFICATION*
-This service allows AP to subscribe to management service group notifications.
-Platform can optionally support notifications of events which might occur in 
-the platform. PuC can send these notification messages to AP if they are 
-implemented and AP has subscribed to these. Events supported are described above
-in Management Notifications. 
+This service allows AP to subscribe to secure management mode service group 
+notifications.
+Platform can optionally support notifications of events which might occur in the
+platform. Management Mode firmware can send these notification messages to AP if
+they are implemented and AP has subscribed to these. Events supported are 
+described above in Secure Management Mode Notifications. 
 
-[#table_mm_ennotification_request_data]
+[#table_smm_ennotification_request_data]
 .Request Data
 [cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
@@ -39,7 +41,7 @@ in Management Notifications.
 notification.
 |===
 
-[#table_mm_ennotification_response_data]
+[#table_smm_ennotification_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
@@ -56,15 +58,14 @@ notification.
 |===
 
 
+==== Service: *SMM_VERSION*
+This service returns the version of a secure management mode service.
 
-==== Service: *MM_VERSION*
-This service returns the version of a management mode service.
-
-[#table_mm_version_request_data]
+[#table_smm_version_request_data]
 .Request Data
 - NA
 
-[#table_mm_version_response_data]
+[#table_smm_version_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
@@ -87,13 +88,13 @@ This service returns the version of a management mode service.
 |===
 
 
+==== Service: *SMM_COMMUNICATE*
+This service is used to invoke a Management Mode service that is implemented in 
+the secure execution environment. The `MM_COMM_BUFFER` field contains data to 
+identify and invoke the Management Mode service. This synchronous call is 
+returned by using `SMM_COMPLETE` service.
 
-==== Service: *MM_COMMUNICATE*
-Calling this MM_COMMUNICATE api invokes a MM service that is implemented in the
-secure execution environment. The MM_COMM_BUFFER contains data to identify and
-invoke the MM service. This synchronous call is returned by using MM_COMPLETE.
-
-[#table_mm_communicate_request_data]
+[#table_smm_communicate_request_data]
 .Request Data
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
@@ -102,7 +103,7 @@ invoke the MM service. This synchronous call is returned by using MM_COMPLETE.
 world.
 |===
 
-[#table_mm_communicate_response_data]
+[#table_smm_communicate_response_data]
 .Response Data
 [cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
@@ -119,13 +120,13 @@ world.
 
 
 
-==== Service: *MM_COMPLETE*
-Use this MM_COMPLETE as the “world-switch synchronous call” normally at the end
-of a synchronous MM_COMMUNICATE call to signal the readiness for handling the 
-synchronous request. The MM_COMM_BUFFER contains the returned data of the MM 
-service invoked.
+==== Service: *SMM_COMPLETE*
+This service is used as the “**world-switch synchronous call**” at the end
+of a synchronous `SMM_COMMUNICATE` service to signal the readiness for handling 
+the synchronous request. The `MM_COMM_BUFFER` field contains the returned data 
+of the MM service invoked in secure execution environment.
 
-[#table_mm_complete_request_data]
+[#table_smm_complete_request_data]
 .Request Data
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
@@ -134,7 +135,7 @@ service invoked.
 world.
 |===
 
-[#table_mm_complete_response_data]
+[#table_smm_complete_response_data]
 .Response Data
 [cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
@@ -151,7 +152,7 @@ world.
 
 
 
-==== Service: *MM_INITIALIZE*
+==== Service: *SMM_INITIALIZE*
 This is an optional service. The MM modules may come in the firmware volume or 
 FD files, loaded by the M-mode firmware like u-boot spl and initialized by the 
 OpenSBI domain during the M-Mode firmware boot time. If so, this service api is 
@@ -159,7 +160,7 @@ not needed as default. But there is still case that the MM modules are requested
 to be loaded or initialized by the S-Mode firmware components, thus this service
 is used to launch the MM related modules as needed.
 
-[#table_mm_initialize_request_data]
+[#table_smm_initialize_request_data]
 .Request Data
 [cols="1, 4, 1, 7a", width=100%, align="center", options="header"]
 |===
@@ -185,7 +186,7 @@ S-Mode firmware.
 the S-Mode firmware.
 |===
 
-[#table_mm_initialize_response_data]
+[#table_smm_initialize_response_data]
 .Response Data
 [cols="1, 4, 1, 7a", width=100%, align="center", options="header"]
 |===
