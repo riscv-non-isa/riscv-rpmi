@@ -53,7 +53,7 @@ acknowledgment must follow byte ordering defined by the RPMI transport.
 
 ==== Message Header
 Message header has a fixed size of `12-byte` which further contains three 
-fields each of `4-byte`. Each message gets a unique identity in a RPMI instance
+fields each of `4-byte`. Each message gets a unique identity in an RPMI instance
 through its header.
 
 Both REQUEST and ACKNOWLEDGEMENT messages have the same message format.
@@ -66,7 +66,7 @@ image::message-format.png[700,900]
 |===
 | Word	| Name		| Description
 | 0	| *TOKEN*	| Message identifier. Unique to each
-request - acknowledgement transaction for a RPMI implementation instance. 
+request - acknowledgement transaction for an RPMI implementation instance.
 In case of Notifications, `SERVICE_ID` and `MESSAGE_TYPE` for notification 
 messages are fixed which will contribute to the unique identity of the message 
 in that RPMI instance implementation.

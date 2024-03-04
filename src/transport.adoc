@@ -4,7 +4,7 @@ RPMI Transport is the abstraction over a physical medium used to send and
 receive messages between an Application Processor and Platform Microcontroller 
 enabling bidirectional communication. 
 
-A RPMI transport instance provides a bidirectional communication channel between
+An RPMI transport instance provides a bidirectional communication channel between
 a privilege level of a set of APs and one PuC. There can be multiple RPMI 
 transport instances between a set of  APs and one PuC. For example: there can 
 be a separate transport instance between each privilege level of APs and one 
@@ -12,7 +12,7 @@ PuC. A platform can also have multiple PuCs with each having its own set of
 RPMI transport to communicate with the APs. The _Figure 1.2_ above shows different
 topologies of RPMI transport.
 
-The physical medium of a RPMI transport can be shared memory or I2C or SPI or 
+The physical medium of an RPMI transport can be shared memory or I2C or SPI or
 some other medium. This specification only defines a shared memory based RPMI 
 transport but a platform can define its own RPMI transport.
 
@@ -26,9 +26,9 @@ the Platform Microcontroller or vice versa.
 image::transport-bidirectional.png[400,400]
 
 === Doorbell Interrupt
-A RPMI transport may also provide doorbell interrupts to either Application
+An RPMI transport may also provide doorbell interrupts to either Application
 Processors or Platform Microcontrollers or both to signal new messages. 
-The doorbell mechanism is optional for a RPMI transport and implementations can
+The doorbell mechanism is optional for an RPMI transport and implementations can
  always use a polling mechanism for checking the arrival of messages. 
 
 The doorbell interrupt from the APs to the PuC can be a MSI or a wired interrupt with a
