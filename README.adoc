@@ -6,6 +6,7 @@ management and control of system.
 
 This specification is based on an earlier draft located here:
 https://docs.google.com/document/d/199ar3Ddd-FlzP1FR3HOkbBf1BNvLUPvJ/edit
+Please note that gdoc is not maintained and may be outdated.
 
 = Licensing
 
