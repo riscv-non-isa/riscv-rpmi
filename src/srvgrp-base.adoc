@@ -20,7 +20,7 @@ Following table lists the service group
 | 0x00007		| CLOCK
 | 0x00008		| DEVICE_POWER
 | 0x00009		| PERFORMANCE
-| 0x0000A		| MM_SERVICE
+| 0x0000A		| SECURE_MANAGEMENT_MODE
 | 0x0000B		| RAS_AGENT
 | 0x0000C - 0x7FFFF 	| _Reserved for Future Use_
 | 0x80000 - 0xFFFFF	| _Implementation Specific Service Groups_
