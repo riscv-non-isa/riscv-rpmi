@@ -183,7 +183,7 @@ Get version of the implemented RPMI specification
 |===
 
 ==== Service: *GET_HW_INFO*
-This service is used to retrieve the Vendor ID and Name of the Vendor having a 
+This service is used to retrieve the Vendor ID and Name of the Vendor having an
 RPMI implementation on PuC. Each vendor will be assigned a unique Vendor ID.
 [#table_base_gethwinfo_request_data]
 .Request Data
