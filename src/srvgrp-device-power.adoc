@@ -43,12 +43,12 @@ value and the context preserved or lost information corresponding to that state.
 .Device Power Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
-| Service ID	| Service Name 				| Request Type
-| 0x01		| ENABLE_NOTIFICATION			| NORMAL_REQUEST
-| 0x02		| GET_DEVICE_POWER_DOMAINS		| NORMAL_REQUEST
-| 0x03		| GET_DEVICE_POWER_DOMAIN_ATTRIBUTES	| NORMAL_REQUEST
-| 0x04		| SET_DEVICE_POWER_STATE		| NORMAL_REQUEST
-| 0x05		| GET_DEVICE_POWER_STATE		| NORMAL_REQUEST
+| Service ID	| Service Name 		| Request Type
+| 0x01		| ENABLE_NOTIFICATION	| NORMAL_REQUEST
+| 0x02		| GET_NUM_DOMAINS	| NORMAL_REQUEST
+| 0x03		| GET_DOMAIN_ATTRIBUTES	| NORMAL_REQUEST
+| 0x04		| SET_DOMAIN_STATE	| NORMAL_REQUEST
+| 0x05		| GET_DOMAIN_STATE	| NORMAL_REQUEST
 |===
 
 ==== Device Power Notifications
@@ -85,7 +85,7 @@ notification.
 - Other errors <<table_error_codes>>
 |===
 
-==== Service: *GET_DEVICE_POWER_DOMAINS*
+==== Service: *GET_NUM_DOMAINS*
 This service is used to query the number of device power domains available which
 can be controlled by the client. The number of domains returned can be less than
 the actual number of domains present with the platform. The number of domains 
@@ -111,7 +111,7 @@ returned are allowed to be managed by the client.
 |===
 
 
-==== Service: *GET_DEVICE_POWER_DOMAIN_ATTRIBUTES*
+==== Service: *GET_DOMAIN_ATTRIBUTES*
 This service is used to query the attributes of a device power domain.
 
 [#table_devpower_getattrs_request_data]
@@ -143,7 +143,7 @@ name
 |===
 
 
-==== Service: *SET_DEVICE_POWER_DOMAIN_STATE*
+==== Service: *SET_DOMAIN_STATE*
 This service is used to change the power state of a device power domain.
 
 [#table_devpower_setstate_request_data]
@@ -176,7 +176,7 @@ See Power States table in the service group description
 - Other errors <<table_error_codes>>
 |===
 
-==== Service: *GET_DEVICE_POWER_DOMAIN_STATE*
+==== Service: *GET_DOMAIN_STATE*
 This service is used to get the current power state of a device power domain.
 
 [#table_devpower_getstate_request_data]
