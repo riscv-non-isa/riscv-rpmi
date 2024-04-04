@@ -188,7 +188,7 @@ voltage levels.
 - Other errors <<table_error_codes>>
 | 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.
 | 2	| REMAINING	| uint32	| Remaining number of levels.
-| 3	| RETURNED	| uint32	| Number of levels returned so far.
+| 3	| RETURNED	| uint32	| Number of levels returned in this request.
 | 4	| VOLTAGE[0]	| uint32	| Voltage array where each entry in the
 array is a voltage level in microvolts(uV).
 

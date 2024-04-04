@@ -196,7 +196,7 @@ In case the CLOCK_FORMAT is a linear range the RETURNED field will be set to `3`
 - Other errors <<table_error_codes>>
 | 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.
 | 2	| REMAINING	| uint32	| Remaining number of clock rates.
-| 3	| RETURNED	| uint32	| Number of clock rates returned so far.
+| 3	| RETURNED	| uint32	| Number of clock rates returned in this request.
 | 4	| CLOCK_RATE[0]	| (uint32, uint32) | Clock rate value.
 | 5	| CLOCK_RATE[1]	| (uint32, uint32) | Clock rate value.
 | ...	| CLOCK_RATE[N-1] | (uint32, uint32) | Clock rate value.

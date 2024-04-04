@@ -278,7 +278,7 @@ This service gets the list of a hart with a specified hart ID start index.
 !===
 - Other errors <<table_error_codes>>
 | 1	| REMAINING	| uint32 | Remaining number of items to be returned
-| 2	| RETURNED	| uint32 | Total number of items returned so far.
+| 2	| RETURNED	| uint32 | Total number of items returned in this request.
 | 3	| HART_ID[0]	| uint32 | Hart ID
 | 4 	| HART_ID[1]	| uint32 | Hart ID
 | N+2	| HART_ID[N-1]	| uint32 | Hart ID

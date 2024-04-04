@@ -216,7 +216,7 @@ This service gets the list of harts with a specified Hart ID start index
 !===
 - Other errors <<table_error_codes>>
 | 1	| REMAINING	| uint32	| Number of remaining items in the list pending to be returned.
-| 2	| RETURNED	| uint32	| Total number of items returned so far.
+| 2	| RETURNED	| uint32	| Total number of items returned in this request.
 | 3	| HART_ID[0]	| uint32	| HART_ID
 | 4	| HART_ID[1]	| uint32	| HART_ID
 | N+2	| HART_ID[N - 1] | uint32	| HART_ID
@@ -250,7 +250,7 @@ items.
 !===
 - Other errors <<table_error_codes>>
 | 1	| REMAINING	| uint32	| Number of remaining items in the list pending to be returned.
-| 2	| RETURNED	| uint32	| Total number of items returned so far.
+| 2	| RETURNED	| uint32	| Total number of items returned in this request.
 | 3	| SUSPEND_TYPE[0] | uint32	| Suspend Type
 | 4	| SUSPEND_TYPE[1] | uint32	| Suspend Type
 | N+2	| SUSPEND_TYPE[N - 1]  | uint32	| Suspend Type
