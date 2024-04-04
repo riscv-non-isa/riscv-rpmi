@@ -420,6 +420,7 @@ This service allows clients to query attributes of the fast channel for the spec
 |===
 | Word	| Name 		| Type		| Description
 | 0	| DOMAIN_ID	| uint32	| Performance domain ID
+| 1	| SERVICE_ID	| uint32	| Performance service ID, see service ID in <<table_perf_services>>
 |===
 
 [#table_perf_getfastchanaddr_response_data]
