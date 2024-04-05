@@ -82,6 +82,53 @@ changed.
 | Performance level changed notification.
 |===
 
+==== Performance Fast Channels
+This section provides an overview of the properties associated with the Fast
+Channel for Performance service group.
+
+*Supported Services*::
+The Fast Channel currently supports only the following Performance services:
+* GET_PERF_LEVEL
+* SET_PERF_LEVEL
+* GET_PERF_LIMIT
+* SET_PERF_LIMIT
+
+
+*Platform Dependency*::
+* Not all Performance domains or Performance services are required to support
+  Fast Channel functionality.
+* Support for Fast Channel depends on the platform implementation.
+
+
+*Discovering Fast Channels*::
+* Fast Channels support are discoverable through Performance service calls.
+* To determine if a platform supports Fast Channel for a specific performance
+  domain, use the `GET_PERF_DOMAIN_ATTRIBUTES` service call.
+* If Fast Channel support is available, retrieve Fast Channel attributes for
+  specific Performance service call using the `GET_PERF_DOMAIN_FAST_CHANNEL_ADDR`
+  service call.
+
+
+*Doorbell Support*::
+* Doorbell support is not available for `GET_PERF_LEVEL` and `GET_PERF_LIMIT`
+  service calls.
+* When Fast Channels are implemented for `GET_PERF_LEVEL` and `GET_PERF_LIMIT`
+  service calls, the last known valid performance level or performance limits
+  are always accessible via the Fast Channel without requiring a doorbell
+  trigger.
+* For other Performance service calls that support Fast Channel, doorbell
+  support is optional.
+
+
+*Payload Requirements*::
+* The payload of a Fast-channel should exclusively include message specific
+  parameters and exclude the DOMAIN_ID. Given that a Fast-channel is specific
+  to both DOMAIN_ID and SERVICE_ID, there is no requirement to include
+  DOMAIN_ID or any other channel specific and message specific headers when
+  utilizing a Fast-channel. For instance, the payload of the `SET_PERF_LIMIT`
+  message should be represented as `'uint32 MAX_PERF_LEVEL'` and
+  `'uint32 MIN_PERF_LEVEL'`.
+
 ==== Service: *ENABLE_NOTIFICATION*
 This service is to enable or disable the performance changed notification event.
 This notification is sent from the PuC when the performance level, performance 
