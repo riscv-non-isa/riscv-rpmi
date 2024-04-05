@@ -28,14 +28,14 @@ Below table lists the services in this group:
 .CPPC Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
-| Service ID	| Service Name 		| Request Type
-| 0x01		| ENABLE_NOTIFICATION	| NORMAL_REQUEST
-| 0x02		| PROBE_REG		| NORMAL_REQUEST
-| 0x03		| READ_REG		| NORMAL_REQUEST
-| 0x04		| WRITE_REG		| NORMAL_REQUEST
-| 0x05		| GET_FAST_CHANNEL_ADDR	| NORMAL_REQUEST
-| 0x06		| POKE_FAST_CHANNEL	| NORMAL_REQUEST
-| 0x07		| GET_HART_LIST		| NORMAL_REQUEST
+| Service ID	| Service Name 			| Request Type
+| 0x01		| ENABLE_NOTIFICATION		| NORMAL_REQUEST
+| 0x02		| PROBE_REG			| NORMAL_REQUEST
+| 0x03		| READ_REG			| NORMAL_REQUEST
+| 0x04		| WRITE_REG			| NORMAL_REQUEST
+| 0x05		| GET_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
+| 0x06		| POKE_FAST_CHANNEL		| NORMAL_REQUEST
+| 0x07		| GET_HART_LIST			| NORMAL_REQUEST
 |===
 
 ==== CPPC Notifications
@@ -175,9 +175,9 @@ probe the REG_ID before reading.
 
 
 
-==== Service: *GET_FAST_CHANNEL_ADDR*
-Request for physical address of CPPC fast channel for the hart ID specified, 
-this physical address shall be used to write the value of https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/08_Processor_Configuration_and_Control/declaring-processors.html?highlight=cppc#desired-performance-register[CPPC Desired 
+==== Service: *GET_FAST_CHANNEL_ATTRIBUTES*
+This request retrieves attributes of the Fast Channel for a specified hart ID.
+The physical address from this request shall be used to write the value of the https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/08_Processor_Configuration_and_Control/declaring-processors.html?highlight=desired-performance-register#desired-performance-register[CPPC Desired 
 Performance Register].
 
 [#table_cppc_getfastchanaddr_request_data]
