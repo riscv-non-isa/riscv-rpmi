@@ -16,8 +16,7 @@ This topology of devices and clock source is dependent on how the system is
 designed and implementation specific. OS can discover this topology through 
 firmware tables (DT/ACPI). 
 
-
-==== Clock rate format
+*Clock Rate Format*::
 Each clock rate is a tuple of two `32 bits` values `(uint32, uint32)` represented
 as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 `clock_rate_low` is at the lower index than the `clock_rate_high`.
