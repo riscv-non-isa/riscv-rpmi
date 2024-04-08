@@ -9,7 +9,7 @@ PROBE_CPPC_REG service can be used to check if a particular CPPC register is imp
 
 For extra debugging, Hart can send a GET_CPPC_PERF_POKE message to exclusively request PuC to process the pending CPPC requests, if any. 
 
-For more information on CPPC, refer https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/index.html[ACPI] and https://github.com/riscv-non-isa/riscv-sbi-doc/[CPPC].
+For more information on CPPC, please refer to the ACPI Specification cite:[ACPI] and the CPPC Extension in the RISC-V SBI Specification cite:[SBI].
 
 CPPC Fast-channel REQ-ACK Memory Entry per Hart:
 [#table_cppc_fastchan_mem]

@@ -58,7 +58,7 @@ transport discovery phase.
 The doorbell interrupt from APs to PuC is optional for RPMI shared memory 
 transport and if available then it MUST be supported through a read-modify-write
 sequence to a memory mapped register. This read-modify-write mechanism can be 
-discovered by APs via DT or ACPI using properties such as register physical 
+discovered by APs via DT or ACPI cite:[ACPI] using properties such as register physical
 address, mask, and value.
 
 The doorbell interrupt from the PuC to the APs for RPMI shared memory transport is
@@ -67,7 +67,7 @@ platform specific.
 The subsequent sections describe the layout and attributes of shared memory 
 which should be consistent across both Application Processor and Platform 
 Microcontroller. These attributes can be static for the Platform Microcontroller
-and discoverable via DT or ACPI for the Application Processor. 
+and discoverable via DT or ACPI cite:[ACPI] for the Application Processor.
 
 
 ==== Attributes of Shared Memory
