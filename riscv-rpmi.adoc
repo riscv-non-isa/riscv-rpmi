@@ -20,7 +20,7 @@
 :imagesoutdir: docs-resources/images
 :bibtex-file: src/rpmi.bib
 :bibtex-order: alphabetical
-:bibtex-style: apa
+:bibtex-style: ieee
 :icons: font
 :lang: en
 :listing-caption: Listing
@@ -72,5 +72,5 @@ include::src/srvgrp-performance.adoc[]
 include::src/srvgrp-management.adoc[]
 
 // The index must precede the bibliography
-include::src/index.adoc[]
+//include::src/index.adoc[]
 include::src/bibliography.adoc[]
