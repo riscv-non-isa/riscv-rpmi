@@ -1,7 +1,7 @@
 
 === Service Group - *HART_STATE_MANAGEMENT* (servicegroup_id: 0x00004)
 The Hart State Management (HSM) service group defines a set of Hart states and 
-functionality equivalent to the RISC-V SBI HSM extension.
+functionality equivalent to the HSM extension in RISC-V SBI Specification cite:[SBI].
 
 Below table lists the services in this group:
 [#table_hsm_services]
