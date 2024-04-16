@@ -38,7 +38,7 @@ level of a performance domain, and performing other related operations. These op
 | 0x06		| SET_PERF_LEVEL			| NORMAL_REQUEST
 | 0x07		| GET_PERF_LIMIT			| NORMAL_REQUEST
 | 0x08		| SET_PERF_LIMIT			| NORMAL_REQUEST
-| 0x09		| GET_PERF_DOMAIN_FAST_CHANNEL_ADDR	| NORMAL_REQUEST
+| 0x09		| GET_PERF_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
 |===
 
 ==== Performance Notifications
@@ -105,7 +105,7 @@ The Fast Channel currently supports only the following Performance services:
 * To determine if a platform supports Fast Channel for a specific performance
   domain, use the `GET_PERF_DOMAIN_ATTRIBUTES` service call.
 * If Fast Channel support is available, retrieve Fast Channel attributes for
-  specific Performance service call using the `GET_PERF_DOMAIN_FAST_CHANNEL_ADDR`
+  specific Performance service call using the `GET_PERF_FAST_CHANNEL_ATTRIBUTES`
   service call.
 
 
@@ -458,8 +458,8 @@ performance level.
 |===
 
 
-==== Service: *GET_PERF_DOMAIN_FAST_CHANNEL_ADDR*
-This service allows clients to query attributes of the fast channel for the specific performance domain and the specific function.
+==== Service: *GET_PERF_FAST_CHANNEL_ATTRIBUTES*
+This service allows clients to query attributes of the fast channel for a specific performance domain and performance service.
 
 [#table_perf_getfastchanaddr_request_data]
 .Request Data
