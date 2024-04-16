@@ -1,7 +1,7 @@
 
 === Service Group - *HART_STATE_MANAGEMENT* (servicegroup_id: 0x00004)
 The Hart State Management (HSM) service group defines a set of Hart states and 
-functionality equivalent to the RISC-V SBI HSM extension.
+functionality equivalent to the HSM extension in RISC-V SBI Specification cite:[SBI].
 
 Below table lists the services in this group:
 [#table_hsm_services]
@@ -131,7 +131,7 @@ success, the calling hart is suspended only after it executes WFI instruction.
 | Word	| Name 		| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID of the calling hart.
 | 1	| SUSPEND_TYPE	| uint32	| Hart suspend type as defined by RISC-V
-SBI Extension[[TODO LINK HERE]]
+SBI Specification cite:[SBI].
 | 2	| RESUME_ADDR_LOW | uint32	| Lower `32 bits` of resume address. +
 _Only used for non-retentive suspend types._
 | 3	| RESUME_ADDR_HIGH | uint32	| Upper `32 bits` of resume address. +

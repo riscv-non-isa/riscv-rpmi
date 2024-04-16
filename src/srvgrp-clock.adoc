@@ -3,21 +3,20 @@
 This service group is for the management of system clocks. Services defined in 
 this group are used to enable or disable clocks, and to set/get clock rates.
 
-Each clock in the system is identified by the clock id which is an integer 
-identifier assigned to each clock. The mapping of clock_id and clock is known to
-both AP and Platform Microcontroller. Clock ID identifiers are sequential and 
-start from `0`.
+Each clock in the system is identified by the clock ID, which is an integer
+identifier assigned to each clock. The mapping of CLOCK_ID and clock is known
+to both the AP and the Platform Microcontroller. Clock ID identifiers are
+sequential and starting from `0`.
 
-The device or the group of devices which share the same clock source becomes a 
-single clock domain, which is identified by the clock_id. Any change in the 
-clock source affects the whole domain which can contain multiple devices.  
+The device or the group of devices sharing the same clock source form a
+single clock domain, which is identified by the CLOCK_ID. Any change to the
+clock source affects the entire domain which may contain multiple devices.
 
-This topology of devices and clock source is dependent on how the system is 
-designed and implementation specific. OS can discover this topology through 
-firmware tables (DT/ACPI). 
+The topology of the devices and the clock source is dependent on how the system
+is designed and implementation specific. The OS can discover this topology
+through firmware tables (DT cite:[DT] / ACPI cite:[ACPI]).
 
-
-==== Clock rate format
+*Clock Rate Format*::
 Each clock rate is a tuple of two `32 bits` values `(uint32, uint32)` represented
 as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 `clock_rate_low` is at the lower index than the `clock_rate_high`.
@@ -42,9 +41,11 @@ Below table lists the services in this group:
 This service group does not support any event for notification
 
 ==== Service: *ENABLE_NOTIFICATION*
-This service allows AP to subscribe to clock service group notifications.
-Platform can optionally support notifications of events which might occur in the platform. PuC can send these notification messages to AP if they are implemented
-and AP has subscribed to these. Events supported are described above in Clock Notifications. 
+This service allows the AP to subscribe to clock service group notifications.
+The platform can optionally support notifications of events which might occur in
+the platform. The PuC can send these notification messages to AP if they are
+implemented and the AP has subscribed to these. The supported events are described
+above in Clock Notifications.
  
 [#table_clock_ennotification_request_data]
 .Request Data
@@ -72,8 +73,9 @@ notification.
 |===
 
 ==== Service: *GET_NUM_CLOCKS*
-Request for number of clocks available in the system. All supported clocks in 
-the system are designated by an integer identifier called clock_id. Clock_id are sequential starting from `0`.
+This service is used to query the number of clocks available in the system.
+All supported clocks in the system are designated by an integer identifier
+called CLOCK_ID. CLOCK_ID are sequential starting from `0`.
 
 [#table_clock_getnumclocks_request_data]
 .Request Data
@@ -95,16 +97,17 @@ the system are designated by an integer identifier called clock_id. Clock_id are
 |===
 
 ==== Service: *GET_ATTRIBUTES*
-This service returns the attributes of a clock like name of the clock which is 
-an array ASCII string of `16 byte`. Transition latency which is the worst case 
-latency for the clock to return to a stable state once clock configuration is 
-changed. Number of Clock rates supported by the requested clock. 
-FLAGS field encode the clock format supported by the clock.
+This service provides detailed attributes of a clock, including its name,
+represented as a 16-byte array of ASCII strings. It also specifies the
+transition latency, which denotes the maximum time for the clock to stabilize
+after a configuration change. Moreover, it indicates the number of clock rates
+supported by the requested clock. The FLAGS field encodes the clock formats
+supported by the clock.
 
-Current supported clock formats are discrete, which is an array of discrete 
-values where each value represents a clock rate. Another format is linear range 
-which is represented by `(min_Hz, max_Hz, step_Hz)`. In future more clock formats 
-can be supported if required.
+Currently supported clock formats include `discrete` format, represented as an
+array where each value represents a clock rate, and `linear` format represented
+as `(min_Hz, max_Hz, step_Hz)`. Additional clock formats may be supported in
+the future, as needed.
 
 [#table_clock_getattrs_request_data]
 .Request Data
@@ -134,8 +137,7 @@ can be supported if required.
 ! [31:30]	! CLOCK_FORMAT
 
 	0b00: Discrete Format
-	Each element in the CLOCK_RATE array is a supported discrete clock rate 
-	value packed in ascending order. Each rate is in Hertz.
+	Each element in the CLOCK_RATE array is a supported discrete clock rate value packed in ascending order. Each rate is in Hertz.
 
 	0b01: Linear Range
 	The CLOCK_RATE array contains the triplet (min_Hz, max_Hz, step_Hz). 
@@ -145,28 +147,28 @@ can be supported if required.
 	CLOCK_RATE[2] = step_Hz   (Step between two successive rates)
 ! [29:0]	! _Reserved_
 !===
-| 2	|NUM_RATESS	 	| uint32	| Number of Clock rates of type depending on CLOCK_FORMAT.
-| 3	| TRANSITION_LATENCY	| uint32	| Transition Latency
+| 2	|NUM_RATESS	 	| uint32	| Number of clock rates of type depending on CLOCK_FORMAT.
+| 3	| TRANSITION_LATENCY	| uint32	| Transition latency, in microseconds (us)
 | 4:7	| CLOCK_NAME		| uint8[16]	| Clock name
 |===
 
 ==== Service: *GET_SUPPORTED_RATES*
 Each domain may support multiple clock rate values which are allowed by the 
-domain to operate. Message can also pass the `clock_rate_index` which is the index
+domain to operate. Message can also pass the `CLOCK_RATE_INDEX` which is the index
 to the first rate value to be described in the return rate array. If all 
 supported rate values are required then this index value can be `0`. 
 
 If the CLOCK_FORMAT is discrete then the clock rate in the received data is an 
-array of supported discrete rate values  packed in ascending order starting from
+array of supported discrete rate values packed in ascending order starting from
 the lower index in the CLOCK_RATE field. If the CLOCK_FORMAT is a linear range, 
 then the CLOCK_RATE array contains a triplet of `(min_Hz, max_Hz, step_Hz)` where
 each item in the triplet is a clock rate value. 
 
 Total words required for the number of clock rates according to the format in 
 one message cannot exceed the total words available in one message DATA field. 
-If they exceed then PuC will return the number of clock rates which can be 
-accommodated in one message and set the REMAINING field accordingly. AP, when 
-REMAINING field is not `0` must call this service again with appropriate 
+If they exceed then the PuC will return the number of clock rates which can be
+accommodated in one message and set the REMAINING field accordingly. The AP,
+when REMAINING field is not `0` must call this service again with appropriate
 CLOCK_RATE_INDEX set to get the remaining clock rates. It's possible that 
 multiple service calls may be required to get all the clock rates. 
 In case the CLOCK_FORMAT is a linear range the RETURNED field will be set to `3`.
