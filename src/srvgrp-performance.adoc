@@ -82,12 +82,12 @@ changed.
 | Performance level changed notification.
 |===
 
-==== Performance Fast Channels
-This section provides an overview of the properties associated with the Fast
-Channel for Performance service group.
+==== Performance Fast-Channels
+This section provides an overview of the properties associated with the Fast-channel
+for Performance service group.
 
 *Supported Services*::
-The Fast Channel currently supports only the following Performance services:
+The Fast-channel currently supports only the following Performance services:
 * GET_PERF_LEVEL
 * SET_PERF_LEVEL
 * GET_PERF_LIMIT
@@ -96,15 +96,15 @@ The Fast Channel currently supports only the following Performance services:
 
 *Platform Dependency*::
 * Not all Performance domains or Performance services are required to support
-  Fast Channel functionality.
-* Support for Fast Channel depends on the platform implementation.
+  Fast-channel functionality.
+* Support for Fast-channel depends on the platform implementation.
 
 
-*Discovering Fast Channels*::
-* Fast Channels support are discoverable through Performance service calls.
-* To determine if a platform supports Fast Channel for a specific performance
+*Discovering Fast-channels*::
+* Fast-channels support are discoverable through Performance service calls.
+* To determine if a platform supports Fast-channel for a specific performance
   domain, use the `GET_PERF_DOMAIN_ATTRIBUTES` service call.
-* If Fast Channel support is available, retrieve Fast Channel attributes for
+* If Fast-channel support is available, retrieve Fast-channel attributes for
   specific Performance service call using the `GET_PERF_FAST_CHANNEL_ATTRIBUTES`
   service call.
 
@@ -112,11 +112,11 @@ The Fast Channel currently supports only the following Performance services:
 *Doorbell Support*::
 * Doorbell support is not available for `GET_PERF_LEVEL` and `GET_PERF_LIMIT`
   service calls.
-* When Fast Channels are implemented for `GET_PERF_LEVEL` and `GET_PERF_LIMIT`
+* When Fast-channels are implemented for `GET_PERF_LEVEL` and `GET_PERF_LIMIT`
   service calls, the last known valid performance level or performance limits
-  are always accessible via the Fast Channel without requiring a doorbell
+  are always accessible via the Fast-channel without requiring a doorbell
   trigger.
-* For other Performance service calls that support Fast Channel, doorbell
+* For other Performance service calls that support Fast-channel, doorbell
   support is optional.
 
 
@@ -459,7 +459,7 @@ performance level.
 
 
 ==== Service: *GET_PERF_FAST_CHANNEL_ATTRIBUTES*
-This service allows clients to query attributes of the fast channel for a specific performance domain and performance service.
+This service allows clients to query attributes of the Fast-channel for a specific performance domain and performance service.
 
 [#table_perf_getfastchanaddr_request_data]
 .Request Data
@@ -481,7 +481,7 @@ This service allows clients to query attributes of the fast channel for a specif
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_NOT_FOUND ! Performance domain not found
-! RPMI_ERROR_NOT_SUPPORTED ! Fast channel not implemented
+! RPMI_ERROR_NOT_SUPPORTED ! Fast-channel not implemented
 !===
 - Other errors <<table_error_codes>>
 | 1	| FLAGS		| uint32	| 
