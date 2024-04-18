@@ -12,10 +12,10 @@ Each domain must support ON and OFF states along with custom power states which
 are discoverable.  Domains may also have power states which may preserve the 
 context. The level of context preserved will depends on the level of power state.
 
-Power states for domains will be discovered via DT cite:[DT] or ACPI cite:[ACPI],
-where the values for ON and OFF are already fixed and known. The power state encodes
-both the power state value and the context preserved or lost information
-corresponding to that state.
+Power states for domains will be discovered via supported hardware description
+mechanisms where the values for ON and OFF are already fixed and known. 
+The power state encodes both the power state value and the context preserved or 
+lost information corresponding to that state.
 
 [#table_devpower_powerstate_data]
 .Power States Encoding
