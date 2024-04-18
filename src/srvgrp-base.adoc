@@ -50,15 +50,15 @@ Below table lists the services in this group:
 .Base Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
-| Service ID	| Service Name 			| Request Type
-| 0x01		| ENABLE_NOTIFICATION		| NORMAL_REQUEST
-| 0x02		| GET_IMPLEMENTATION_VERSION	| NORMAL_REQUEST
-| 0x03		| GET_IMPLEMENTATION_ID		| NORMAL_REQUEST
-| 0x04		| GET_SPEC_VERSION		| NORMAL_REQUEST
-| 0x05		| GET_HW_INFO			| NORMAL_REQUEST
-| 0x06		| PROBE_SERVICE_GROUP		| NORMAL_REQUEST
-| 0x07		| GET_BASE_ATTRIBUTES		| NORMAL_REQUEST
-| 0x08		| SET_MSI			| NORMAL_REQUEST
+| Service ID	| Service Name 				| Request Type
+| 0x01		| BASE_ENABLE_NOTIFICATION		| NORMAL_REQUEST
+| 0x02		| BASE_GET_IMPLEMENTATION_VERSION	| NORMAL_REQUEST
+| 0x03		| BASE_GET_IMPLEMENTATION_ID		| NORMAL_REQUEST
+| 0x04		| BASE_GET_SPEC_VERSION			| NORMAL_REQUEST
+| 0x05		| BASE_GET_HW_INFO			| NORMAL_REQUEST
+| 0x06		| BASE_PROBE_SERVICE_GROUP		| NORMAL_REQUEST
+| 0x07		| BASE_GET_BASE_ATTRIBUTES		| NORMAL_REQUEST
+| 0x08		| BASE_SET_MSI				| NORMAL_REQUEST
 |===
 
 ==== Base Notifications
@@ -77,7 +77,7 @@ this event may send the list of messages which the Platform Microcontroller was 
 notification
 |===
 
-==== Service: *ENABLE_NOTIFICATION*
+==== Service: *BASE_ENABLE_NOTIFICATION*
 This service allows AP to subscribe to Base service group notifications. +
 Platform can optionally support notifications of errors which might occur in the platform. PuC can send these notification messages to AP if they are implemented
 and AP has subscribed to these. Events supported are described above in Base Notifications. 
@@ -106,7 +106,7 @@ notification.
 - Other errors <<table_error_codes>>
 |===
 
-==== Service: *GET_IMPLEMENTATION_VERSION*
+==== Service: *BASE_GET_IMPLEMENTATION_VERSION*
 Get the implementation version of the message framework from Platform Microcontroller. Versioning is also done for the spec but it's possible that for a single version of spec there may be multiple implementation versions and based on that any lowest supported implementation version can be mandated to ensure the stability and support. Version returned using this service is a 32 bits composite number which contains both Major and Minor numbers.
 
 [#table_base_getimplversion_request_data]
@@ -134,7 +134,7 @@ Get the implementation version of the message framework from Platform Microcontr
 !===
 |===
 
-==== Service: *GET_IMPLEMENTATION_ID*
+==== Service: *BASE_GET_IMPLEMENTATION_ID*
 Get the RPMI Implementation ID assigned to the Operating system or Firmware or any other software host which implements the RPMI specification.
 [#table_base_getimplid_request_data]
 .Request Data
@@ -155,7 +155,7 @@ Get the RPMI Implementation ID assigned to the Operating system or Firmware or a
 | 1	| IMPL_ID	| uint32	| Implementation ID
 |===
 
-==== Service: *GET_SPEC_VERSION*
+==== Service: *BASE_GET_SPEC_VERSION*
 Get version of the implemented RPMI specification
 [#table_base_getspecversion_request_data]
 .Request Data
@@ -182,7 +182,7 @@ Get version of the implemented RPMI specification
 !===
 |===
 
-==== Service: *GET_HW_INFO*
+==== Service: *BASE_GET_HW_INFO*
 This service is used to retrieve the Vendor ID and Name of the Vendor having an
 RPMI implementation on PuC. Each vendor will be assigned a unique Vendor ID.
 [#table_base_gethwinfo_request_data]
@@ -223,7 +223,7 @@ RPMI implementation on PuC. Each vendor will be assigned a unique Vendor ID.
 			hardware.
 |===
 
-==== Service: *PROBE_SERVICE_GROUP*
+==== Service: *BASE_PROBE_SERVICE_GROUP*
 Probe the implementation of any service group by its service group id. Except 
 BASE, rest of the service groups are optional but if a service group is 
 implemented then it has to be implemented completely with all services in that group. The notifications in that service group are still optional which will be implemented by the PuC.
@@ -258,7 +258,7 @@ implemented then it has to be implemented completely with all services in that g
 	1: Service group implemented by platform.
 |===
 
-==== Service: *GET_BASE_ATTRIBUTES*
+==== Service: *BASE_GET_BASE_ATTRIBUTES*
 This service is used to discover additional features supported by the base service group.
 [#table_base_getbaseattrs_request_data]
 .Request Data
@@ -296,7 +296,7 @@ This service is used to discover additional features supported by the base servi
 | 4 	| FLAGS3	| uint32	| _Reserved, initialized to_ `0`
 |===
 
-==== Service: *SET_MSI*
+==== Service: *BASE_SET_MSI*
 Configure the MSI address and data which the Platform Microcontroller can use as a doorbell to AP.
 
 The PuC to AP MSI can be used for both sending MSI or injecting wired interrupts. If the MSI target address is IMSIC then AP will take MSI whereas if the MSI target address is "setipnum" of APLIC then AP will take wired interrupt.

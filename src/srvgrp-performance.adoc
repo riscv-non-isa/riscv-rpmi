@@ -34,15 +34,15 @@ These operations are described in more detail in the following section.
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 				| Request Type
-| 0x01		| ENABLE_NOTIFICATION			| NORMAL_REQUEST
-| 0x02		| GET_PERF_DOMAINS			| NORMAL_REQUEST
-| 0x03		| GET_PERF_DOMAIN_ATTRIBUTES		| NORMAL_REQUEST
-| 0x04		| GET_PERF_DOMAIN_LEVELS		| NORMAL_REQUEST
-| 0x05		| GET_PERF_LEVEL			| NORMAL_REQUEST
-| 0x06		| SET_PERF_LEVEL			| NORMAL_REQUEST
-| 0x07		| GET_PERF_LIMIT			| NORMAL_REQUEST
-| 0x08		| SET_PERF_LIMIT			| NORMAL_REQUEST
-| 0x09		| GET_PERF_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
+| 0x01		| PERF_ENABLE_NOTIFICATION		| NORMAL_REQUEST
+| 0x02		| PERF_GET_NUM_DOMAINS			| NORMAL_REQUEST
+| 0x03		| PERF_GET_ATTRIBUTES			| NORMAL_REQUEST
+| 0x04		| PERF_GET_SUPPORTED_LEVELS		| NORMAL_REQUEST
+| 0x05		| PERF_GET_LEVEL			| NORMAL_REQUEST
+| 0x06		| PERF_SET_LEVEL			| NORMAL_REQUEST
+| 0x07		| PERF_GET_LIMIT			| NORMAL_REQUEST
+| 0x08		| PERF_SET_LIMIT			| NORMAL_REQUEST
+| 0x09		| PERF_GET_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
 |===
 
 ==== Performance Notifications
@@ -92,10 +92,10 @@ for Performance service group.
 
 *Supported Services*::
 The Fast-channel currently supports only the following Performance services:
-* GET_PERF_LEVEL
-* SET_PERF_LEVEL
-* GET_PERF_LIMIT
-* SET_PERF_LIMIT
+* PERF_GET_LEVEL
+* PERF_SET_LEVEL
+* PERF_GET_LIMIT
+* PERF_SET_LIMIT
 
 
 *Platform Dependency*::
@@ -107,16 +107,16 @@ The Fast-channel currently supports only the following Performance services:
 *Discovering Fast-channels*::
 * Fast-channels support are discoverable through Performance service calls.
 * To determine if a platform supports Fast-channel for a specific performance
-  domain, use the `GET_PERF_DOMAIN_ATTRIBUTES` service call.
+  domain, use the `PERF_GET_ATTRIBUTES` service call.
 * If Fast-channel support is available, retrieve Fast-channel attributes for
-  specific Performance service call using the `GET_PERF_FAST_CHANNEL_ATTRIBUTES`
+  specific Performance service call using the `PERF_GET_FAST_CHANNEL_ATTRIBUTES`
   service call.
 
 
 *Doorbell Support*::
-* Doorbell support is not available for `GET_PERF_LEVEL` and `GET_PERF_LIMIT`
+* Doorbell support is not available for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
   service calls.
-* When Fast-channels are implemented for `GET_PERF_LEVEL` and `GET_PERF_LIMIT`
+* When Fast-channels are implemented for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
   service calls, the last known valid performance level or performance limits
   are always accessible via the Fast-channel without requiring a doorbell
   trigger.
@@ -129,11 +129,11 @@ The Fast-channel currently supports only the following Performance services:
   parameters and exclude the DOMAIN_ID. Given that a Fast-channel is specific
   to both DOMAIN_ID and SERVICE_ID, there is no requirement to include
   DOMAIN_ID or any other channel specific and message specific headers when
-  utilizing a Fast-channel. For instance, the payload of the `SET_PERF_LIMIT`
+  utilizing a Fast-channel. For instance, the payload of the `PERF_SET_LIMIT`
   message should be represented as `'uint32 MAX_PERF_LEVEL'` and
   `'uint32 MIN_PERF_LEVEL'`.
 
-==== Service: *ENABLE_NOTIFICATION*
+==== Service: *PERF_ENABLE_NOTIFICATION*
 This service is to enable or disable the performance changed notification event.
 This notification is sent from the PuC when the performance level, performance 
 limit or performance power of a performance domain has changed. This allows the 
@@ -166,7 +166,7 @@ notification.
 |===
 
 
-==== Service: *GET_PERF_DOMAINS*
+==== Service: *PERF_GET_NUM_DOMAINS*
 This service returns the number of performance domains supported by the system.
 The number of performance domains can vary depending on the hardware platform 
 and implementation. In general, performance domains are used to group related 
@@ -195,7 +195,7 @@ important for optimizing system performance and power consumption.
 |===
 
 
-==== Service: *GET_PERF_DOMAIN_ATTRIBUTES*
+==== Service: *PERF_GET_ATTRIBUTES*
 This service is used to retrieve the attributes of a specific performance 
 domain. These attributes provide information about the performance capabilities 
 and constraints of the domain, such as the performance limit and performance 
@@ -253,7 +253,7 @@ pass between two consecutive requests, in microseconds (us).
 | 3:6	| PERF_DOMAIN_NAME | uint8[16]	| Performance domain name, a NULL-terminated ASCII string up to 16-bytes.
 |===
 
-==== Service: *GET_PERF_DOMAIN_LEVELS*
+==== Service: *PERF_GET_SUPPORTED_LEVELS*
 This service provides a list of the available performance levels or also called
 operating performance points (OPPs) for a specific performance domain. These
 represent different performance levels that can be set for the components in the
@@ -290,7 +290,7 @@ loop:
 The pseudocode above demonstrates the process for retrieving the level
 information for a specific performance domain. First, the number of
 performance levels is determined by checking the FLAGS[28:21] parameter
-returned by the GET_PERF_DOMAIN_ATTRIBUTES service.
+returned by the PERF_GET_ATTRIBUTES service.
 
 Total words required for the number of performance levels according to the
 format in one message cannot exceed the total words available in one message
@@ -346,8 +346,8 @@ platform.
 |===
 
 
-==== Service: *GET_PERF_LEVEL*
-This service is used to obtain the current performance level of a specific 
+==== Service: *PERF_GET_LEVEL*
+This service is used to obtain the current performance level of a specific
 performance domain in the system.
 
 [#table_perf_getlevel_request_data]
@@ -375,7 +375,7 @@ performance domain in the system.
 |===
 
 
-==== Service: *SET_PERF_LEVEL*
+==== Service: *PERF_SET_LEVEL*
 This service is used to set the current performance level of a specific 
 performance domain in the system.
 
@@ -409,7 +409,7 @@ performance level.
 |===
 
 
-==== Service: *GET_PERF_LIMIT*
+==== Service: *PERF_GET_LIMIT*
 This service is used to obtain the current performance limit of a specific 
 performance domain in the system.
 
@@ -439,7 +439,7 @@ performance domain in the system.
 |===
 
 
-==== Service: *SET_PERF_LIMIT*
+==== Service: *PERF_SET_LIMIT*
 This service is used to set the current performance limit of a specific 
 performance domain in the system.
 
@@ -474,7 +474,7 @@ performance level.
 |===
 
 
-==== Service: *GET_PERF_FAST_CHANNEL_ATTRIBUTES*
+==== Service: *PERF_GET_FAST_CHANNEL_ATTRIBUTES*
 This service allows clients to query attributes of the Fast-channel for a specific performance domain and performance service.
 
 [#table_perf_getfastchanaddr_request_data]

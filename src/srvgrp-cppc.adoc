@@ -16,11 +16,11 @@ CPPC Fast-channel REQ-ACK Memory Entry per Hart:
 .CPPC Fast-Channel Memory Entry
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
-| Word	| Description 			| Entity which writes the word
+| Word	| Description 				| Entity which writes the word
 | 0	| Request Sequence Number Register	| AP
-| 1	| Request Register		| AP
-| 2	| Acknowledgement Register	| PuC
-| 3	| Reserved			| None
+| 1	| Request Register			| AP
+| 2	| Acknowledgement Register		| PuC
+| 3	| Reserved				| None
 |===
 
 Below table lists the services in this group:
@@ -28,14 +28,14 @@ Below table lists the services in this group:
 .CPPC Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
-| Service ID	| Service Name 			| Request Type
-| 0x01		| ENABLE_NOTIFICATION		| NORMAL_REQUEST
-| 0x02		| PROBE_REG			| NORMAL_REQUEST
-| 0x03		| READ_REG			| NORMAL_REQUEST
-| 0x04		| WRITE_REG			| NORMAL_REQUEST
-| 0x05		| GET_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
-| 0x06		| POKE_FAST_CHANNEL		| NORMAL_REQUEST
-| 0x07		| GET_HART_LIST			| NORMAL_REQUEST
+| Service ID	| Service Name 				| Request Type
+| 0x01		| CPPC_ENABLE_NOTIFICATION		| NORMAL_REQUEST
+| 0x02		| CPPC_PROBE_REG			| NORMAL_REQUEST
+| 0x03		| CPPC_READ_REG				| NORMAL_REQUEST
+| 0x04		| CPPC_WRITE_REG			| NORMAL_REQUEST
+| 0x05		| CPPC_GET_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
+| 0x06		| CPPC_POKE_FAST_CHANNEL		| NORMAL_REQUEST
+| 0x07		| CPPC_GET_HART_LIST			| NORMAL_REQUEST
 |===
 
 ==== CPPC Notifications
@@ -43,7 +43,7 @@ This service group does not support any event for notification.
 
 
 
-==== Service: *ENABLE_NOTIFICATION*
+==== Service: *CPPC_ENABLE_NOTIFICATION*
 This service allows AP to subscribe to CPPC service group notifications.
 Platform can optionally support notifications of events which might occur in the platform. PuC can send these notification messages to AP if they are implemented
 and AP has subscribed to these. Events supported are described above in CPPC Notifications. 
@@ -75,7 +75,7 @@ notification.
 
 
 
-==== Service: *PROBE_REG*
+==== Service: *CPPC_PROBE_REG*
 Probe for CPPC register and get its length in bytes. If the register is not 
 implemented, REG_LENGTH returned will be zero.
 
@@ -107,7 +107,7 @@ https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-cppc.adoc[SBI
 
 
 
-==== Service: *READ_REG*
+==== Service: *CPPC_READ_REG*
 Read CPPC register value
 
 [#table_cppc_readreg_request_data]
@@ -141,7 +141,7 @@ probe the REG_ID before reading.
 
 
 
-==== Service: *WRITE_REG*
+==== Service: *CPPC_WRITE_REG*
 Write a CPPC register
 
 [#table_cppc_writereg_request_data]
@@ -175,7 +175,7 @@ probe the REG_ID before reading.
 
 
 
-==== Service: *GET_FAST_CHANNEL_ATTRIBUTES*
+==== Service: *CPPC_GET_FAST_CHANNEL_ATTRIBUTES*
 This request retrieves attributes of the Fast-channel for a specified hart ID.
 The physical address from this request shall be used to write the value of the https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/08_Processor_Configuration_and_Control/declaring-processors.html?highlight=desired-performance-register#desired-performance-register[CPPC Desired 
 Performance Register].
@@ -228,7 +228,7 @@ Performance Register].
 
 
 
-==== Service: *POKE_FAST_CHANNEL*
+==== Service: *CPPC_POKE_FAST_CHANNEL*
 Debug request message to poke the PuC FW to process the pending CPPC messages if
 any.
 
@@ -253,7 +253,7 @@ any.
 
 
 
-==== Service: *GET_HART_LIST*
+==== Service: *CPPC_GET_HART_LIST*
 This service gets the list of a hart with a specified hart ID start index.
 
 [#table_cppc_gethartlist_request_data]
