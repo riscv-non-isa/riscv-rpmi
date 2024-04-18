@@ -48,6 +48,7 @@ An RPMI agent is an implementation instance of the RPMI Messaging Protocol and T
 agent in S-mode for some RPMI services, an M-mode RPMI agent also enhances 
 security.
 
+[#img-transport-topologies]
 .Transport for M-Mode and S-Mode
 image::transport-topologies.png[width=800,height=800]
 

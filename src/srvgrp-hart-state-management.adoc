@@ -113,7 +113,7 @@ processor.
 [cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully and hart is started.
+! RPMI_SUCCESS	! Service completed successfully and hart is stopped.
 ! RPMI_ERROR_DENIED ! Not allowed due to current hart state which is platform 
 specific
 !===
@@ -147,7 +147,7 @@ _Only used for non-retentive suspend types._
 [cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully and hart is started.
+! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_INVALID_PARAMETER ! Invalid SUSPEND_TYPE.
 !===
 - Other errors <<table_error_codes>>
@@ -173,7 +173,7 @@ This service gets the running status of a Hart.
 [cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Notifications are subscribed successfully.
+! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_INVALID_PARAMETER ! Invalid HART_ID.
 !===
 - Other errors <<table_error_codes>>
@@ -211,7 +211,7 @@ This service gets the list of harts with a specified Hart ID start index
 [cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Notifications are subscribed successfully.
+! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_INVALID_PARAMETER ! Invalid START_INDEX.
 !===
 - Other errors <<table_error_codes>>
@@ -245,7 +245,7 @@ items.
 [cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Notifications are subscribed successfully.
+! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_INVALID_PARAMETER ! Invalid START_INDEX.
 !===
 - Other errors <<table_error_codes>>
@@ -276,7 +276,7 @@ Get attributes of a suspend type.
 [cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Notifications are subscribed successfully.
+! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_INVALID_PARAMETER ! Invalid SUSPEND_TYPE.
 !===
 - Other errors <<table_error_codes>>

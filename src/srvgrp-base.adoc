@@ -64,7 +64,7 @@ Below table lists the services in this group:
 ==== Base Notifications
 Platform Microcontroller can send asynchronous notifications to AP via this 
 service. There can be multiple types of events classified in the Base service 
-group which can be combined into a single message as depicted in _Figure 3.5_. 
+group which can be combined into a single message as depicted in <<Notifications>>.
 If Platform Microcontroller has multiple events for the same type, Platform Microcontroller can send the single instance of that event that was received 
 last.
 [#table_base_srvgroup_events]

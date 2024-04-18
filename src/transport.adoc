@@ -9,8 +9,8 @@ a privilege level of a set of APs and one PuC. There can be multiple RPMI
 transport instances between a set of  APs and one PuC. For example: there can 
 be a separate transport instance between each privilege level of APs and one 
 PuC. A platform can also have multiple PuCs with each having its own set of 
-RPMI transport to communicate with the APs. The _Figure 1.2_ above shows 
-different topologies of RPMI transport.
+RPMI transport to communicate with the APs. The <<img-transport-topologies>>
+above shows different topologies of RPMI transport.
 
 The physical medium of an RPMI transport can be shared memory or some other 
 medium. This specification only defines a shared memory based RPMI 
@@ -86,11 +86,12 @@ and
 ==== Layout of Shared Memory
 The shared memory RPMI Transport defines four shared memory based queues for 
 bidirectional synchronous/asynchronous communication between an AP and PuC. 
-The detailed layout of the shared memory and queues is shown in Figure 2.1. All
-queues in the shared memory are contiguous and of equal size. Sequence of the queues is
-arranged such that queues which enable Request-Acknowledgement for a side either
-AP to PuC or vice versa are together.
+The detailed layout of the shared memory and queues is shown in <<img-shmem-layout>>.
+All queues in the shared memory are contiguous and of equal size. Sequence of
+the queues is arranged such that queues which enable Request-Acknowledgement
+for a side either AP to PuC or vice versa are together.
 
+[#img-shmem-layout]
 .Memory Layout of Shared Memory
 image::shmem-layout.png[600,600]
 
