@@ -39,7 +39,7 @@ each service dictates if acknowledgment is mandatory or not.
 ==== NOTIFICATIONS
 Notifications are messages which are sent asynchronously from PuC to AP to 
 notify about the events happening in the system related to various service 
-groups. Notifications are covered in detail in below section <<ADD LINK HERE>>
+groups. Notifications are covered in detail in below <<Notifications>>.
 
 === Message Format
 On the AP side, each call to a service results in a message request to the PuC. 
@@ -143,8 +143,8 @@ can include the system states, power states, errors/faults in the system etc.
 Action taken on behalf of any event notification is completely dependent on the 
 AP and they can be ignored. Platform Microcontroller may combine multiple events
 into a single message depending on the available space in the message data. 
-Individual events may also have additional data associated. _Figure 3.4_ shows 
-the notification message format.
+Individual events may also have additional data associated. <<img-notification-format>>
+shows the notification message format.
 
 Each service group will have a notification service with fixed `SERVICE_ID=0x00`
 across every service group. Notifications are sent from PuC to AP with events 
@@ -174,6 +174,8 @@ header.
 Event data and its format depend on the service group and details are present in
 respective service group sections.
 
+[#img-notification-format]
+.Notification Format
 image::notification-format.png[500,600]
 
 [#table_notification_message_format]
