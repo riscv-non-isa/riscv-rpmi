@@ -26,21 +26,21 @@ Below table lists the services in this group:
 .Clock Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
-| Service ID	| Service Name 		| Request Type
-| 0x01		| ENABLE_NOTIFICATION	| NORMAL_REQUEST
-| 0x02		| GET_NUM_CLOCKS	| NORMAL_REQUEST
-| 0x03		| GET_ATTRIBUTES	| NORMAL_REQUEST
-| 0x04		| GET_SUPPORTED_RATES	| NORMAL_REQUEST
-| 0x05		| SET_CONFIG		| NORMAL_REQUEST
-| 0x06		| GET_CONFIG		| NORMAL_REQUEST
-| 0x07		| SET_RATE		| NORMAL_REQUEST
-| 0x08		| GET_RATE		| NORMAL_REQUEST
+| Service ID	| Service Name 			| Request Type
+| 0x01		| CLK_ENABLE_NOTIFICATION	| NORMAL_REQUEST
+| 0x02		| CLK_GET_NUM_CLOCKS		| NORMAL_REQUEST
+| 0x03		| CLK_GET_ATTRIBUTES		| NORMAL_REQUEST
+| 0x04		| CLK_GET_SUPPORTED_RATES	| NORMAL_REQUEST
+| 0x05		| CLK_SET_CONFIG		| NORMAL_REQUEST
+| 0x06		| CLK_GET_CONFIG		| NORMAL_REQUEST
+| 0x07		| CLK_SET_RATE			| NORMAL_REQUEST
+| 0x08		| CLK_GET_RATE			| NORMAL_REQUEST
 |===
 
 ==== Clock Notifications
 This service group does not support any event for notification
 
-==== Service: *ENABLE_NOTIFICATION*
+==== Service: *CLK_ENABLE_NOTIFICATION*
 This service allows the AP to subscribe to clock service group notifications.
 The platform can optionally support notifications of events which might occur in
 the platform. The PuC can send these notification messages to AP if they are
@@ -72,7 +72,7 @@ notification.
 - Other errors <<table_error_codes>>
 |===
 
-==== Service: *GET_NUM_CLOCKS*
+==== Service: *CLK_GET_NUM_CLOCKS*
 This service is used to query the number of clocks available in the system.
 All supported clocks in the system are designated by an integer identifier
 called CLOCK_ID. CLOCK_ID are sequential starting from `0`.
@@ -96,7 +96,7 @@ called CLOCK_ID. CLOCK_ID are sequential starting from `0`.
 | 1	|	NUM_CLOCKS	| uint32 	| Number of Clocks
 |===
 
-==== Service: *GET_ATTRIBUTES*
+==== Service: *CLK_GET_ATTRIBUTES*
 This service provides detailed attributes of a clock, including its name,
 represented as a 16-byte array of ASCII strings. It also specifies the
 transition latency, which denotes the maximum time for the clock to stabilize
@@ -152,7 +152,7 @@ the future, as needed.
 | 4:7	| CLOCK_NAME		| uint8[16]	| Clock name
 |===
 
-==== Service: *GET_SUPPORTED_RATES*
+==== Service: *CLK_GET_SUPPORTED_RATES*
 Each domain may support multiple clock rate values which are allowed by the 
 domain to operate. Message can also pass the `CLOCK_RATE_INDEX` which is the index
 to the first rate value to be described in the return rate array. If all 
@@ -204,7 +204,7 @@ In case the CLOCK_FORMAT is a linear range the RETURNED field will be set to `3`
 | ...	| CLOCK_RATE[N-1] | (uint32, uint32) | Clock rate value.
 |===
 
-==== Service: *SET_CONFIG*
+==== Service: *CLK_SET_CONFIG*
 Set clock config, enable or disable the clock.
 
 [#table_clock_setconfig_request_data]
@@ -243,7 +243,7 @@ Set clock config, enable or disable the clock.
 |===
 
 
-==== Service: *GET_CONFIG*
+==== Service: *CLK_GET_CONFIG*
 Get the current status of a clock, if it's enabled or disabled.
 
 [#table_clock_getconfig_request_data]
@@ -276,7 +276,7 @@ Get the current status of a clock, if it's enabled or disabled.
 !===
 |===
 
-==== Service: *SET_RATE*
+==== Service: *CLK_SET_RATE*
 Set clock rate.
 
 [#table_clock_setrate_request_data]
@@ -320,7 +320,7 @@ Set clock rate.
 - Other errors <<table_error_codes>>
 |===
 
-==== Service: *GET_RATE*
+==== Service: *CLK_GET_RATE*
 Get the current clock rate value.
 
 [#table_clock_getrate_request_data]

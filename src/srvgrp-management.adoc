@@ -13,7 +13,7 @@ interfaces for invoking MM services synchronously.
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 				| Request Type
-| 0x01		| ENABLE_NOTIFICATION			| NORMAL_REQUEST
+| 0x01		| MM_ENABLE_NOTIFICATION		| NORMAL_REQUEST
 | 0x02		| MM_VERSION				| NORMAL_REQUEST
 | 0x03		| MM_COMMUNICATE			| NORMAL_REQUEST
 | 0x04		| MM_COMPLETE				| NORMAL_REQUEST
@@ -23,7 +23,7 @@ interfaces for invoking MM services synchronously.
 ==== Management Notifications
 This service group does not support any event for notification.
 
-==== Service: *ENABLE_NOTIFICATION*
+==== Service: *MM_ENABLE_NOTIFICATION*
 This service allows AP to subscribe to management service group notifications.
 Platform can optionally support notifications of events which might occur in 
 the platform. PuC can send these notification messages to AP if they are 
