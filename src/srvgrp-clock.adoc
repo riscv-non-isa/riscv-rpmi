@@ -14,7 +14,7 @@ clock source affects the entire domain which may contain multiple devices.
 
 The topology of the devices and the clock source is dependent on how the system
 is designed and implementation specific. The OS can discover this topology
-through firmware tables (DT cite:[DT] / ACPI cite:[ACPI]).
+through supported hardware description mechanisms.
 
 *Clock Rate Format*::
 Each clock rate is a tuple of two `32 bits` values `(uint32, uint32)` represented
