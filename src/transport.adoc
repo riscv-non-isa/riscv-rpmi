@@ -9,15 +9,15 @@ a privilege level of a set of APs and one PuC. There can be multiple RPMI
 transport instances between a set of  APs and one PuC. For example: there can 
 be a separate transport instance between each privilege level of APs and one 
 PuC. A platform can also have multiple PuCs with each having its own set of 
-RPMI transport to communicate with the APs. The _Figure 1.2_ above shows different
-topologies of RPMI transport.
+RPMI transport to communicate with the APs. The _Figure 1.2_ above shows 
+different topologies of RPMI transport.
 
-The physical medium of an RPMI transport can be shared memory or I2C or SPI or
-some other medium. This specification only defines a shared memory based RPMI 
+The physical medium of an RPMI transport can be shared memory or some other 
+medium. This specification only defines a shared memory based RPMI 
 transport but a platform can define its own RPMI transport.
 
 RISC-V S-Mode/M-Mode clients are responsible for the packing of the messages as 
-per the message binary format requirements described later and sharing the 
+per the message format requirements described later and sharing the 
 message via the transport layer. The transport layer abstracts the mechanism of 
 how the message is physically delivered between the Application Processor and
 the Platform Microcontroller or vice versa.
@@ -29,16 +29,21 @@ image::transport-bidirectional.png[400,400]
 An RPMI transport may also provide doorbell interrupts to either Application
 Processors or Platform Microcontrollers or both to signal new messages. 
 The doorbell mechanism is optional for an RPMI transport and implementations can
- always use a polling mechanism for checking the arrival of messages. 
+always use a polling mechanism for checking the arrival of messages. 
 
-The doorbell interrupt from the APs to the PuC can be a MSI or a wired interrupt with a
-RPMI transport specific way to trigger the interrupt.
+==== AP to PuC
+The doorbell interrupt from the APs to the PuC can be either a message signaled 
+interrupt (MSI) or a wired interrupt. If available then it must be supported 
+through a read-modify-write sequence to a memory mapped register. 
+This read-modify-write mechanism can be discovered by APs hardware description 
+mechanisms using properties such as register physical address, mask, and value.
 
-The doorbell interrupt from the PuC to the APs can be either a wired interrupt or
-message signaled interrupt (MSI). If the doorbell interrupt from the PuC to the APs is
-a wired interrupt then the RPMI transport must define a way to trigger the
-interrupt. If the doorbell interrupt from PuC to APs is a MSI then RPMI messages
-can be used by APs to configure the MSI.
+==== PuC to AP
+The doorbell interrupt from the PuC to the APs can be either a message signaled 
+interrupt (MSI) or a wired interrupt . If the doorbell interrupt from the PuC to 
+the APs is a wired interrupt then the RPMI transport must define a way to trigger
+the interrupt. If the doorbell interrupt from PuC to APs is a MSI then RPMI 
+message defined in the Base service group can be used by APs to configure the MSI.
 
 === Shared Memory Transport
 The physical memory of the RPMI shared memory transport can be either a device 
@@ -52,22 +57,15 @@ NOTE: To avoid the caching side effects, the platform can configure the shared
 memory as IO or non-cacheable memory for both APs and PuC.
 
 All data sent/received through RPMI shared memory MUST follow Little-Endian byte
- ordering, unless, optionally, the byte-ordering is discovered during the 
+ordering, unless, optionally, the byte-ordering is discovered during the 
 transport discovery phase.
 
-The doorbell interrupt from APs to PuC is optional for RPMI shared memory 
-transport and if available then it MUST be supported through a read-modify-write
-sequence to a memory mapped register. This read-modify-write mechanism can be 
-discovered by APs via DT cite:[DT] or ACPI cite:[ACPI] using properties such as register physical
-address, mask, and value.
-
-The doorbell interrupt from the PuC to the APs for RPMI shared memory transport is
-platform specific.
 
 The subsequent sections describe the layout and attributes of shared memory 
 which should be consistent across both Application Processor and Platform 
 Microcontroller. These attributes can be static for the Platform Microcontroller
-and discoverable via DT cite:[DT] or ACPI cite:[ACPI] for the Application Processor.
+and discoverable via available hardware description mechanisms for the 
+Application Processor.
 
 
 ==== Attributes of Shared Memory
@@ -152,3 +150,21 @@ must block until the slot is available for the sending messages.
 
 .Queue Slots
 image::queue-operation.png[500,500]
+
+=== Fast-channels
+Fast-channels are per-hart shared memory based transport required for usecases 
+which require faster processing of message. Fast-channels layout and message format
+are specific to service groups and not all service group needs to support these. 
+Service group which supports Fast-channels may only enable some services to be 
+used over Fast-channel.
+
+NOTE: To avoid the caching side effects, the platform can configure the 
+shared memory as IO or non-cacheable memory for both APs and PuC.
+
+If support for Fast-channels is defined by a service group, its implementation 
+and attributes like physical memory address are discovered dynamically through 
+service defined by that particular service group.
+
+Fast-channels may support doorbell but its optional. Attributes of doorbell
+if supported are discovered dynamically via service defined by the service group.
+
