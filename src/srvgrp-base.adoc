@@ -319,7 +319,7 @@ In case of platforms with PLIC, the platform need to provide a MMIO register to 
 |===
 | Word  | Name          | Type          | Description
 | 0     | STATUS	| int32		| Return Status Code 
-[cols="5,5"]
+[cols="6,5"]
 !===
 ! *Error Code*  !  *Description*
 ! RPMI_SUCCESS  ! MSI address and data are configured successfully.
