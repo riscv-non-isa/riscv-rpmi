@@ -74,16 +74,9 @@ with this service.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name         	| Type		| Description
-| 0     | RESET_TYPE	| uint32	| Reset type value
-[cols="2,5"]
-!===
-! *Value* 	!  *Description*
-! 0x0	! System Shutdown
-! 0x1 	! System Cold Reset
-! 0x2	! System Warm Reset
-! 0x3 - 0xEFFFFFFF ! _Reserved_
-! 0xF0000000 - 0xFFFFFFFF ! _Implementation specific reset types_.
-!===
+| 0     | RESET_TYPE	| uint32	| Reset type value. +
+Refer to https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-sys-reset.adoc#table_srst_system_reset_types[*SRST System Reset Types*^]
+in the RISC-V SBI Specification cite:[SBI] for the RESET_TYPE definition.
 |===
 
 [#table_sysreset_getsysresetattrs_response_data]
@@ -125,16 +118,9 @@ in the system entering a non-functional state.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name         	| Type		| Description
-| 0     | RESET_TYPE	| uint32	|
-[cols="4,5a"]
-!===
-! *Value* 	!  *Description*
-! 0x0	! System Shutdown
-! 0x1 	! System Cold Reset
-! 0x2	! System Warm Reset
-! 0x3 - 0xEFFFFFFF ! _Reserved_
-! 0xF0000000 - 0xFFFFFFFF ! _Implementation specific reset types_.
-!===
+| 0     | RESET_TYPE	| uint32	| Reset type value. +
+Refer to https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-sys-reset.adoc#table_srst_system_reset_types[*SRST System Reset Types*^]
+in the RISC-V SBI Specification cite:[SBI] for the RESET_TYPE definition.
 |===
 
 [#table_sysreset_sysreset_response_data]
