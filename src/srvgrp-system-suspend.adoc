@@ -1,12 +1,12 @@
 
 ===  Service Group - *SYSTEM_SUSPEND* (servicegroup_id: 0x00003)
 This service group provides services to put the entire system in a low power 
-suspend state. All HARTs except the HART doing system suspend need to be in the 
-STOPPED state.
+suspend state. All harts except the hart doing system suspend need to be in
+the STOPPED state.
 
 Below if the list of services in this group:
 [#table_syssuspend_services]
-.System Suspend Services
+.SYSTEM_SUSPEND Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 			| Request Type
@@ -15,14 +15,17 @@ Below if the list of services in this group:
 | 0x03		| SYSSUSP_SUSPEND		| NORMAL_REQUEST
 |===
 
-==== System Suspend Notifications
+[#system-suspend-notifications]
+==== Notifications
 This service group does not support any event for notification.
 
 ==== Service: *SYSSUSP_ENABLE_NOTIFICATION*
-This service allows AP to subscribe to system reset service group notifications.
-Platform can optionally support notifications of events which might occur in the platform. PuC can send these notification messages to AP if they are implemented
-and AP has subscribed to these. Events supported are described above in System
-Suspend Notifications. 
+This service allows the AP to subscribe to SYSTEM_SUSPEND service group
+notification. The platform can optionally support notifications of events
+that may occur in the platform. PuC can send these notification messages to
+the AP if they are implemented and the AP has subscribed to them. Supported
+events are described in <<system-suspend-notifications>>.
+
 [#table_syssuspend_ennotification_request_data]
 .Request Data
 [cols="1, 2, 1, 7", width=100%, align="center", options="header"]
@@ -49,8 +52,8 @@ notification.
 |===
 
 ==== Service: *SYSSUSP_GET_ATTRIBUTES*
-This service is used to discover system suspend types supported by the platform.
-Each supported system suspend type is identified by SUSPEND_TYPE.
+This service is used to discover the SYSTEM_SUSPEND attributes with a specific
+SUSPEND_TYPE.
 
 [#table_syssuspend_getsyssuspendattrs_request_data]
 .Request Data
@@ -79,7 +82,7 @@ Each supported system suspend type is identified by SUSPEND_TYPE.
 ! RPMI_ERROR_NOT_SUPPORTED ! *SUSPEND_TYPE* not supported
 !===
 - Other errors <<table_error_codes>>
-| 1	| FLAGS		| uint32	| Attributes of SUSPEND_TYPE
+| 1	| FLAGS		| uint32	| Attributes of the SUSPEND_TYPE
 [cols="2,5a"]
 !===
 ! *Bits* 	!  *Description*
@@ -97,10 +100,10 @@ Each supported system suspend type is identified by SUSPEND_TYPE.
 
 ==== Service: *SYSSUSP_SUSPEND*
 This service puts the system into low power state based on the specified suspend
-type. The service requires all harts except the calling hart to be in STOPPED 
-state as defined by the Hart State Management service group. The system goes 
-into low power state only after the HART which requested system suspend, 
-executes WFI instruction.
+type. It requires that all harts except the calling hart to be in the STOPPED
+state as defined by the Hart State Management service group. The system
+transitions into the low power state only after the requesting hart executes
+the WFI instruction.
 
 [#table_syssuspend_syssuspend_request_data]
 .Request Data
@@ -128,8 +131,8 @@ executes WFI instruction.
 [cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_ERROR_NOT_SUPPORTED ! SUSPEND_TYPE not supported. AP must use the
-SYSSUSP_GET_ATTRIBUTES service to discover if SUSPEND_TYPE is supported
+! RPMI_ERROR_NOT_SUPPORTED ! SUSPEND_TYPE is not supported. The AP must use the
+SYSSUSP_GET_ATTRIBUTES service to determine if SUSPEND_TYPE is supported
 or not. Only supported SUSPEND_TYPE must be used with this service.
 !===
 - Other errors <<table_error_codes>>
