@@ -60,13 +60,9 @@ SUSPEND_TYPE.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word  | Name         	| Type		| Description
-| 0     | SUSPEND_TYPE	| uint32	| Suspend type value
-[cols="2,5"]
-!===
-! *Value* 	!  *Description*
-! 0x0	! Suspend to Ram
-! 0x1 - 0xFFFFFFFF ! _Reserved_
-!===
+| 0     | SUSPEND_TYPE	| uint32	| Suspend type value. +
+Refer to https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-sys-suspend.adoc#table_susp_sleep_types[*SUSP System Sleep Types*^]
+in the RISC-V SBI Specification cite:[SBI] for the SUSPEND_TYPE definition.
 |===
 
 [#table_syssuspend_getsysuspendattrs_response_data]
@@ -111,13 +107,9 @@ the WFI instruction.
 |===
 | Word  | Name         	| Type		| Description
 | 0	| HART_ID	| uint32	| Hart ID of the calling hart.
-| 1     | SUSPEND_TYPE	| uint32	|
-[cols="2,5a"]
-!===
-! *Value* 	!  *Description*
-! 0x0	! Suspend to RAM
-! 0x1 - 0xFFFFFFFF ! _Reserved_
-!===
+| 1     | SUSPEND_TYPE	| uint32	| Suspend type value. +
+Refer to https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-sys-suspend.adoc#table_susp_sleep_types[*SUSP System Sleep Types*^]
+in the RISC-V SBI Specification cite:[SBI] for the SUSPEND_TYPE definition.
 | 2	| RESUME_ADDR_LOW	| uint32	| Lower `32 bits` address
 | 3	| RESUME_ADDR_HIGH	| uint32	| Upper `32 bits` address
 |===
