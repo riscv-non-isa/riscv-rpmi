@@ -8,12 +8,12 @@ is challenging for the Application Processors running the OS. To mitigate this,
 systems today contain one or more Platform Microcontrollers which abstract 
 various platform specific system management and control related tasks. 
 RPMI enables the communication between the application processors and the 
-Platform micro-controllers. It abstracts the system complexity and provides a message-based interface for system management and control.
+platform microcontrollers. It abstracts the system complexity and provides a message-based interface for system management and control.
 
 RPMI is not limited to a single Application Processor and Platform 
 Microcontroller. It can support multiple Application Processors and multiple Platform Microcontrollers.
 
-The Platform Micro-Controller (PuC)  serves as an external embedded processor 
+The Platform Microcontroller (PuC)  serves as an external embedded processor
 that abstracts low-level platform control management from the application 
 processor system. This design allows RPMI to provide an OS-agnostic, generic interface that can support various System-on-Chip (SoC) hardware or platforms.
 
