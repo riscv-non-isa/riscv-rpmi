@@ -38,7 +38,7 @@ RPMI currently provides message interfaces to manage power, voltage,
 performance, idle states etc, along with extensibility for vendors to add their 
 own interfaces.
 
-Application Processor and A.P are used interchangeably throughout this document.
+Application Processor and AP are used interchangeably throughout this document.
 Similarly, Platform Microcontroller and PuC are used interchangeably.
 
 .High Level Architecture
