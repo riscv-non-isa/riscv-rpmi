@@ -93,8 +93,8 @@ sleep state supported. Platform must acknowledge that hart can be stopped and
 return success. Application Processor must execute WFI upon successful 
 acknowledgement. Platform then proceeds to stop the hart. Detecting the WFI 
 state from PuC is implementation defined. Once the hart is stopped it can only 
-be started using an explicit HSM_HART_START service call from the application 
-processor.
+be started using an explicit HSM_HART_START service call from the Application
+Processor.
 
 [#table_hsm_hartstop_request_data]
 .Request Data

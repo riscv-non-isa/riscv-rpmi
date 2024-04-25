@@ -1,7 +1,7 @@
 
 ===  Service Group - *PERFORMANCE* (servicegroup_id: 0x00009)
 This performance domain extension is designed for managing the performance of a 
-group of devices or application processors that operate in the same performance
+group of devices or Application Processors that operate in the same performance
 domain. Unlike legacy performance control mechanisms where the OS was responsible
 to directly control the voltage and clocks this mechanism instead operates on
 an metric less integer performance scale. Each integer value on this
@@ -13,9 +13,9 @@ hardware parameters such as voltage and frequency, etc. The mapping between leve
 and frequencies can be as simple as using a multiplication factor of 1000.
 
 The CPPC service group is also intended for performance control but it's only
-for the application processors. This service group is primarily intended for
-devices such as GPUs, accelerators, etc but can also be used for application
-processors.
+for the Application Processors. This service group is primarily intended for
+devices such as GPUs, accelerators, etc but can also be used for Application
+Processors.
 
 It is important to note that performance domains should not be confused with 
 power domains. A performance domain is defined as a set of devices that must 
@@ -49,7 +49,8 @@ These operations are described in more detail in the following section.
 When a client registers for performance change notifications, the platform will 
 send notification to the client whenever there is a change in the performance 
 level, performance limit or the performance power of a specific performance 
-domain. This notification is typically sent by the platform control processor to inform clients in the system about changes in the performance domain.
+domain. This notification is typically sent by the Platform Microcontroller to
+inform clients in the system about changes in the performance domain.
 
 [#table_perf_notification_events]
 .Performance Notification Events

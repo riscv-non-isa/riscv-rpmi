@@ -36,8 +36,8 @@ implementation.
 === Service Group - *BASE* (servicegroup_id: 0x00001)
 The Base service group is mandatory and provides the following services:
 
-* Initial handshaking between the Application processor and the Platform
-microcontroller.
+* Initial handshaking between the Application Processor and the Platform
+Microcontroller.
 
 * Querying the message framework implementation version information.
 
