@@ -23,12 +23,6 @@ always run at the same performance level, while a power domain is defined as a
 set of devices that can be turned on or off together for power management 
 purposes.
 
-The PERFORMANCE service groups provide a set of services for managing
-performance domains. These services include retrieving performance domain 
-information, setting the performance level, obtaining the current performance 
-level of a performance domain, and performing other related operations.
-These operations are described in more detail in the following section.
-
 [#table_perf_services]
 .PERFORMANCE Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
