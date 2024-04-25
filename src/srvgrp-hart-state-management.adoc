@@ -1,11 +1,11 @@
 
 === Service Group - *HART_STATE_MANAGEMENT* (servicegroup_id: 0x00004)
-The Hart State Management (HSM) service group defines a set of Hart states and 
+The Hart State Management (HSM) service group defines a set of hart states and
 functionality equivalent to the HSM extension in RISC-V SBI Specification cite:[SBI].
 
 Below table lists the services in this group:
 [#table_hsm_services]
-.Hart State Management Services
+.HART_STATE_MANAGEMENT Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 			| Request Type
@@ -19,15 +19,17 @@ Below table lists the services in this group:
 | 0x08		| HSM_GET_SUSPEND_INFO		| NORMAL_REQUEST
 |===
 
-==== Hart State Management Notifications
+[#hsm-notifications]
+==== Notifications
 This service group does not support any event for notification
 
 ==== Service: *HSM_ENABLE_NOTIFICATION*
 This service allows AP to subscribe to system reset service group notifications.
 Platform can optionally support notifications of events which might occur in the
 platform. PuC can send these notification messages to AP if they are implemented
-and AP has subscribed to these. Events supported are described above in 
-Hart State Management Notifications. 
+and AP has subscribed to these. Events supported are described in
+<<#hsm-notifications>>.
+
 [#table_hsm_ennotification_request_data]
 .Request Data
 [cols="1, 2, 1, 7", width=100%, align="center", options="header"]

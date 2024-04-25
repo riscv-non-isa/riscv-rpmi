@@ -1,6 +1,6 @@
 
 ===  Service Group - *DEVICE_POWER* (servicegroup_id: 0x00008)
-This Device Power service group provides messages to manage the power states of
+This DEVICE_POWER service group provides messages to manage the power states of
 a device power domain. This service group is used only for device power
 management since System and CPU power management is handled by already defined 
 service groups such as SYSTEM_RESET, SYSTEM_SUSPEND and HART_STATE_MANAGEMENT.
@@ -41,7 +41,7 @@ lost information corresponding to that state.
 |===
 
 [#table_devpower_services]
-.Device Power Services
+.DEVICE_POWER Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 			| Request Type
@@ -52,15 +52,16 @@ lost information corresponding to that state.
 | 0x05		| DPWR_GET_STATE		| NORMAL_REQUEST
 |===
 
-==== Device Power Notifications
+[#device-power-notifications]
+==== Notifications
 This service group does not support any event for notification.
 
 ==== Service: *DPWR_ENABLE_NOTIFICATION*
-This service allows the AP to subscribe to Device Power service group notifications.
+This service allows the AP to subscribe to DEVICE_POWER service group notifications.
 The platform can optionally support notifications of events that may occur in the platform.
 The PuC can send these notification messages to the AP if they are implemented
-and the AP has subscribed to them. The supported events are described above in Device
-Power Notifications.  
+and the AP has subscribed to them. The supported events are described in
+<<device-power-notifications>>.
  
 [#table_devpower_ennotification_request_data]
 .Request Data

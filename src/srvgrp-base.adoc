@@ -34,7 +34,7 @@ does not necessarily reflect the order in which they should be called in the
 implementation.
 
 === Service Group - *BASE* (servicegroup_id: 0x00001)
-The Base service group is mandatory and provides the following services:
+The BASE service group is mandatory and provides the following services:
 
 * Initial handshaking between the Application Processor and the Platform
 Microcontroller.
@@ -52,7 +52,7 @@ receive messages.
 Below table lists the services in this group:
 
 [#table_base_services]
-.Base Services
+.BASE Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 				| Request Type
@@ -66,15 +66,16 @@ Below table lists the services in this group:
 | 0x08		| BASE_SET_MSI				| NORMAL_REQUEST
 |===
 
-==== Base Notifications
+[#base-notifications]
+==== Notifications
 The Platform Microcontroller can send asynchronous notifications to the AP via this
-service. There can be multiple types of events classified in the Base service 
+service. There can be multiple types of events classified in the BASE service
 group which can be combined into a single message as depicted in <<Notifications>>.
 If the Platform Microcontroller has multiple events for the same type, it can
 send the single instance of that event that was received last.
 
 [#table_base_srvgroup_events]
-.Base Service Group Events
+.BASE Service Group Events
 [cols="1, 2, 1, 4", width=100%, align="center", options="header"]
 |===
 | Event ID	| Event Name	| Event Data	| Description
@@ -86,11 +87,11 @@ notification.
 |===
 
 ==== Service: *BASE_ENABLE_NOTIFICATION*
-This service allows the AP to subscribe to Base service group notifications.
+This service allows the AP to subscribe to BASE service group notifications.
 Platform can optionally support notifications of errors which might occur in
 the platform. The PuC can send these notification messages to the AP if they
-are implemented and the AP has subscribed to them. Supported events are
-described in <<Base Notifications>>.
+are implemented and the AP has subscribed to them. The supported events are
+described in <<base-notifications>>.
 
 [#table_base_ennotification_request_data]
 .Request Data
