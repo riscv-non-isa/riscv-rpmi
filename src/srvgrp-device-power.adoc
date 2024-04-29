@@ -17,6 +17,10 @@ mechanisms where the values for ON and OFF are already fixed and known.
 The power state encodes both the power state value and the context preserved or 
 lost information corresponding to that state.
 
+The DEVICE_POWER services take a 32-bit integer identifier known as `DOMAIN_ID`
+to specify the device power domain. These `DOMAIN_ID` identifiers are sequential
+and start from 0.
+
 [#table_devpower_powerstate_data]
 .Power States Encoding
 [cols="2, 2, 5a", width=100%, align="center", options="header"]
