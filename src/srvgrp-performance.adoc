@@ -1,7 +1,7 @@
 
 ===  Service Group - *PERFORMANCE* (servicegroup_id: 0x00009)
-This performance domain extension is designed for managing the performance of a 
-group of devices or application processors that operate in the same performance
+This PERFORMANCE service group is designed for managing the performance of a
+group of devices or Application Processors that operate in the same performance
 domain. Unlike legacy performance control mechanisms where the OS was responsible
 to directly control the voltage and clocks this mechanism instead operates on
 an metric less integer performance scale. Each integer value on this
@@ -13,9 +13,9 @@ hardware parameters such as voltage and frequency, etc. The mapping between leve
 and frequencies can be as simple as using a multiplication factor of 1000.
 
 The CPPC service group is also intended for performance control but it's only
-for the application processors. This service group is primarily intended for
-devices such as GPUs, accelerators, etc but can also be used for application
-processors.
+for the Application Processors. This service group is primarily intended for
+devices such as GPUs, accelerators, etc but can also be used for Application
+Processors.
 
 It is important to note that performance domains should not be confused with 
 power domains. A performance domain is defined as a set of devices that must 
@@ -23,14 +23,8 @@ always run at the same performance level, while a power domain is defined as a
 set of devices that can be turned on or off together for power management 
 purposes.
 
-The Performance service groups provide a set of services for managing 
-performance domains. These services include retrieving performance domain 
-information, setting the performance level, obtaining the current performance 
-level of a performance domain, and performing other related operations.
-These operations are described in more detail in the following section.
-
 [#table_perf_services]
-.Performance Services
+.PERFORMANCE Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 				| Request Type
@@ -45,11 +39,13 @@ These operations are described in more detail in the following section.
 | 0x09		| PERF_GET_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
 |===
 
-==== Performance Notifications
+[#performance-notifications]
+==== Notifications
 When a client registers for performance change notifications, the platform will 
 send notification to the client whenever there is a change in the performance 
 level, performance limit or the performance power of a specific performance 
-domain. This notification is typically sent by the platform control processor to inform clients in the system about changes in the performance domain.
+domain. This notification is typically sent by the Platform Microcontroller to
+inform clients in the system about changes in the performance domain.
 
 [#table_perf_notification_events]
 .Performance Notification Events
@@ -88,7 +84,7 @@ changed.
 
 ==== Performance Fast-Channels
 This section provides an overview of the properties associated with the Fast-channel
-for Performance service group.
+for PERFORMANCE service group.
 
 *Supported Services*::
 The Fast-channel currently supports only the following Performance services:
@@ -135,10 +131,11 @@ The Fast-channel currently supports only the following Performance services:
 
 ==== Service: *PERF_ENABLE_NOTIFICATION*
 This service is to enable or disable the performance changed notification event.
-This notification is sent from the PuC when the performance level, performance 
+The notification is sent from the PuC when the performance level, performance
 limit or performance power of a performance domain has changed. This allows the 
 system to adjust its behavior in response to performance changes and ensure that
-it is operating within its desired performance level.
+it is operating within its desired performance level. The supported events are
+described in <<performance-notifications>>.
 
 [#table_perf_ennotification_request_data]
 .Request Data

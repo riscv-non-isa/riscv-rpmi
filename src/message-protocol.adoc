@@ -3,9 +3,9 @@ Message Protocol supports a variety of system management and control tasks and
 provides a message interface for such tasks. Each message which does a specific 
 task is called Service. Multiple messages or Services are grouped into Service 
 Groups like Clock, Voltage, Power management, etc. A service call results in a 
-message request being sent to the Platform micro-controller for a specific 
+message request being sent to the Platform Microcontroller for a specific
 purpose. Each service may have an associated response message which enables the 
-Platform micro-controller to provide the status or information for that request.
+Platform Microcontroller to provide the status or information for that request.
 
 .Service Groups and Services
 image::servicegroups-service.png[400,400]
@@ -16,7 +16,7 @@ received by an client.
 
 ==== REQUEST
 Messages which convey a command to the other entity/client, usually from the AP 
-from either S-Mode/M-mode client to Platform Microcontroller (it may also send 
+from either S-Mode/M-mode client to the Platform Microcontroller (it may also send
 REQUESTs to AP, but there are no use cases yet). Each command will have a 
 certain action that the Platform Microcontroller will take and it may 
 acknowledge the AP with another message in return which may contain some data or

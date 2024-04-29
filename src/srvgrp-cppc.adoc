@@ -38,15 +38,18 @@ Below table lists the services in this group:
 | 0x07		| CPPC_GET_HART_LIST			| NORMAL_REQUEST
 |===
 
-==== CPPC Notifications
+[#cppc-notifications]
+==== CPPC
 This service group does not support any event for notification.
 
 
 
 ==== Service: *CPPC_ENABLE_NOTIFICATION*
 This service allows AP to subscribe to CPPC service group notifications.
-Platform can optionally support notifications of events which might occur in the platform. PuC can send these notification messages to AP if they are implemented
-and AP has subscribed to these. Events supported are described above in CPPC Notifications. 
+Platform can optionally support notifications of events which might occur in
+the platform. PuC can send these notification messages to AP if they are
+implemented and AP has subscribed to these. Events supported are described
+in <<cppc-notifications>>.
 
 [#table_cppc_ennotification_request_data]
 .Request Data

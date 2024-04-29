@@ -1,6 +1,7 @@
 
 ===  Service Group - *MANAGEMENT* (servicegroup_id: 0x0000A)
-This management service extension is designed to be used for software invocation of Management Mode (MM) in a secure execution environment. For general background 
+This MANAGEMENT service group is designed to be used for software invocation of
+Management Mode (MM) in a secure execution environment. For general background
 on Management Mode (MM), review the Platform Initialization (PI) specifications,
 Volume 4: Management Mode Core Interface. Management Mode (MM) provides an 
 environment for implementing OS agnostic services (MM services) like secure 
@@ -9,7 +10,7 @@ invoked synchronously and asynchronously. This service group describes the
 interfaces for invoking MM services synchronously. 
 
 [#table_mm_services]
-.Management Services
+.MANAGEMENT Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 				| Request Type
@@ -20,15 +21,16 @@ interfaces for invoking MM services synchronously.
 | 0x05		| MM_INITIALIZE				| NORMAL_REQUEST
 |===
 
-==== Management Notifications
+[#management-notifications]
+==== Notifications
 This service group does not support any event for notification.
 
 ==== Service: *MM_ENABLE_NOTIFICATION*
-This service allows AP to subscribe to management service group notifications.
+This service allows AP to subscribe to MANAGEMENT service group notifications.
 Platform can optionally support notifications of events which might occur in 
 the platform. PuC can send these notification messages to AP if they are 
-implemented and AP has subscribed to these. Events supported are described above
-in Management Notifications. 
+implemented and AP has subscribed to these. Events supported are described
+in <<management-notifications>>.
 
 [#table_mm_ennotification_request_data]
 .Request Data

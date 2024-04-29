@@ -1,8 +1,11 @@
 
 == Service Groups
-A service group is a collection of services which are logically grouped according to the functionality they provide. For example, all voltage related services/messages are collectively referred to as Voltage Service Group.
+A service group is a collection of services which are logically grouped
+according to the functionality they provide. For example, all voltage related
+ services/messages are collectively referred to as the Voltage Service Group.
 
-This specification defines standard service groups and services with provision to add more service groups as per requirement in the future. 
+This specification defines standard service groups and services with the
+provision to add more service groups as per requirement in the future.
 
 Following table lists the service group
 
@@ -25,29 +28,31 @@ Following table lists the service group
 | 0x0000C - 0x7FFFF 	| _Reserved for Future Use_
 | 0x80000 - 0xFFFFF	| _Implementation Specific Service Groups_
 |===
-NOTE: The services listed in each service group do not follow any sequence and 
-are not defined in any specific order. It's possible that any particular service
-in any service group inherently requires to be called first before other defined services before that.
+NOTE: The services listed within each service group do not have a specific order.
+Additionally, the sequence in which services are defined in the specification
+does not necessarily reflect the order in which they should be called in the
+implementation.
 
 === Service Group - *BASE* (servicegroup_id: 0x00001)
-Base service group is mandatory and provides services for:
+The BASE service group is mandatory and provides the following services:
 
-* Initial handshaking between the Application processor and Platform 
-micro-controller.
+* Initial handshaking between the Application Processor and the Platform
+Microcontroller.
 
 * Querying the message framework implementation version information.
 
-* Discovering the implementation and version of a specific service group or any specific service in any service group.
+* Discovering the implementation and version of a specific service group or any
+  specific service within any service group.
 
 * Gathering allowed system information from the firmware. 
 
 * Status of the transport and if the Platform Microcontroller is ready for 
-accepting messages.
+receive messages.
 
 Below table lists the services in this group:
 
 [#table_base_services]
-.Base Services
+.BASE Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 				| Request Type
@@ -57,30 +62,37 @@ Below table lists the services in this group:
 | 0x04		| BASE_GET_SPEC_VERSION			| NORMAL_REQUEST
 | 0x05		| BASE_GET_HW_INFO			| NORMAL_REQUEST
 | 0x06		| BASE_PROBE_SERVICE_GROUP		| NORMAL_REQUEST
-| 0x07		| BASE_GET_BASE_ATTRIBUTES		| NORMAL_REQUEST
+| 0x07		| BASE_GET_ATTRIBUTES			| NORMAL_REQUEST
 | 0x08		| BASE_SET_MSI				| NORMAL_REQUEST
 |===
 
-==== Base Notifications
-Platform Microcontroller can send asynchronous notifications to AP via this 
-service. There can be multiple types of events classified in the Base service 
+[#base-notifications]
+==== Notifications
+The Platform Microcontroller can send asynchronous notifications to the AP via this
+service. There can be multiple types of events classified in the BASE service
 group which can be combined into a single message as depicted in <<Notifications>>.
-If Platform Microcontroller has multiple events for the same type, Platform Microcontroller can send the single instance of that event that was received 
-last.
+If the Platform Microcontroller has multiple events for the same type, it can
+send the single instance of that event that was received last.
+
 [#table_base_srvgroup_events]
-.Base Service Group Events
+.BASE Service Group Events
 [cols="1, 2, 1, 4", width=100%, align="center", options="header"]
 |===
 | Event ID	| Event Name	| Event Data	| Description
-| 0x001		| REQUEST_HANDLE_ERROR	| NA	| This event indicates that the Platform Microcontroller is unable to serve the message requests anymore and 
-this event may send the list of messages which the Platform Microcontroller was processing when the failure took place. No event data is necessary for this 
-notification
+| 0x001		| REQUEST_HANDLE_ERROR	| NA	| This event indicates that the
+Platform Microcontroller is unable to serve the message requests anymore and
+this event may send the list of messages which the Platform Microcontroller
+was processing when the error occured. No event data is necessary for this
+notification.
 |===
 
 ==== Service: *BASE_ENABLE_NOTIFICATION*
-This service allows AP to subscribe to Base service group notifications. +
-Platform can optionally support notifications of errors which might occur in the platform. PuC can send these notification messages to AP if they are implemented
-and AP has subscribed to these. Events supported are described above in Base Notifications. 
+This service allows the AP to subscribe to BASE service group notifications.
+Platform can optionally support notifications of errors which might occur in
+the platform. The PuC can send these notification messages to the AP if they
+are implemented and the AP has subscribed to them. The supported events are
+described in <<base-notifications>>.
+
 [#table_base_ennotification_request_data]
 .Request Data
 [cols="1, 2, 1, 7", width=100%, align="center", options="header"]
@@ -107,7 +119,13 @@ notification.
 |===
 
 ==== Service: *BASE_GET_IMPLEMENTATION_VERSION*
-Get the implementation version of the message framework from Platform Microcontroller. Versioning is also done for the spec but it's possible that for a single version of spec there may be multiple implementation versions and based on that any lowest supported implementation version can be mandated to ensure the stability and support. Version returned using this service is a 32 bits composite number which contains both Major and Minor numbers.
+Get the implementation version of the message framework from the Platform
+Microcontroller. Versioning is also done for the specification but it's
+possible that for a single version of the specifiction to have multiple
+implementation versions and based on that any lowest supported implementation
+version can be mandated to ensure the stability and support. The version
+returned by this service is a 32-bits composite number containing both Major
+and Minor numbers.
 
 [#table_base_getimplversion_request_data]
 .Request Data
@@ -135,7 +153,9 @@ Get the implementation version of the message framework from Platform Microcontr
 |===
 
 ==== Service: *BASE_GET_IMPLEMENTATION_ID*
-Get the RPMI Implementation ID assigned to the Operating system or Firmware or any other software host which implements the RPMI specification.
+Get the RPMI Implementation ID assigned to the Operating system or Firmware or
+any other software host which implements the RPMI Specification.
+
 [#table_base_getimplid_request_data]
 .Request Data
 - NA
@@ -156,7 +176,7 @@ Get the RPMI Implementation ID assigned to the Operating system or Firmware or a
 |===
 
 ==== Service: *BASE_GET_SPEC_VERSION*
-Get version of the implemented RPMI specification
+Get version of the implemented RPMI Specification.
 [#table_base_getspecversion_request_data]
 .Request Data
 - NA
@@ -170,7 +190,7 @@ Get version of the implemented RPMI specification
 [cols="2,5a"]
 !===
 ! *Error Code*  !  *Description*
-! RPMI_SUCCESS  ! RPMI specification version returned successfully.
+! RPMI_SUCCESS  ! RPMI Specification version returned successfully.
 !===
 - Other errors <<table_error_codes>>
 | 1	| VERSION	| uint32	| RPMI Specification Version
@@ -183,8 +203,9 @@ Get version of the implemented RPMI specification
 |===
 
 ==== Service: *BASE_GET_HW_INFO*
-This service is used to retrieve the Vendor ID and Name of the Vendor having an
-RPMI implementation on PuC. Each vendor will be assigned a unique Vendor ID.
+This service is used to retrieve the vendor ID and name of the vendor with an
+RPMI implementation on the PuC. Each vendor will be assigned a unique Vendor ID.
+
 [#table_base_gethwinfo_request_data]
 .Request Data
 - NA
@@ -224,9 +245,11 @@ RPMI implementation on PuC. Each vendor will be assigned a unique Vendor ID.
 |===
 
 ==== Service: *BASE_PROBE_SERVICE_GROUP*
-Probe the implementation of any service group by its service group id. Except 
-BASE, rest of the service groups are optional but if a service group is 
-implemented then it has to be implemented completely with all services in that group. The notifications in that service group are still optional which will be implemented by the PuC.
+This service probes the implementation of any service group by its `SERVICEGROUP_ID`.
+All service groups except BASE are optional. However, if a service group is
+implemented, it must be fully implemented all services in that service group.
+Notifications within the service group remain optional and may be implemented
+by the PuC.
 
 [#table_base_probesrvgrp_request_data]
 .Request Data
@@ -258,8 +281,8 @@ implemented then it has to be implemented completely with all services in that g
 	1: Service group implemented by platform.
 |===
 
-==== Service: *BASE_GET_BASE_ATTRIBUTES*
-This service is used to discover additional features supported by the base service group.
+==== Service: *BASE_GET_ATTRIBUTES*
+This service is used to discover additional features supported by the BASE service group.
 [#table_base_getbaseattrs_request_data]
 .Request Data
 - NA
@@ -297,19 +320,24 @@ This service is used to discover additional features supported by the base servi
 |===
 
 ==== Service: *BASE_SET_MSI*
-Configure the MSI address and data which the Platform Microcontroller can use as a doorbell to AP.
+This service is used to configure the MSI address and data which the Platform
+Microcontroller can use as a doorbell to the AP.
 
-The PuC to AP MSI can be used for both sending MSI or injecting wired interrupts. If the MSI target address is IMSIC then AP will take MSI whereas if the MSI target address is "setipnum" of APLIC then AP will take wired interrupt.
+The PuC to AP MSI can be used for both sending MSI or injecting wired
+interrupts. If the MSI target address is IMSIC, then the AP will take MSI
+whereas if the MSI target address is "setipnum" of the APLIC then the AP
+will take the wired interrupt.
 
-In case of platforms with PLIC, the platform need to provide a MMIO register to inject a edge-triggered interrupt.
+In the case of platforms with PLIC, the platform need to provide a MMIO
+register to inject an edge-triggered interrupt.
 
 [#table_base_setmsi_request_data]
 .Request Data
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word  | Name          	| Type          | Description
-| 0     | MSI_ADDRESS_LOW	| uint32	| Lower `32 bits` of MSI address
-| 1     | MSI_ADDRESS_HIGH	| uint32	| Upper `32 bits` of MSI address
+| 0     | MSI_ADDRESS_LOW	| uint32	| Lower `32 bits` of the MSI address
+| 1     | MSI_ADDRESS_HIGH	| uint32	| Upper `32 bits` of the MSI address
 | 2	| MSI_DATA		| uint32	| `32 bits` MSI data
 |===
 
@@ -319,11 +347,11 @@ In case of platforms with PLIC, the platform need to provide a MMIO register to 
 |===
 | Word  | Name          | Type          | Description
 | 0     | STATUS	| int32		| Return Status Code 
-[cols="5,5"]
+[cols="6,5"]
 !===
 ! *Error Code*  !  *Description*
 ! RPMI_SUCCESS  ! MSI address and data are configured successfully.
-! RPMI_ERROR_NOT_SUPPORTED ! MSI not supported. Implementation must use base attributes to discover this capability and then use this service..
+! RPMI_ERROR_NOT_SUPPORTED ! MSI is not supported. The implementation must use `BASE_GET_ATTRIBUTES` service to discover this capability and then use this service.
 !===
 - Other errors <<table_error_codes>>
 |===

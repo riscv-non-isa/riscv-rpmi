@@ -7,15 +7,16 @@ demand to manage and control the system along with executing compute workloads
 is challenging for the Application Processors running the OS. To mitigate this,
 systems today contain one or more Platform Microcontrollers which abstract 
 various platform specific system management and control related tasks. 
-RPMI enables the communication between the application processors and the 
-Platform micro-controllers. It abstracts the system complexity and provides a message-based interface for system management and control.
+RPMI enables the communication between the Application Processors and the
+Platform Microcontrollers. It abstracts the system complexity and provides a
+message-based interface for system management and control.
 
 RPMI is not limited to a single Application Processor and Platform 
 Microcontroller. It can support multiple Application Processors and multiple Platform Microcontrollers.
 
-The Platform Micro-Controller (PuC)  serves as an external embedded processor 
-that abstracts low-level platform control management from the application 
-processor system. This design allows RPMI to provide an OS-agnostic, generic interface that can support various System-on-Chip (SoC) hardware or platforms.
+The Platform Microcontroller (PuC)  serves as an external embedded processor
+that abstracts low-level platform control management from the Application
+Processor system. This design allows RPMI to provide an OS-agnostic, generic interface that can support various System-on-Chip (SoC) hardware or platforms.
 
 Furthermore, RPMI offers a scalable and extensible interface that can support 
 the addition of new service groups over time, allowing for the implementation 
@@ -38,7 +39,7 @@ RPMI currently provides message interfaces to manage power, voltage,
 performance, idle states etc, along with extensibility for vendors to add their 
 own interfaces.
 
-Application Processor and A.P are used interchangeably throughout this document.
+Application Processor and AP are used interchangeably throughout this document.
 Similarly, Platform Microcontroller and PuC are used interchangeably.
 
 .High Level Architecture

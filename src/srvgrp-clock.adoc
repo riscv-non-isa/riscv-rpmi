@@ -23,7 +23,7 @@ as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 
 Below table lists the services in this group:
 [#table_clock_services]
-.Clock Services
+.CLOCK Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
 | Service ID	| Service Name 			| Request Type
@@ -37,15 +37,16 @@ Below table lists the services in this group:
 | 0x08		| CLK_GET_RATE			| NORMAL_REQUEST
 |===
 
-==== Clock Notifications
+[#clock-notifications]
+==== Notifications
 This service group does not support any event for notification
 
 ==== Service: *CLK_ENABLE_NOTIFICATION*
-This service allows the AP to subscribe to clock service group notifications.
+This service allows the AP to subscribe to CLOCK service group notifications.
 The platform can optionally support notifications of events which might occur in
 the platform. The PuC can send these notification messages to AP if they are
 implemented and the AP has subscribed to these. The supported events are described
-above in Clock Notifications.
+in <<clock-notifications>>.
  
 [#table_clock_ennotification_request_data]
 .Request Data
