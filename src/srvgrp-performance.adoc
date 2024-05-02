@@ -331,8 +331,8 @@ compromises of three 32-bit words.
 [cols="1,5"]
 !===
 ! *Word* 	!  *Description*
-! 0	! OPP-level, a unique ID representing the performance level within the 
-OPP table.
+! 0	! Performance level representing clock frequency in kilohertz (kHz) and 
+should be unique within this performance domain ID.
 ! 1 	! Power Cost in microwatt (uW). This is an optional parameter. 
 Set to value of zero to indicate that power cost is not returned by the 
 platform.
