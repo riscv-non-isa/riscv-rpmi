@@ -43,7 +43,7 @@ The doorbell interrupt from the PuC to the APs can be either a message signaled
 interrupt (MSI) or a wired interrupt . If the doorbell interrupt from the PuC to 
 the APs is a wired interrupt then the RPMI transport must define a way to trigger
 the interrupt. If the doorbell interrupt from PuC to APs is a MSI then RPMI 
-message defined in the Base service group can be used by APs to configure the MSI.
+message defined in the BASE service group can be used by APs to configure the MSI.
 
 === Shared Memory Transport
 The physical memory of the RPMI shared memory transport can be either a device 
