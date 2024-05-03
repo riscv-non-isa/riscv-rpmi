@@ -1,3 +1,13 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - *VOLTAGE* (servicegroup_id: 0x00006)
 The system can be classified into multiple domains for voltage control.

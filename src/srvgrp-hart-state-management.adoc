@@ -1,3 +1,13 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 === Service Group - *HART_STATE_MANAGEMENT* (servicegroup_id: 0x00004)
 The HART_STATE_MANAGEMENT (HSM) service group defines a set of hart states and

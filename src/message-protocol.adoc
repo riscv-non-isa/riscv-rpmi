@@ -1,3 +1,14 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
 == Message Protocol
 Message Protocol supports a variety of system management and control tasks and 
 provides a message interface for such tasks. Each message which does a specific 

@@ -1,3 +1,14 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
 [[intro]]
 == Introduction
 This document describes the RISC-V Platform Management Interface (RPMI), which is

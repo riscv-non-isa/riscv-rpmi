@@ -1,3 +1,13 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - *DEVICE_POWER* (servicegroup_id: 0x00008)
 This DEVICE_POWER service group provides messages to manage the power states of

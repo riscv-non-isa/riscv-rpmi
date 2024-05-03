@@ -1,4 +1,16 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
 :stem: latexmath
+
 == Transport
 RPMI Transport is the abstraction over a physical medium used to send and 
 receive messages between an Application Processor and Platform Microcontroller 

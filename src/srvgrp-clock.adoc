@@ -1,3 +1,13 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - *CLOCK* (servicegroup_id: 0x00007)
 This service group is for the management of system clocks. Services defined in 

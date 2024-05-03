@@ -1,3 +1,13 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - *MANAGEMENT* (servicegroup_id: 0x0000A)
 This MANAGEMENT service group is designed to be used for software invocation of

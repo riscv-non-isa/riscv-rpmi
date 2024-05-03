@@ -1,3 +1,13 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - *SYSTEM_RESET* (servicegroup_id: 0x00002)
 This service group offers services for resetting or shutting down the system,

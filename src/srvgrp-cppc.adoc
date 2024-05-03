@@ -1,3 +1,14 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
 === Service Group - *CPPC* (servicegroup_id: 0x00005)
 This service group defines the services to control CPU performance by managing a set of registers and a dedicated physical memory block, which will define Fast-channel access to each hart in the system. Hart writes a specific 32 bits desired performance number in Fast-channel memory. PuC decodes the request and performs the corresponding CPPC operations.
 

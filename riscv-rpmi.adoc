@@ -1,4 +1,5 @@
 = RISC-V Platform Management Interface Specification (RPMI)
+:rootpath: ./
 :docgroup: RISC-V RPMI Task Group
 :description: RISC-V Platform Management Interface Specification Document (RPMI)
 :company: RISC-V.org
