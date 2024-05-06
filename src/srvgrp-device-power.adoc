@@ -1,3 +1,13 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - *DEVICE_POWER* (servicegroup_id: 0x00008)
 This DEVICE_POWER service group provides messages to manage the power states of
@@ -16,6 +26,10 @@ Power states for domains will be discovered via supported hardware description
 mechanisms where the values for ON and OFF are already fixed and known. 
 The power state encodes both the power state value and the context preserved or 
 lost information corresponding to that state.
+
+The DEVICE_POWER services take a 32-bit integer identifier known as `DOMAIN_ID`
+to specify the device power domain. These `DOMAIN_ID` identifiers are sequential
+and start from 0.
 
 [#table_devpower_powerstate_data]
 .Power States Encoding
@@ -81,9 +95,9 @@ notification.
 [cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Notifications are subscribed successfully.
+! RPMI_SUCCESS	! Notification is subscribed successfully.
 ! RPMI_ERROR_NOT_FOUND ! EVENT_ID is not supported or invalid.
-! RPMI_ERROR_NOT_SUPPORTED ! Notifications not supported.
+! RPMI_ERROR_NOT_SUPPORTED ! Notification is not supported.
 !===
 - Other errors <<table_error_codes>>
 |===
@@ -171,8 +185,8 @@ See Power States description in the <<table_devpower_powerstate_data>>.
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_NOT_FOUND ! Device power domain not found.
-! RPMI_ERROR_INVALID_PARAMETER ! Invalid or Not supported POWER_STATE value.
-! RPMI_ERROR_DENIED ! Client does not have permissions to change the Device power domain power state.
+! RPMI_ERROR_INVALID_PARAMETER ! Invalid or not supported POWER_STATE value.
+! RPMI_ERROR_DENIED ! Client does not have permissions to change the device power domain power state.
 ! RPMI_ERROR_HW_FAULT ! Failed due to hardware error.
 !===
 - Other errors <<table_error_codes>>
@@ -200,7 +214,7 @@ This service is used to get the current power state of a device power domain.
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
 ! RPMI_ERROR_NOT_FOUND ! Device power domain not found.
-! RPMI_ERROR_DENIED ! Client does not have permissions to change the Device power domain power state.
+! RPMI_ERROR_DENIED ! Client does not have permissions to change the device power domain power state.
 !===
 - Other errors <<table_error_codes>>
 | 1	| POWER_STATE	| uint32	| This field indicates the current power state

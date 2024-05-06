@@ -1,4 +1,5 @@
 = RISC-V Platform Management Interface Specification (RPMI)
+:rootpath: ./
 :docgroup: RISC-V RPMI Task Group
 :description: RISC-V Platform Management Interface Specification Document (RPMI)
 :company: RISC-V.org
@@ -58,17 +59,29 @@ Copyright 2023 by RISC-V International.
 include::src/contributors.adoc[]
 
 include::src/intro.adoc[]
+
 include::src/transport.adoc[]
+
 include::src/message-protocol.adoc[]
+
 include::src/srvgrp-base.adoc[]
+
 include::src/srvgrp-system-reset.adoc[]
+
 include::src/srvgrp-system-suspend.adoc[]
+
 include::src/srvgrp-hart-state-management.adoc[]
+
 include::src/srvgrp-cppc.adoc[]
+
 include::src/srvgrp-voltage.adoc[]
+
 include::src/srvgrp-clock.adoc[]
+
 include::src/srvgrp-device-power.adoc[]
+
 include::src/srvgrp-performance.adoc[]
+
 include::src/srvgrp-management.adoc[]
 
 // The index must precede the bibliography
