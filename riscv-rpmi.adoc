@@ -84,6 +84,8 @@ include::src/srvgrp-performance.adoc[]
 
 include::src/srvgrp-management.adoc[]
 
+include::src/srvgrp-ras-agent.adoc[]
+
 // The index must precede the bibliography
 //include::src/index.adoc[]
 include::src/bibliography.adoc[]
