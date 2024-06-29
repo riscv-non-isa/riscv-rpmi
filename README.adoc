@@ -64,6 +64,7 @@ make
 ----
 
 == Meeting Slides
+- https://docs.google.com/presentation/d/11a0woIlfyBSYbaI9n53QQYZPv8FwzG7ayPzd92zihZw[Meeting - June 27, 2024]
 - https://docs.google.com/presentation/d/18VAMHXqp0kFY2D43v70ux5DH25V41fbrBGAgloig3rA[Meeting - June 13, 2024]
 - https://docs.google.com/presentation/d/1rEjHMrXNHLk5J81IvnCqLJsqCuxKWkXd_HcQCj9rZnc[Meeting - May 16, 2024]
 - https://docs.google.com/presentation/d/1EsrcgUZiXf_mqt4Wcd0oiRyLw4ZIGaVMa6Ew0GZ7hoQ[Meeting - May 02, 2024]
