@@ -146,19 +146,20 @@ the future, as needed.
 !===
 ! *Bits* 	!  *Description*
 ! [31:30]	! CLOCK_FORMAT
+----
+0b00: Discrete Format
+Each element in the CLOCK_RATE array is a supported discrete clock rate value packed in ascending order. Each rate is in Hertz.
 
-	0b00: Discrete Format
-	Each element in the CLOCK_RATE array is a supported discrete clock rate value packed in ascending order. Each rate is in Hertz.
-
-	0b01: Linear Range
-	The CLOCK_RATE array contains the triplet (min_Hz, max_Hz, step_Hz). 
-	Each item in the triplet is a clock rate value.
-	CLOCK_RATE[0] = min_Hz  (lowest physical rate that the clock can synthesize)
-	CLOCK_RATE[1] = max_Hz   (highest physical rate that the clock can synthesize)
-	CLOCK_RATE[2] = step_Hz   (Step between two successive rates)
+0b01: Linear Range
+The CLOCK_RATE array contains the triplet (min_Hz, max_Hz, step_Hz). 
+Each item in the triplet is a clock rate value.
+CLOCK_RATE[0] = min_Hz  (lowest physical rate that the clock can synthesize)
+CLOCK_RATE[1] = max_Hz  (highest physical rate that the clock can synthesize)
+CLOCK_RATE[2] = step_Hz (Step between two successive rates)
+----
 ! [29:0]	! _Reserved_
 !===
-| 2	|NUM_RATESS	 	| uint32	| Number of clock rates of type depending on CLOCK_FORMAT.
+| 2	| NUM_RATES		| uint32	| Number of clock rates of type depending on CLOCK_FORMAT.
 | 3	| TRANSITION_LATENCY	| uint32	| Transition latency, in microseconds (us)
 | 4:7	| CLOCK_NAME		| uint8[16]	| Clock name
 |===
@@ -232,7 +233,6 @@ Set clock config, enable or disable the clock.
 ! [0]		! 
 
 	0b0: Disable clock
-
 	0b1: Enable clock
 !===
 |===
@@ -301,13 +301,11 @@ Set clock rate.
 !===
 ! *Bits* 	!  *Description*
 ! [31:30]	! Clock rate roundup/rounddown
-
-	0b00: Round down
-
-	0b01: Round up
-
-	0b10: Auto. Platform autonomously choose rate closest to the requested
-	rate.
+----
+0b00: Round down
+0b01: Round up
+0b10: Auto. Platform autonomously choose rate closest to the requested rate.
+----
 
 ! [29:0]	! _Reserved_ 
 !===

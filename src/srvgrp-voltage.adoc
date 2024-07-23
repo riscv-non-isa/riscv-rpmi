@@ -128,32 +128,35 @@ formats. Additional voltage formats can be accommodated in the future if require
 [cols="2,5a"]
 !===
 ! *Bits* 	!  *Description*
-! [31:30]	! VOLTAGE_FORMAT
-
-	0b00: Fixed voltage
-
-	0b01: Simple-linear range containing single triplet (min_uV, max_uV, step_uV).
+! [31:29]	! VOLTAGE_FORMAT
+----
+0b000: Fixed voltage
 	
-	0b10: Multi-linear range containing multiple linear ranges of type `0x1` where each range contains (min_uV, min_sel, max_sel, step_uV).
+0b001: Simple-linear range containing single triplet (min_uV, max_uV, step_uV).
 	
-	0b11: Discrete range.
-! [29:1]	! _Reserved_
+0b010: Multi-linear range containing multiple linear ranges where each range contains (min_uV, min_sel, max_sel, step_uV).
+	
+0b011: Discrete range.
+	
+0b100 - 0b111: Reserved.
+----
+! [28:1]	! _Reserved_
 ! [0]		! ALWAYS_ON
 
 	0b0: Voltage domain can be enabled/disabled.
-
 	0b1: Voltage domain is always-on, voltage value can be changed in the supported voltage range.
 !===
-| 2	|NUM_LEVELS	 | uint32	| Number of voltage levels supported by 
-domain. Some values are dependent on the VOLTAGE_FORMAT.
+| 2	|NUM_LEVELS	 | uint32	| Number of voltage levels (word-size)
+supported by the domain. Values are dependent on the VOLTAGE_FORMAT. Get the
+voltage levels with VOLT_GET_SUPPORTED_LEVELS.
 [cols="2,5a"]
 !===
 ! *Value* 	!  *Description*
 ! 1		! When VOLTAGE_FORMAT=`0x0`
 ! 3		! When VOLTAGE_FORMAT=`0x1`
-! N		! When VOLTAGE_FORMAT=`0x2` or `0x3`. Based on the format here
-each item can be a single voltage value or tuple of values. Check the VOLTAGE_FORMAT
-field in FLAGS.
+! 4N		! When VOLTAGE_FORMAT=`0x2` (Multiple of 4 voltage level words)
+! N		! When VOLTAGE_FORMAT=`0x3` (NUM_LEVELS is the number of 
+discrete voltage levels)
 !===
 | 3	| TRANSITION_LATENCY	| uint32	| Transition latency, in microsecond (us).
 | 4:7	| VOLTAGE_DOMAIN_NAME	| uint8[16]	| Voltage domain name, a NULL-terminated ASCII string up to 16-bytes.
@@ -201,42 +204,46 @@ all the voltage levels.
 !===
 - Other errors <<table_error_codes>>
 | 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.
-| 2	| REMAINING	| uint32	| Remaining number of levels.
-| 3	| RETURNED	| uint32	| Number of levels returned in this request.
-| 4	| VOLTAGE[0]	| int32	| Voltage array where each entry in the
-array is a voltage level in microvolts (uV).
+| 2	| REMAINING	| uint32	| Remaining number of voltage levels (in word).
+| 3	| RETURNED	| uint32	| Number of voltage levels (in word) returned in this request.
+| 4	| VOLTAGE	| int32[N]	| Voltage level
 
-N is specified by the VOLT_GET_ATTRIBUTES.NUM_LEVELS. Voltage represented in 
-microvolt (uV).
+[cols="1,1,5"]
+!===
+3+! *Format: Fixed Voltage (VOLT_GET_ATTRIBUTES.FLAGS[31:29]: 0)*
+! *Word*	! *Name*	! *Description*
+! 0		! volt_uV	! Fixed Voltage (uV)
+!===
 
-If the bits in VOLT_GET_ATTRIBUTES.FLAGS[31:30] are set to `0` (Fixed voltage), VOLTAGE[0]
-contains a fixed voltage level in the array. +
-`VOLTAGE[0]: volt_uV`
+[cols="1,1,5"]
+!===
+3+! *Format: Simple Linear (VOLT_GET_ATTRIBUTES.FLAGS[31:29]: 1)*
+! *Word*	! *Name*	! *Description*
+! 0		! min_uV	! Lower boundary of voltage level (uV)
+! 1		! max_uV	! Upper boundary of voltage level (uV)
+! 2		! step_uV	! Step size (uV)
+!===
 
-If the bits in VOLT_GET_ATTRIBUTES.FLAGS[31:30] are set to `1` (Simple-linear), it means that
-the voltage array contains three entries as below: +
-`VOLTAGE[0]: min_uV +
-VOLTAGE[1]: max_uV +
-VOLTAGE[2]: step_uV`
- 
-If the bits in VOLT_GET_ATTRIBUTES.FLAGS[31:30] are set to `2` (Multi-linear), it indicates
-that the voltage array contains multiple groups of four entries. Each group 
-represent a linear voltage range and consists of the following entries: +
-`VOLTAGE[0] = min_uV +
-VOLTAGE[1] = min_sel +
-VOLTAGE[2] = max_sel +
-VOLTAGE[3] = step_uV`
+[cols="1,1,5"]
+!===
+3+! *Format: Multi-Linear (VOLT_GET_ATTRIBUTES.FLAGS[31:29]: 2)*
+! *Word*	! *Name*	! *Description*
+! 0		! min_uV	! Lower boundary of voltage level (uV)
+! 1		! min_sel	! Lowest selector for range
+! 2		! max_sel	! Highest selector for range
+! 3		! step_uV	! Step size (uV)
+!===
 
-If the bits in  VOLT_GET_ATTRIBUTES.FLAGS[31:30] are set to 3 (Discrete), it means that
-the entry array contains discrete voltage levels listed in ascending numeric 
-order (_Low index represents minimum voltage level, and high index represents
-maximum voltage level supported_). +
-`VOLTAGE[0]: Voltage0 +
-VOLTAGE[1]: Voltage1 +
-VOLTAGE[2]: Voltage2 +
-VOLTAGE[N - 1]: Voltage(N – 1)`
-| 5	| VOLTAGE[1]	| int32	|
-| ...	| VOLTAGE[N-1]	| int32	|
+[cols="1,1,5"]
+!===
+3+! *Format: Discrete (VOLT_GET_ATTRIBUTES.FLAGS[31:29]: 3)*
+! *Word*	! *Name*	! *Description*
+! 0		! volt_uV	! Discrete voltage level (uV)
+! 1		! volt_uV	! Discrete voltage level (uV)
+3+! ...
+! N		! volt_uV	! Discrete voltage level (uV)
+!===
+
 |===
 
 ==== Service: *VOLT_SET_CONFIG*
@@ -261,7 +268,6 @@ the voltage level
 ! [0]		! 
 
 	0b0: Disable voltage for domain
-
 	0b1: Enable voltage for domain
 !===
 |===
