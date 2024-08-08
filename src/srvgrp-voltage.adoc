@@ -17,6 +17,35 @@ voltage source, thereby influencing either the individual device or the collecti
 group of devices sharing the same voltage source.
 Each domain is identified by `DOMAIN_ID` which is a `32 bits` integer starting from `0`.
 
+*Voltage Levels Format*::
+There are 4 types of voltage level formats supported in the voltage service
+group. The voltage levels are represented as a group.
+[#table_voltage_level]
+.Voltage Levels Structure
+[cols="1,1,5" width=100%, align="center"]
+|===
+3+| *Fixed Voltage Format*
+| *Word*	| *Name*	| *Description*
+| 0		| volt_uV	| Fixed Voltage (uV)
+3+|
+3+| *Simple Linear Format*
+| *Word*	| *Name*	| *Description*
+| 0		| min_uV	| Lower boundary of voltage level (uV)
+| 1		| max_uV	| Upper boundary of voltage level (uV)
+| 2		| step_uV	| Step size (uV)
+3+|
+3+| *Multi-Linear Format*
+| *Word*	| *Name*	| *Description*
+| 0		| min_uV	| Lower boundary of voltage level (uV)
+| 1		| min_sel	| Lowest selector for range
+| 2		| max_sel	| Highest selector for range
+| 3		| step_uV	| Step size (uV)
+3+|
+3+| *Discrete Format*
+| *Word*	| *Name*	| *Description*
+| 0		| volt_uV	| Discrete voltage level (uV)
+|===
+
 Below table lists the services in this group:
 [#table_voltage_services]
 .VOLTAGE Services
@@ -43,14 +72,14 @@ The platform can optionally support notifications of events which might occur
 in the platform. The PuC can send these notification messages to the AP if
 they are implemented and the AP has subscribed to them. The supported events
 are described in <<voltage-notifications>>.
- 
+
 
 [#table_voltage_ennotification_request_data]
 .Request Data
 [cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| EVENT_ID	| uint32	| Event to be subscribed for 
+| 0	| EVENT_ID	| uint32	| Event to be subscribed for
 notification.
 |===
 
@@ -124,20 +153,16 @@ formats. Additional voltage formats can be accommodated in the future if require
 ! RPMI_ERROR_NOT_FOUND ! Voltage DOMAIN_ID not found
 !===
 - Other errors <<table_error_codes>>
-| 1	| FLAGS		| uint32	| 
+| 1	| FLAGS		| uint32	|
 [cols="2,5a"]
 !===
 ! *Bits* 	!  *Description*
-! [31:29]	! VOLTAGE_FORMAT
+! [31:29]	! VOLTAGE_FORMAT (Refer to <<table_voltage_level>>)
 ----
 0b000: Fixed voltage
-	
-0b001: Simple-linear range containing single triplet (min_uV, max_uV, step_uV).
-	
-0b010: Multi-linear range containing multiple linear ranges where each range contains (min_uV, min_sel, max_sel, step_uV).
-	
+0b001: Simple-linear.
+0b010: Multi-linear.
 0b011: Discrete range.
-	
 0b100 - 0b111: Reserved.
 ----
 ! [28:1]	! _Reserved_
@@ -146,24 +171,20 @@ formats. Additional voltage formats can be accommodated in the future if require
 	0b0: Voltage domain can be enabled/disabled.
 	0b1: Voltage domain is always-on, voltage value can be changed in the supported voltage range.
 !===
-| 2	|NUM_LEVELS	 | uint32	| Number of voltage levels (word-size)
-supported by the domain. Values are dependent on the VOLTAGE_FORMAT. Get the
-voltage levels with VOLT_GET_SUPPORTED_LEVELS.
+| 2	|NUM_LEVELS	 | uint32	| Number of voltage levels (number of arrays)
+supported by the domain. Get the voltage levels with VOLT_GET_SUPPORTED_LEVELS.
 [cols="2,5a"]
 !===
 ! *Value* 	!  *Description*
-! 1		! When VOLTAGE_FORMAT=`0x0`
-! 3		! When VOLTAGE_FORMAT=`0x1`
-! 4N		! When VOLTAGE_FORMAT=`0x2` (Multiple of 4 voltage level words)
-! N		! When VOLTAGE_FORMAT=`0x3` (NUM_LEVELS is the number of 
-discrete voltage levels)
+! 1		! Fixed voltage format only
+! N		! Simple-linear, Multi-linear and Discrete
 !===
 | 3	| TRANSITION_LATENCY	| uint32	| Transition latency, in microsecond (us).
 | 4:7	| VOLTAGE_DOMAIN_NAME	| uint8[16]	| Voltage domain name, a NULL-terminated ASCII string up to 16-bytes.
 |===
 
 ==== Service: *VOLT_GET_SUPPORTED_LEVELS*
-Each domain may support multiple voltage levels which are allowed by the domain 
+Each domain may support multiple voltage levels which are allowed by the domain
 to operate.
 Depending on the hardware, the voltage levels can be either discrete or stepwise range.
 In a discrete voltage range, the voltages will be arranged in sequence, starting
@@ -203,56 +224,19 @@ all the voltage levels.
 ! RPMI_ERROR_INVALID_PARAMETER	! VOLTAGE_LEVEL_INDEX is not valid
 !===
 - Other errors <<table_error_codes>>
-| 1	| FLAGS		| uint32	| _Reserved_ and must be `0`.
-| 2	| REMAINING	| uint32	| Remaining number of voltage levels (in word).
-| 3	| RETURNED	| uint32	| Number of voltage levels (in word) returned in this request.
-| 4	| VOLTAGE	| int32[N]	| Voltage level
-
-[cols="1,1,5"]
-!===
-3+! *Format: Fixed Voltage (VOLT_GET_ATTRIBUTES.FLAGS[31:29]: 0)*
-! *Word*	! *Name*	! *Description*
-! 0		! volt_uV	! Fixed Voltage (uV)
-!===
-
-[cols="1,1,5"]
-!===
-3+! *Format: Simple Linear (VOLT_GET_ATTRIBUTES.FLAGS[31:29]: 1)*
-! *Word*	! *Name*	! *Description*
-! 0		! min_uV	! Lower boundary of voltage level (uV)
-! 1		! max_uV	! Upper boundary of voltage level (uV)
-! 2		! step_uV	! Step size (uV)
-!===
-
-[cols="1,1,5"]
-!===
-3+! *Format: Multi-Linear (VOLT_GET_ATTRIBUTES.FLAGS[31:29]: 2)*
-! *Word*	! *Name*	! *Description*
-! 0		! min_uV	! Lower boundary of voltage level (uV)
-! 1		! min_sel	! Lowest selector for range
-! 2		! max_sel	! Highest selector for range
-! 3		! step_uV	! Step size (uV)
-!===
-
-[cols="1,1,5"]
-!===
-3+! *Format: Discrete (VOLT_GET_ATTRIBUTES.FLAGS[31:29]: 3)*
-! *Word*	! *Name*	! *Description*
-! 0		! volt_uV	! Discrete voltage level (uV)
-! 1		! volt_uV	! Discrete voltage level (uV)
-3+! ...
-! N		! volt_uV	! Discrete voltage level (uV)
-!===
-
+| 1	| FLAGS			| uint32 | _Reserved_ and must be `0`.
+| 2	| REMAINING		| uint32 | Remaining number of voltage levels (number of arrays).
+| 3	| RETURNED		| uint32 | Number of voltage levels (number of arrays) returned in this request.
+| 4	| VOLTAGE_LEVEL[N]	| struct | Voltage level. (<<table_voltage_level>>)
 |===
 
 ==== Service: *VOLT_SET_CONFIG*
 Set voltage config message enable or disable any voltage domain. Enabling the voltage
 means applying the domain with the voltage level to operate normally. The AP can
-enable the voltage to any domain without knowing the actual voltage levels. 
+enable the voltage to any domain without knowing the actual voltage levels.
 Disabling the voltage level means disabling the voltage supply to the domain.
 
-CONFIG field encodes these discrete settings which do not require AP to know 
+CONFIG field encodes these discrete settings which do not require AP to know
 the voltage level
 [#table_voltage_setdomainconfig_request_data]
 .Request Data
@@ -265,7 +249,7 @@ the voltage level
 !===
 ! *Bits* 	!  *Description*
 ! [31:1]	! _Reserved_
-! [0]		! 
+! [0]		!
 
 	0b0: Disable voltage for domain
 	0b1: Enable voltage for domain
@@ -290,7 +274,7 @@ specified voltage domain.
 |===
 
 ==== Service: *VOLT_GET_CONFIG*
-Get voltage config message request for the configuration of the voltage domain 
+Get voltage config message request for the configuration of the voltage domain
 currently set.
 [#table_voltage_getdomainconfig_request_data]
 .Request Data
@@ -317,7 +301,7 @@ currently set.
 [cols="2,5a"]
 !===
 ! *Value* 	!  *Description*
-! 0x0		! Disabled 
+! 0x0		! Disabled
 ! 0x1		! Enabled
 !===
 |===
