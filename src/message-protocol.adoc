@@ -178,10 +178,12 @@ data exceeds the size that a single message can accommodate, multipart messages
 can be used. Some request messages may not have associated data and in that
 case their `DATALEN` field in the message must be `0`.
 
-Acknowledgement message data contains `a 32-bit` `STATUS` code which represents
-the error code.
-Acknowledgement message may contain more data apart from the `STATUS` code
-depending on the corresponding request message.
+The acknowledgement message data must contain a `32-bit` `STATUS` code which
+represents the error code generated during the servicing of the request message.
+The acknowledgement message may contain more data apart from the `STATUS` code
+depending on the corresponding request message. The minimum `DATALEN` value for
+the acknowledgement message is `4-byte` for `STATUS` code. The acknowledgement
+message must not return partial data apart from `STATUS` code if supported.
 
 === Notifications
 Notification messages are asynchronous messages that notify about the events
