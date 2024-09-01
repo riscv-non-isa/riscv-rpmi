@@ -611,7 +611,7 @@ for performance control.
 If the number of words required for all available Hart IDs exceeds the number of
 words that can be returned in one acknowledgement message then the platform
 microcontroller will set the `REMAINING` and `RETURNED` fields accordingly and
-only return the hart IDs which can be accommodated. The application processor
+only return the Hart IDs which can be accommodated. The application processor
 may need to call this service again with the appropriate `START_INDEX` until the
 `REMAINING` field returns `0`.
 
