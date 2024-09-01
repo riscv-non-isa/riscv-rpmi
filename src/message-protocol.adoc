@@ -11,7 +11,7 @@ endif::rootpath[]
 
 == Message Protocol
 The RPMI protocol defines the message format and different messages
-for system management and control tasks. Each message is called a *Service*
+for system management and control tasks. A message is called a *Service* if its
 designated to perform a specific task. Multiple similar services are grouped
 logically into a *Service Group* like Clock, Voltage, Power management, etc.
 A service call results in a request message being sent on a transport
@@ -20,58 +20,74 @@ vice-versa. If the request has an associated response, the platform
 microcontroller after processing and servicing the request can send the
 response message with status and additional data.
 
-
-
-.Service Groups and Services
-image::servicegroups-service.png[400,400]
-
 === Message Types
-There are three categories of messages supported - *Request*, *Acknowledgement*
-and *Notification*.
+Three categories of message are supported - REQUEST, ACKNOWLEDGEMENT
+and NOTIFICATION. 
 
-==== REQUEST
-Message that convey a command is called a request message. Each command is
-associated with an action which the platform microcontroller will take and may
-acknowledge the application processor with a response message if supported by
-that request message. The response message will carry status code and
-additional data if required.
+A Request message represents a specific control and management task which needs
+to be performed. A Request message represents a service in RPMI. Depending on
+the services defined, a request message may also carry data if required by a
+service. Not all request messages have an associated response message also
+called an acknowledgement. For example the request for system reset from the
+application processor to the platform microcontroller does not require a
+response message. If a request message has an associated acknowledgement message
+then it is called a NORMAL REQUEST otherwise it is called a POSTED REQUEST. 
 
-Not every request message needs an acknowledgement due to the nature of the
-action requested by the application processor that may leave the application
-processor in a state where it cannot receive the acknowledgment. For example,
-when the application processor requests the platform microcontroller to
-suspend the system or reset the application processor itself.
+The Aknowledgement message indicates the status of the request message after it
+has been processed by the platform microcontroller.
+The acknowledgement messages may also contain additional data depending on the
+defined service. 
 
-Request messages based on the acknowledgement are further categorized as -
+A Notification is an asynchronous message from the platform microcontroller to
+the application processor to inform it about the events that have occurred in
+the system.
 
-===== Normal Requests
-Request message with Acknowledgement.
+[#table_message_types]
+.RPMI Message Types
+[cols="3, 5a, 3", width=100%, align="center", options="header"]
+|===
+| Message Type
+| Message Subtype
+| Description
 
-===== Posted Requests
-Request message without Acknowledgement
+| REQUEST
+| [cols="6,7a", options="header"]
+!===
+! Subtype Name
+! Description
 
-==== ACKNOWLEDGEMENT
-Acknowledgement is a message which carries the status of the request message
-after it has been processed successfully. The acknowledgement messages may
-also carry additional data depending on the service.
+! NORMAL REQUEST
+! Request with Acknowledgement.
 
-==== NOTIFICATION
-Notification is a message sent asynchronously from the platform
-microcontroller to the application processor to notify about the events
-happened in the system related to various service groups.
+! POSTED REQUEST
+! Request without Acknowledgement.
+!===
+
+| Messages for requesting a service from platform microcontroller. 
+
+| ACKNOWLEDGEMENT
+| _Not applicable_
+| Response message corresponding to a NORMAL REQUEST message.
+
+| NOTIFICATION
+| _Not applicable_
+| Asynchronous messages from the platform microcontroller to the
+application processor for sending events.
+|===
 
 === Message Format
-Each message regardless of its type consists of two parts - Message Header
-and Data. The size of the message header is fixed, but the data size is
-implementation-defined, based on the layout of transport queues. All the
+Each message regardless of its type consists of two parts - message header
+and data. The size of the message header is fixed, but the size of the data
+is implementation-defined, based on the layout of the transport queues. All the
 messages must follow the byte order as defined by the RPMI transport.
 
-image::message-format.png[700,900]
+.RPMI Message Format
+image::message-format.png[700,900, align="center"]
 
 ==== Message Layout Tables
-The message layout which includes header and data is represented in the form
+The message layout, including header and data, is presented in the form
 of tables as shown below. Some of the columns listed below may be omitted from
-some of the tables as required.
+some of the tables if required.
 
 [#table_message_layout_table_example]
 .Message Layout Table Example
@@ -82,17 +98,17 @@ some of the tables as required.
 | Type
 | Description
 
-| Each message is split into multiple *Words* where each word is of `4-byte`
-and indexed starting from `0`. This column represents the index of that word.
+| This column represents the index of that word. +
+Each message is split into several *Words*, where each word is `4-byte` long
+and indexed starting from `0`.
 | Name of the word. Name may be omitted if not required.
 | Type of field, eg: int32 or uint32, etc
 | Description and interpretation of the fields present in the word.
 |===
 
 ==== Message Header
-The message header of `8-byte` has a fixed layout that consists of multiple
-fields. Each message gets a unique identity in an RPMI instance through its
-header.
+The `8-byte` message header has a fixed layout consisting of several fields.
+Each message is given a unique identity in an RPMI instance by its header.
 
 [#table_message_header]
 .Message Header
@@ -112,7 +128,7 @@ header.
 ! [31:24] 
 ! FLAGS
 
-	FLAGS[7:4]: Reserved, must be initialized to 0.
+	FLAGS[7:4]: RESERVED.
 
 	FLAGS[3]: DOORBELL
 	0b0: Doorbell interrupt is enabled.
@@ -123,16 +139,16 @@ header.
 	0b001: POSTED_REQUEST
 	0b010: ACKNOWLEDGEMENT
 	0b011: NOTIFICATION
-	0b100 - 0b111: Reserved, must be initialized to 0.
+	0b100 - 0b111: RESERVED, must be 0.
 
 ! [23:16] 
 ! SERVICE_ID +
-`8-bit` identifier which represents a service(message). This identifier is
-unique in a particular service group.
+`8-bit` identifier representing a service(message). This identifier is
+unique within a given service group.
 
 ! [15:0] 
 ! SERVICEGROUP_ID +
-Services alike are grouped into service groups and each group is identified by
+Services are grouped into service groups and each group is identified by a
 `SERVICEGROUP_ID` which is a `16-bit` identifier.
 !===
 
@@ -145,69 +161,66 @@ Services alike are grouped into service groups and each group is identified by
 
 ! [31:16]  
 ! TOKEN +
-`16-bit` sequence number for a message. Used along with `SERVICEGROUP_ID` and
-`SERVICE_ID` to match the request message with its corresponding
+`16-bit` sequence number for a message. Used together with `SERVICEGROUP_ID` and
+`SERVICE_ID` to associate the request message with its corresponding
 acknowledgement message.
 
 ! [15:0] 
 ! DATALEN +
-Stores the size of the message data in bytes. Value stored in this field must
-be multiple of `4-byte` or `0` if no data is present.
+Stores the size of the message data in bytes. The value stored in this field must
+be a multiple of `4-byte` or `0` if no data is present.
 !===
 |===
 
-In case of normal request messages which require acknowledgement, the
-platform microcontroller must preserve the `TOKEN`, `SERVICEGROUP_ID`,
-`SERVICE_ID` from the normal request message header and use these fields in the
-acknowledgement message header. The platform microcontroller must mark the
-message type as `ACKNOWLEDGEMENT` in the `FLAGS` and update the `DATALEN`
-depending on the data supported by that acknowledgement.
-In case of notification, the platform microcontroller will generate the `TOKEN`
-and set the `SERVICEGROUP_ID` and fixed `SERVICE_ID=0x00` assigned for each
-notification message in each service group and set the 
-`FLAGS` with message type as `NOTIFICATION`. The notification messages do not 
-require any acknowledgement.
+In the case of normal request messages requiring acknowledgement, the
+platform microcontroller must preserve the `TOKEN`, `SERVICEGROUP_ID` and
+`SERVICE_ID` fields from the normal request message header and use these fields
+in the acknowledgement message header. The platform microcontroller must mark
+the message type as `ACKNOWLEDGEMENT` in the `FLAGS` and update the `DATALEN`
+according to the data carried by this acknowledgement.
+
+In the case of notification message, the platform microcontroller will generate
+the `TOKEN` and set the `SERVICEGROUP_ID` and the fixed `SERVICE_ID=0x00`
+assigned to the notification message type in each service group and set the 
+`FLAGS` with the message type as `NOTIFICATION`. The notification messages do not 
+require an acknowledgement.
 
 ==== Message Data
-Message data in any message type if present must be multiple of `4-byte`.
-Data format for the request and acknowledgement messages depends on each 
-service and details are present with each service section in their 
-respective service groups. The maximum size of data each message can
+Message data in a message of any type if present must be a multiple of `4-byte`.
+The data format for the request and acknowledgement messages depends on the 
+individual service and details are defined in every service's section in their 
+respective service group. The maximum size of data each message can
 accommodate depends on the transport `slot-size` attribute. Services where the
 data exceeds the size that a single message can accommodate, multipart messages
 can be used. Some request messages may not have associated data and in that
 case their `DATALEN` field in the message must be `0`.
 
-The acknowledgement message data must contain a `32-bit` `STATUS` code which
-represents the error code generated during the servicing of the request message.
-The acknowledgement message may contain more data apart from the `STATUS` code
-depending on the corresponding request message. The minimum `DATALEN` value for
-the acknowledgement message is `4-byte` for `STATUS` code. The acknowledgement
-message must not return partial data apart from `STATUS` code if supported.
+The acknowledgement message data contains `a 32-bit` `STATUS` code which
+represents the error code.
+The acknowledgement message may contain other data in addition to the `STATUS`
+code depending on the corresponding request message.
 
 === Notifications
 Notification messages are asynchronous messages that notify about the events
-that occurred in the system. A notification message is a posted message which
-does not require an acknowledgement. A notification message may combine
-multiple events into a single message depending on the available space in the
-message data. Individual events may also have additional data associated with
-them. Any action required on behalf of any event notification is dependent on
-the application processor. <<img-notification-format>> shows the notification
-message format.
+that have occurred in the system. A notification message has no associated
+acknowledgement. A notification message can combine multiple events into a
+single message depending on the space available in the message data. Individual
+events may also have additional data associated with them. Any action required
+on behalf of an event depends on the application processor.
+<<img-notification-format>> shows the notification message format.
 
-Each service group has a service of type notification with a fixed 
-`SERVICE_ID=0x00` used to send the events in the notification message.
-By default the event notification is disabled for each service
+Each service group has one service with a fixed `SERVICE_ID=0x00` to subscribe
+to events. By default the event notification is disabled for each service
 group and the application processor must subscribe to the supported events in
 each service group to receive notification messages. Notification messages are
 only sent for events to which the application processor has subscribed to. If
 multiple events are supported in each service group, the application processor
-must subscribe to each event individually through reserved
-`ENABLE_NOTIFICATION` service in each service group. 
+must subscribe to each event individually using reserved `ENABLE_NOTIFICATION`
+service in every service group. 
 
 [#img-notification-format]
-.Notification Format
-image::notification-format.png[500,600]
+.Notification Message Format
+image::notification-format.png[500,600, align="center"]
 
 ==== Events
 An event consists of a header containing two fields: `EVENT_ID (8-bit)`
@@ -215,44 +228,36 @@ and `EVENT_DATALEN (16-bit)`.
 An event may also have associated data. If the event data is present, it must
 be a multiple of `4-byte`.
 
-The number of events that can be stored in a notification message depends upon
+The number of events that can be stored in a notification message depends on
 the maximum message data size. The `DATALEN` field in the message header 
 represents the data size in bytes present in the message which is the aggregate
 of all event sizes. The application processor must parse each event and
 its data according to the event header.
 
-Event data and its format is specific to a service group and details are
+The event data and its format is specific to a service group and details are
 given in the respective service group sections.
 
 [#img-event-header]
 .Event Header
-image::event-header.png[800,800]
+image::event-header.png[800,800, align="center"]
 
 [#table_notification_message_format]
-.Notification Message Format
+.Event Format
 [cols="3,2,7a", width=100%, align="center", options="header"]
 |===
-| Word	
-| Name
-| Description
-
-| 0
-| EVENT_HDR	
-| `32-bit` field represents a single event.
-
-[cols="1,7a", options="header"]
+| Word	| Name		| Description
+| 0	| *EVENT_HDR*	| `32-bit` field represents a single event.
+[cols="1,7a"]
 !===
-! Bits
-! Description
-
-! [31:24] ! _Reserved and must be initialized to_ `0`.
-! [23:16] ! EVENT_ID + 
+! *Bits*  !  *Description*
+! [31:24] ! Reserved and must be initialized to `0`.
+! [23:16] ! *EVENT_ID* + 
 Unique identifier for an event in a service group.
 
-! [15:0] ! EVENT_DATALEN +
+! [15:0] ! *EVENT_DATALEN* +
 `16-bit` field to store event data size in bytes.
 !===
-| 1:(EVENT_DATALEN/4)	| EVENT_DATA	| Event Data
+| 1 : (*EVENT_DATALEN/4*)	| *EVENT_DATA*	| Event Data
 |===
 
 The table above shows the format for an event and its data. Subsequent events
@@ -260,80 +265,34 @@ are packed in the same way. This specification does not define the order of
 packing of multiple events and its implementation defined.
 
 === Return Error Codes
-The table below lists all the error codes that can be returned by any service
-in the in the `STATUS` word of the acknowledgement message.
+The following table lists all the error codes that can be returned by a service
+in the `STATUS` field of the acknowledgement message.
 
 [#table_error_codes]
 .Return Status Codes
 [cols="4, 2, 6", width=100%, align="center", options="header"]
 |===
-| Name				
-| Status Code
-| Description
-
-| RPMI_SUCCESS 			
-| 0  
-| Service has been completed successfully.
-
-| RPMI_ERROR_FAILED 		
-| -1 
-| Failed due to general error.
-
-| RPMI_ERROR_NOT_SUPPORTED	
-| -2 
-| Service or feature not supported.
-
-| RPMI_ERROR_INVALID_PARAMETER 	
-| -3 
-| One or more parameters passed are invalid.
-
-| RPMI_ERROR_DENIED		
-| -4 
-| Requested operation denied due to insufficient permissions.
-
-| RPMI_ERROR_NOT_FOUND 		
-| -5 
-| Requested resource not found.
-
-| RPMI_ERROR_OUT_OF_RANGE	
-| -6 
-| Index out of range.
-
-| RPMI_ERROR_OUT_OF_RESOURCE 	
-| -7 
-| Resource limit reached.
-
-| RPMI_ERROR_HW_FAULT 		
-| -8 
-| Operation failed due to hardware fault.
-
-| RPMI_ERROR_BUSY 		
-| -9 
-| System is currently busy and cannot respond to requests.
-
-| RPMI_ERROR_TIMEOUT 		
-| -10 
-| Operation timed out.
-
-| RPMI_ERROR_COMMS		
-| -11 
-| Error in communication.
-
-| RPMI_ERROR_ALREADY		
-| -12 
-| Operation already in progress or state changed already for which the
-operation was performed.
-
-| RPMI_ERROR_EXTENSION	
-| -13 
-| Error in extension implementation that violates the extension specification
-or the extension version mismatch.
-
-|	
-| -14 to -127 	
-| _Reserved_
-|
-| > -127	
-| _Vendor specific_
+| Name				| Status Code | Description
+| RPMI_SUCCESS 			| 0  | Service has been completed successfully
+| RPMI_ERROR_FAILED 		| -1 | Failed due to general error
+| RPMI_ERROR_NOT_SUPPORTED	| -2 | Service or feature not supported
+| RPMI_ERROR_INVALID_PARAMETER 	| -3 | One or more parameters passed are 
+invalid
+| RPMI_ERROR_DENIED		| -4 | Requested operation denied due to
+insufficient permissions or failed dependency check
+| RPMI_ERROR_NOT_FOUND 		| -5 | Requested resource not found
+| RPMI_ERROR_OUT_OF_RANGE	| -6 | Index out of range
+| RPMI_ERROR_OUT_OF_RESOURCE 	| -7 | Resource limit reached
+| RPMI_ERROR_HW_FAULT 		| -8 | Operation failed due to hardware fault.
+| RPMI_ERROR_BUSY 		| -9 | System is currently busy and cannot 
+respond to requests
+| RPMI_ERROR_TIMEOUT 		| -10 | Operation timed out
+| RPMI_ERROR_COMMS		| -11 | Error in communication
+| RPMI_ERROR_ALREADY		| -12 | Operation already in progress or state
+changed already for which the operation was performed.
+| RPMI_ERROR_EXTENSION	| -13 | Error in extension implementation that
+violates the extension specification or the extension version mismatch
+|	| -14 to -127 	| Reserved
+|	| > -127	| Vendor specific
 |===
 
