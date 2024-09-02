@@ -11,61 +11,62 @@ endif::rootpath[]
 
 [[intro]]
 == Introduction
-This document describes the RISC-V Platform Management Interface (RPMI), which is
-an extensible interface to manage and control the system using a dedicated microcontroller. Systems today pose challenges in terms of manageability and controllability where the OS may have to support a variety of hardware which
-can be different in design and connected devices. The extra complexity and
-demand to manage and control the system along with executing compute workloads
-is challenging for the Application Processors running the OS. To mitigate this,
-systems today contain one or more Platform Microcontrollers which abstract 
-various platform specific system management and control related tasks. 
-RPMI enables the communication between the Application Processors and the
-Platform Microcontrollers. It abstracts the system complexity and provides a
+This document describes the RISC-V Platform Management Interface (RPMI), which
+provides an extensible interface to manage and control the system using a 
+dedicated microcontroller. 
+
+Today's systems pose challenges in terms of manageability and controllability
+where the operating system may need to support a variety of hardware that can be
+of different designs and with variety of connected devices. The extra complexity
+and demand to manage and control the system along with executing compute
+workloads is a challenge for the application processors running the OS. To
+mitigate this, systems today contain one or more platform microcontrollers
+that abstract various platform specific system management and control related
+tasks. RPMI enables the communication between the application processors and the
+platform microcontrollers. It abstracts the system complexity and provides a
 message-based interface for system management and control.
 
-RPMI is not limited to a single Application Processor and Platform 
-Microcontroller. It can support multiple Application Processors and multiple Platform Microcontrollers.
+RPMI is not limited to a single application processor and platform 
+microcontroller. It can support multiple application processors and multiple
+platform microcontrollers.
 
-The Platform Microcontroller (PuC)  serves as an external embedded processor
-that abstracts low-level platform control management from the Application
-Processor system. This design allows RPMI to provide an OS-agnostic, generic interface that can support various System-on-Chip (SoC) hardware or platforms.
+The platform microcontroller or in short PuC abstracts low-level platform
+control and management from the application processor. 
 
-Furthermore, RPMI offers a scalable and extensible interface that can support 
-the addition of new service groups over time, allowing for the implementation 
-of new features and functions. This feature simplifies the integration of new components and technologies into existing systems, making it easier for system designers to keep up with changing requirements and adapt to evolving industry standards.
-
-
+In addition, RPMI provides a OS-agnostic scalable and extensible interface that
+can support the addition of new capabilities and services over time. This
+feature simplifies the integration of new components and technologies into
+existing systems, making it easier for system designers to keep up with changing
+requirements and adapt to evolving industry standards.
 
 === Abstractions provided by RPMI
 *Transport*: Describes the mechanism by which the messages are exchanged 
-between the Application Processors and Platform Microcontrollers. 
+between the application processor and the platform microcontroller. 
 
-*Messaging Protocol*: Provides the Messaging Interface between the Application
-Processors and Platform Microcontrollers to communicate with each other via 
+*Messaging Protocol*: Provides the messaging interface between the application
+processors and the platform microcontrollers to communicate with each other via 
 messages to make requests for various services supported by the hardware 
 platform. This is accomplished by grouping each management interface into 
 service groups. With each service group implementing several individual 
 services within.
 
-RPMI currently provides message interfaces to manage power, voltage, 
-performance, idle states etc, along with extensibility for vendors to add their 
-own interfaces.
+In addition to the standard services, RPMI can also be extended to allow vendors
+to add their own services.
 
-Application Processor and AP are used interchangeably throughout this document.
-Similarly, Platform Microcontroller and PuC are used interchangeably.
+The term "Application Processor" or "AP" is used interchangeably throughout this
+document. Similarly, the term "Platform Microcontroller" or "PuC" is used
+interchangeably.
 
 .High Level Architecture
-image::highlevel-arch.png[width=800,height=800]
+image::highlevel-arch.png[width=800,height=800, align="center"]
 
-An RPMI agent is an implementation instance of the RPMI Messaging Protocol and Transport. It is necessary to implement the AP side RPMI agent for most RPMI services in M-mode. While it may be possible to implement the AP side RPMI
-agent in S-mode for some RPMI services, an M-mode RPMI agent also enhances 
-security.
+An RPMI instance is an implementation of the RPMI messaging protocol and the
+transport which handles the packing and unpacking of RPMI messages, as well as
+the delivery of messages via the RPMI transport to the other side.
 
 [#img-transport-topologies]
 .Transport for M-Mode and S-Mode
-image::transport-topologies.png[width=800,height=800]
+image::transport-topologies.png[width=800,height=800, align="center"]
 
-RPMI is designed to work with a single or multi-tenant topology as depicted
+RPMI is designed to work with a single or multi-tenant topology as shown
 above.
-
-NOTE: The discovery of the transport itself is out of scope for this document. Which can either be described in firmware through DT cite:[DT] or ACPI cite:[ACPI].
-

@@ -21,11 +21,11 @@ their implementation-specific service groups.
 
 All service groups except the `BASE` service group are optional. If a service
 group is implemented, it must implement all its services except a dedicated
-notification service (service_id: 0x00) meant to deliver events.
+notification service (SERVICE_ID: 0x00) meant to deliver events.
 A service group must not implement defined services partially unless it also
 defines a mechanism to discover its implemented services.
 If a service group defines events then it must also implement notification
-service (service_id: 0x00).
+service (SERVICE_ID: 0x00).
 
 The following table lists the service group
 
