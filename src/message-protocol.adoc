@@ -112,7 +112,7 @@ header.
 ! [31:24] 
 ! FLAGS
 
-	FLAGS[7:4]: RESERVED.
+	FLAGS[7:4]: Reserved, must be initialized to 0.
 
 	FLAGS[3]: DOORBELL
 	0b0: Doorbell interrupt is enabled.
@@ -123,7 +123,7 @@ header.
 	0b001: POSTED_REQUEST
 	0b010: ACKNOWLEDGEMENT
 	0b011: NOTIFICATION
-	0b100 - 0b111: RESERVED, must be 0.
+	0b100 - 0b111: Reserved, must be initialized to 0.
 
 ! [23:16] 
 ! SERVICE_ID +
@@ -178,10 +178,12 @@ data exceeds the size that a single message can accommodate, multipart messages
 can be used. Some request messages may not have associated data and in that
 case their `DATALEN` field in the message must be `0`.
 
-Acknowledgement message data contains `a 32-bit` `STATUS` code which represents
-the error code.
-Acknowledgement message may contain more data apart from the `STATUS` code
-depending on the corresponding request message.
+The acknowledgement message data must contain a `32-bit` `STATUS` code which
+represents the error code generated during the servicing of the request message.
+The acknowledgement message may contain more data apart from the `STATUS` code
+depending on the corresponding request message. The minimum `DATALEN` value for
+the acknowledgement message is `4-byte` for `STATUS` code. The acknowledgement
+message must not return partial data apart from `STATUS` code if supported.
 
 === Notifications
 Notification messages are asynchronous messages that notify about the events
@@ -193,8 +195,9 @@ them. Any action required on behalf of any event notification is dependent on
 the application processor. <<img-notification-format>> shows the notification
 message format.
 
-Each service group has a service with a fixed `SERVICE_ID=0x00` to subscribe
-to events. By default the event notification is disabled for each service
+Each service group has a service of type notification with a fixed 
+`SERVICE_ID=0x00` used to send the events in the notification message.
+By default the event notification is disabled for each service
 group and the application processor must subscribe to the supported events in
 each service group to receive notification messages. Notification messages are
 only sent for events to which the application processor has subscribed to. If
@@ -229,19 +232,27 @@ image::event-header.png[800,800]
 .Notification Message Format
 [cols="3,2,7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name		| Description
-| 0	| *EVENT_HDR*	| `32-bit` field represents a single event.
-[cols="1,7a"]
+| Word	
+| Name
+| Description
+
+| 0
+| EVENT_HDR	
+| `32-bit` field represents a single event.
+
+[cols="1,7a", options="header"]
 !===
-! *Bits*  !  *Description*
-! [31:24] ! Reserved and must be initialized to `0`.
-! [23:16] ! *EVENT_ID* + 
+! Bits
+! Description
+
+! [31:24] ! _Reserved and must be initialized to_ `0`.
+! [23:16] ! EVENT_ID + 
 Unique identifier for an event in a service group.
 
-! [15:0] ! *EVENT_DATALEN* +
+! [15:0] ! EVENT_DATALEN +
 `16-bit` field to store event data size in bytes.
 !===
-| 1:(*EVENT_DATALEN/4*)	| *EVENT_DATA*	| Event Data
+| 1:(EVENT_DATALEN/4)	| EVENT_DATA	| Event Data
 |===
 
 The table above shows the format for an event and its data. Subsequent events
@@ -256,27 +267,73 @@ in the in the `STATUS` word of the acknowledgement message.
 .Return Status Codes
 [cols="4, 2, 6", width=100%, align="center", options="header"]
 |===
-| Name				| Status Code | Description
-| RPMI_SUCCESS 			| 0  | Service has been completed successfully
-| RPMI_ERROR_FAILED 		| -1 | Failed due to general error
-| RPMI_ERROR_NOT_SUPPORTED	| -2 | Service or feature not supported
-| RPMI_ERROR_INVALID_PARAMETER 	| -3 | One or more parameters passed are 
-invalid
-| RPMI_ERROR_DENIED		| -4 | Requested operation denied due to
-insufficient permissions
-| RPMI_ERROR_NOT_FOUND 		| -5 | Requested resource not found
-| RPMI_ERROR_OUT_OF_RANGE	| -6 | Index out of range
-| RPMI_ERROR_OUT_OF_RESOURCE 	| -7 | Resource limit reached
-| RPMI_ERROR_HW_FAULT 		| -8 | Operation failed due to hardware fault.
-| RPMI_ERROR_BUSY 		| -9 | System is currently busy and cannot 
-respond to requests
-| RPMI_ERROR_TIMEOUT 		| -10 | Operation timed out
-| RPMI_ERROR_COMMS		| -11 | Error in communication
-| RPMI_ERROR_ALREADY		| -12 | Operation already in progress or state
-changed already for which the operation was performed.
-| RPMI_ERROR_EXTENSION	| -13 | Error in extension implementation that
-violates the extension specification or the extension version mismatch
-|	| -14 to -127 	| Reserved
-|	| > -127	| Vendor specific
+| Name				
+| Status Code
+| Description
+
+| RPMI_SUCCESS 			
+| 0  
+| Service has been completed successfully.
+
+| RPMI_ERROR_FAILED 		
+| -1 
+| Failed due to general error.
+
+| RPMI_ERROR_NOT_SUPPORTED	
+| -2 
+| Service or feature not supported.
+
+| RPMI_ERROR_INVALID_PARAMETER 	
+| -3 
+| One or more parameters passed are invalid.
+
+| RPMI_ERROR_DENIED		
+| -4 
+| Requested operation denied due to insufficient permissions.
+
+| RPMI_ERROR_NOT_FOUND 		
+| -5 
+| Requested resource not found.
+
+| RPMI_ERROR_OUT_OF_RANGE	
+| -6 
+| Index out of range.
+
+| RPMI_ERROR_OUT_OF_RESOURCE 	
+| -7 
+| Resource limit reached.
+
+| RPMI_ERROR_HW_FAULT 		
+| -8 
+| Operation failed due to hardware fault.
+
+| RPMI_ERROR_BUSY 		
+| -9 
+| System is currently busy and cannot respond to requests.
+
+| RPMI_ERROR_TIMEOUT 		
+| -10 
+| Operation timed out.
+
+| RPMI_ERROR_COMMS		
+| -11 
+| Error in communication.
+
+| RPMI_ERROR_ALREADY		
+| -12 
+| Operation already in progress or state changed already for which the
+operation was performed.
+
+| RPMI_ERROR_EXTENSION	
+| -13 
+| Error in extension implementation that violates the extension specification
+or the extension version mismatch.
+
+|	
+| -14 to -127 	
+| _Reserved_
+|
+| > -127	
+| _Vendor specific_
 |===
 

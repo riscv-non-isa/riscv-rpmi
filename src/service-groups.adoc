@@ -1,0 +1,55 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+== Service Groups
+A service group is a collection of services that are logically grouped
+according to the functionality they provide. For example, all the voltage
+related services are collectively called the Voltage service group.
+
+This specification defines standard service groups and services with the
+provision to add more service groups as required in the future. The
+service group ID namespace also provides a means to platform vendors to add
+their implementation-specific service groups.
+
+All service groups except the `BASE` service group are optional. If a service
+group is implemented, it must implement all its services except a dedicated
+notification service (service_id: 0x00) meant to deliver events.
+A service group must not implement defined services partially unless it also
+defines a mechanism to discover its implemented services.
+If a service group defines events then it must also implement notification
+service (service_id: 0x00).
+
+The following table lists the service group
+
+[#table_service_groups]
+.RPMI Service Groups
+[cols="2, 4", width=100%, align="center", options="header"]
+|===
+| Service Group ID	| Service Group Name
+| 0x0001		| BASE
+| 0x0002		| SYSTEM_RESET
+| 0x0003		| SYSTEM_SUSPEND
+| 0x0004		| HART_STATE_MANAGEMENT
+| 0x0005		| CPPC
+| 0x0006		| VOLTAGE
+| 0x0007		| CLOCK
+| 0x0008		| DEVICE_POWER
+| 0x0009		| PERFORMANCE
+| 0x000A		| MANAGEMENT_MODE
+| 0x000B		| RAS_AGENT
+| 0x000C - 0x7FFF	| _Reserved for Future Use_
+| 0x8000 - 0xFFFF	| _Implementation Specific Service Groups_
+|===
+NOTE: The services listed within each service group do not have a specific order.
+Additionally, the sequence in which services are defined in the specification
+does not necessarily reflect the order in which they should be called in the
+implementation.
+
