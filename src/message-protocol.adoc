@@ -250,7 +250,7 @@ image::event-header.png[800,800, align="center"]
 [cols="1,7a"]
 !===
 ! *Bits*  !  *Description*
-! [31:24] ! Reserved and must be initialized to `0`.
+! [31:24] ! _Reserved, must be initialized to_ `0`.
 ! [23:16] ! *EVENT_ID* + 
 Unique identifier for an event in a service group.
 
