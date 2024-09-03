@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *MANAGEMENT_MODE* (servicegroup_id: 0x0000A)
+===  Service Group - *MANAGEMENT_MODE* (SERVICEGROUP_ID: 0x0000A)
 This MANAGEMENT_MODE service group is designed to be used for software invocation
 of Management Mode (MM) in a secure execution environment. For general background
 on Management Mode, refer to the Platform Initialization (PI) specifications
@@ -35,7 +35,7 @@ MM_COMPLETE facilitates synchronous call from the secure to the non-secure world
 ==== Notifications
 This service group does not support any event for notification.
 
-==== Service: *MM_ENABLE_NOTIFICATION*
+==== Service: MM_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
 This service allows the application processor to subscribe to MANAGEMENT_MODE
 service group notifications. Platform can optionally support notifications of
 events which might occur in the platform. Platform microcontroller can send
@@ -70,7 +70,7 @@ notification.
 
 
 
-==== Service: *MM_VERSION*
+==== Service: MM_VERSION (SERVICE_ID: 0x02)
 This service returns the version of a Management Mode.
 
 [#table_mm_version_request_data]
@@ -101,7 +101,7 @@ This service returns the version of a Management Mode.
 
 
 
-==== Service: *MM_COMMUNICATE*
+==== Service: MM_COMMUNICATE (SERVICE_ID: 0x03)
 Calling this MM_COMMUNICATE api invokes a MM service that is implemented in the
 secure execution environment. The MM_COMM_DATA contains data to identify and
 invoke the MM service. The readiness of this synchronous request from the non-secure
@@ -139,7 +139,7 @@ from non-secure to secure world.
 
 
 
-==== Service: *MM_COMPLETE*
+==== Service: MM_COMPLETE (SERVICE_ID: 0x04)
 Use this MM_COMPLETE as the “world-switch synchronous call” normally at the end
 of a synchronous MM_COMMUNICATE call to signal the readiness for handling the 
 synchronous request. The MM_COMM_DATA contains the returned data of the MM
