@@ -122,7 +122,7 @@ in table <<table_base_srvgroup_events>>.
 | 0	
 | STATUS
 | int32
-| Return Status Code
+| Return Error Code
 
 [cols="6,5a", options="header"]
 !===
@@ -132,10 +132,10 @@ in table <<table_base_srvgroup_events>>.
 ! RPMI_SUCCESS
 ! Notifications are subscribed successfully.
 
-! RPMI_ERROR_NOT_FOUND
-! `EVENT_ID` is not supported or invalid.
+! RPMI_ERR_INVALID_PARAM
+! `EVENT_ID` is invalid.
 
-! RPMI_ERROR_NOT_SUPPORTED 
+! RPMI_ERR_NOT_SUPPORTED 
 ! Notifications not supported.
 !===
 - Other errors <<table_error_codes>>
@@ -165,7 +165,7 @@ the `MAJOR` and `MINOR` numbers.
 | 0
 | STATUS
 | int32
-| Return Status Code
+| Return Error Code
 
 [cols="2,5a", options="header"]
 !===
@@ -220,7 +220,7 @@ unique and listed in the table <<table_base_rpmi_impl_id>>
 | 0
 | STATUS
 | int32
-| Return Status Code
+| Return Error Code
 
 [cols="2,5a", options="header"]
 !===
@@ -262,7 +262,7 @@ version returned is a `32-bit` composite number containing the `MAJOR` and
 | 0
 | STATUS
 | int32
-| Return Status Code
+| Return Error Code
 
 [cols="2,5a", options="header"]
 !===
@@ -314,7 +314,7 @@ This service is used to get addition platform information if available.
 | 0
 | STATUS
 | int32
-| Return Status Code
+| Return Error Code
 
 [cols="5,5a", options="header"]
 !===
@@ -343,7 +343,9 @@ model, revision, or configuration of the hardware.
 
 ==== Service: BASE_PROBE_SERVICE_GROUP (SERVICE_ID: 0x06)
 This service is used to probe the implementation of a service group. All
-service groups except `BASE` are optional.
+service groups except `BASE` are optional. If the `SERVICEGROUP_ID` is
+not implemented or invalid then this service returns `0` in the
+`SERVICE_GROUP_STATUS` field instead of the error code in `STATUS`.
 
 [#table_base_probesrvgrp_request_data]
 .Request Data
@@ -374,7 +376,7 @@ The first `16-bit` of the `uint32` field will store the `SERVICEGROUP_ID`.
 | 0     
 | STATUS	
 | int32		
-| Return Status Code
+| Return Error Code
 
 [cols="3,4a", options="header"]
 !===
@@ -418,7 +420,7 @@ service group.
 | 0
 | STATUS
 | int32		
-| Return Status Code
+| Return Error Code
 
 [cols="2,5a", options="header"]
 !===
@@ -529,7 +531,7 @@ processor will take the wired interrupt.
 | 0
 | STATUS
 | int32
-| Return Status Code 
+| Return Error Code 
 
 [cols="7,5a", options="header"]
 !===
@@ -539,11 +541,11 @@ processor will take the wired interrupt.
 ! RPMI_SUCCESS 
 ! MSI address and data are configured successfully.
 
-! RPMI_ERROR_NOT_SUPPORTED 
+! RPMI_ERR_NOT_SUPPORTED 
 ! MSI is not supported. The implementation must use `BASE_GET_ATTRIBUTES`
 service to discover this capability and then use this service.
 
-! RPMI_ERROR_INVALID_PARAMETER
+! RPMI_ERR_INVALID_ADDR
 ! MSI address is not `4-byte` aligned.
 !===
 - Other errors <<table_error_codes>>
