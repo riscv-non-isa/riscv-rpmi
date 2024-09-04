@@ -67,12 +67,12 @@ Below table lists the services in this group:
 This service group does not support any event for notification.
 
 ==== Service: *VOLT_ENABLE_NOTIFICATION*
-This service allows the AP to subscribe to VOLTAGE service group notifications.
-The platform can optionally support notifications of events which might occur
-in the platform. The PuC can send these notification messages to the AP if
-they are implemented and the AP has subscribed to them. The supported events
-are described in <<voltage-notifications>>.
-
+This service allows the application processor to subscribe to VOLTAGE service
+group notifications. The platform can optionally support notifications of events
+which might occur in the platform. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<voltage-notifications>>.
 
 [#table_voltage_ennotification_request_data]
 .Request Data
@@ -194,12 +194,12 @@ format of the voltage level.
 
 The total number of words required to represent the voltage levels in one message
 cannot exceed the total words available in one message DATA field. If the number
-of levels exceeds this limit, the PuC will return the maximum number of levels
-that can be accommodated in one message and adjust the REMAINING field accordingly.
-When the REMAINING field is not zero, the AP must make subsequent service calls
-with the appropriate VOLTAGE_LEVEL_INDEX set to retrieve the remaining voltage
-levels. It is possible that multiple service calls may be necessary to retrieve
-all the voltage levels.
+of levels exceeds this limit, the platform microcontroller will return the maximum
+number of levels that can be accommodated in one message and adjust the REMAINING
+field accordingly. When the REMAINING field is not zero, the application processor
+must make subsequent service calls with the appropriate VOLTAGE_LEVEL_INDEX set
+to retrieve the remaining voltage levels. It is possible that multiple service
+calls may be necessary to retrieve all the voltage levels.
 
 [#table_voltage_getdomainlevels_request_data]
 .Request Data
@@ -231,13 +231,15 @@ all the voltage levels.
 |===
 
 ==== Service: *VOLT_SET_CONFIG*
-Set voltage config message enable or disable any voltage domain. Enabling the voltage
-means applying the domain with the voltage level to operate normally. The AP can
-enable the voltage to any domain without knowing the actual voltage levels.
-Disabling the voltage level means disabling the voltage supply to the domain.
+Set voltage config message enable or disable any voltage domain. Enabling the
+voltage means applying the domain with the voltage level to operate normally.
+The application processor can enable the voltage to any domain without knowing
+the actual voltage levels. Disabling the voltage level means disabling the
+voltage supply to the domain.
 
-CONFIG field encodes these discrete settings which do not require AP to know
-the voltage level
+CONFIG field encodes these discrete settings which do not require application
+processor to know the voltage level.
+
 [#table_voltage_setdomainconfig_request_data]
 .Request Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]

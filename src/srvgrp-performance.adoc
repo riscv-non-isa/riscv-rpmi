@@ -11,7 +11,7 @@ endif::rootpath[]
 
 ===  Service Group - *PERFORMANCE* (servicegroup_id: 0x00009)
 This PERFORMANCE service group is designed for managing the performance of a
-group of devices or Application Processors that operate in the same performance
+group of devices or application processors that operate in the same performance
 domain. Unlike legacy performance control mechanisms where the OS was responsible
 to directly control the voltage and clocks this mechanism instead operates on
 an metric less integer performance scale. Each integer value on this
@@ -23,9 +23,9 @@ hardware parameters such as voltage and frequency, etc. The mapping between leve
 and frequencies can be as simple as using a multiplication factor of 1000.
 
 The CPPC service group is also intended for performance control but it's only
-for the Application Processors. This service group is primarily intended for
-devices such as GPUs, accelerators, etc but can also be used for Application
-Processors.
+for the application processors. This service group is primarily intended for
+devices such as GPUs, accelerators, etc but can also be used for application
+processors.
 
 It is important to note that performance domains should not be confused with
 power domains. A performance domain is defined as a set of devices that must
@@ -65,7 +65,7 @@ purposes.
 When a client registers for performance change notifications, the platform will
 send notification to the client whenever there is a change in the performance
 level, performance limit or the performance power of a specific performance
-domain. This notification is typically sent by the Platform Microcontroller to
+domain. This notification is typically sent by the platform microcontroller to
 inform clients in the system about changes in the performance domain.
 
 [#table_perf_notification_events]
@@ -152,11 +152,11 @@ The Fast-channel currently supports only the following Performance services:
 
 ==== Service: *PERF_ENABLE_NOTIFICATION*
 This service is to enable or disable the performance changed notification event.
-The notification is sent from the PuC when the performance level, performance
-limit or performance power of a performance domain has changed. This allows the
-system to adjust its behavior in response to performance changes and ensure that
-it is operating within its desired performance level. The supported events are
-described in <<performance-notifications>>.
+The notification is sent from the platform microcontroller when the performance
+level, performance limit or performance power of a performance domain has changed.
+This allows the system to adjust its behavior in response to performance changes
+and ensure that it is operating within its desired performance level. The
+supported events are described in <<performance-notifications>>.
 
 [#table_perf_ennotification_request_data]
 .Request Data
@@ -312,11 +312,11 @@ returned by the PERF_GET_ATTRIBUTES service.
 
 Total words required for the number of performance levels according to the
 format in one message cannot exceed the total words available in one message
-DATA field. If they exceed then PuC will return the number of levels which
-can be accommodated in one message and set the REMAINING field accordingly.
-AP, when REMAINING field is not 0 must call this service again with appropriate
-PERF_LEVEL_INDEX set to get the remaining levels. It's possible that multiple
-service calls may be required to get all the levels.
+DATA field. If they exceed then platform microcontroller will return the number
+of levels which can be accommodated in one message and set the REMAINING field
+accordingly. Application processor, when REMAINING field is not 0 must call this
+service again with appropriate PERF_LEVEL_INDEX set to get the remaining levels.
+It's possible that multiple service calls may be required to get all the levels.
 
 [#table_perf_getdomainlevels_request_data]
 .Request Data

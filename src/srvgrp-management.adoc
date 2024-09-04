@@ -36,11 +36,12 @@ MM_COMPLETE facilitates synchronous call from the secure to the non-secure world
 This service group does not support any event for notification.
 
 ==== Service: *MM_ENABLE_NOTIFICATION*
-This service allows the AP to subscribe to MANAGEMENT_MODE service group
-notifications. Platform can optionally support notifications of events which
-might occur in the platform. PuC can send these notification messages to AP
-if they are implemented and AP has subscribed to these. Events supported are
-described in <<management-notifications>>.
+This service allows the application processor to subscribe to MANAGEMENT_MODE
+service group notifications. Platform can optionally support notifications of
+events which might occur in the platform. Platform microcontroller can send
+these notification messages to application processor if they are implemented
+and application processor has subscribed to these. Events supported are described
+in <<management-notifications>>.
 
 [#table_mm_ennotification_request_data]
 .Request Data

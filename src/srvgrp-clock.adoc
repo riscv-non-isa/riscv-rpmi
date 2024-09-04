@@ -15,8 +15,8 @@ this group are used to enable or disable clocks, and to set/get clock rates.
 
 Each clock in the system is identified by the clock ID, which is an integer
 identifier assigned to each clock. The mapping of CLOCK_ID and clock is known
-to both the AP and the Platform Microcontroller. Clock ID identifiers are
-sequential and starting from `0`.
+to both the application processor and the platform microcontroller. Clock ID
+identifiers are sequential and starting from `0`.
 
 The device or the group of devices sharing the same clock source form a
 single clock domain, which is identified by the CLOCK_ID. Any change to the
@@ -72,11 +72,12 @@ Below table lists the services in this group:
 This service group does not support any event for notification
 
 ==== Service: *CLK_ENABLE_NOTIFICATION*
-This service allows the AP to subscribe to CLOCK service group notifications.
-The platform can optionally support notifications of events which might occur in
-the platform. The PuC can send these notification messages to AP if they are
-implemented and the AP has subscribed to these. The supported events are described
-in <<clock-notifications>>.
+This service allows the application processor to subscribe to CLOCK service
+group notifications. The platform can optionally support notifications of
+events which might occur in the platform. The platform microcontroller can send
+these notification messages to application processor if they are implemented
+and the application processor has subscribed to these. The supported events are
+described in <<clock-notifications>>.
 
 [#table_clock_ennotification_request_data]
 .Request Data
@@ -189,14 +190,15 @@ the lower index in the CLOCK_RATE field. If the CLOCK_FORMAT is a linear range,
 then the CLOCK_RATE array contains a triplet of `(min_Hz, max_Hz, step_Hz)` where
 each item in the triplet is a clock rate value.
 
-Total words required for the number of clock rates according to the format in
-one message cannot exceed the total words available in one message DATA field.
-If they exceed then the PuC will return the number of clock rates which can be
-accommodated in one message and set the REMAINING field accordingly. The AP,
-when REMAINING field is not `0` must call this service again with appropriate
-CLOCK_RATE_INDEX set to get the remaining clock rates. It's possible that
-multiple service calls may be required to get all the clock rates.
-In case the CLOCK_FORMAT is a linear range the RETURNED field will be set to `3`.
+Total words required for the number of clock rates according to the format in 
+one message cannot exceed the total words available in one message DATA field. 
+If they exceed then the platform microcontroller will return the number of
+clock rates which can be accommodated in one message and set the REMAINING field
+accordingly. The application processor, when REMAINING field is not `0` must
+call this service again with appropriate CLOCK_RATE_INDEX set to get the
+remaining clock rates. It's possible that multiple service calls may be required
+to get all the clock rates. In case the CLOCK_FORMAT is a linear range the
+RETURNED field will be set to `3`.
 
 [#table_clock_getsupprates_request_data]
 .Request Data

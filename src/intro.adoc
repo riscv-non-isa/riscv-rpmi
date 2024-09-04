@@ -53,10 +53,6 @@ services within.
 In addition to the standard services, RPMI can also be extended to allow vendors
 to add their own services.
 
-The term "Application Processor" or "AP" is used interchangeably throughout this
-document. Similarly, the term "Platform Microcontroller" or "PuC" is used
-interchangeably.
-
 .High Level Architecture
 image::highlevel-arch.png[width=800,height=800, align="center"]
 

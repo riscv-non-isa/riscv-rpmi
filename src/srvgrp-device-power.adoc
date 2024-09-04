@@ -71,11 +71,12 @@ and start from 0.
 This service group does not support any event for notification.
 
 ==== Service: *DPWR_ENABLE_NOTIFICATION*
-This service allows the AP to subscribe to DEVICE_POWER service group notifications.
-The platform can optionally support notifications of events that may occur in the platform.
-The PuC can send these notification messages to the AP if they are implemented
-and the AP has subscribed to them. The supported events are described in
-<<device-power-notifications>>.
+This service allows the application processor to subscribe to DEVICE_POWER
+service group notifications. The platform can optionally support notifications
+of events that may occur in the platform. The platform microcontroller can send
+these notification messages to the application processor if they are implemented
+and the application processor has subscribed to them. The supported events are
+described in <<device-power-notifications>>.
 
 [#table_devpower_ennotification_request_data]
 .Request Data

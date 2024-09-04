@@ -34,11 +34,12 @@ Below table lists the services in this group:
 This service group does not support any event for notification.
 
 ==== Service: *RAS_ENABLE_NOTIFICATION*
-This service allows the AP to subscribe to RAS_AGENT service group
-notifications. The platform can optionally support notifications of events that
-may occur in the platform. The PuC can send these notification messages to the
-AP if they are implemented and the AP has subscribed to them. The supported
-events are described in <<ras-notifications>>.
+This service allows the application processor to subscribe to RAS_AGENT service
+group notifications. The platform can optionally support notifications of events
+that may occur in the platform. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<ras-notifications>>.
 
 [#table_ras_ennotification_request_data]
 .Request Data
