@@ -188,7 +188,7 @@ The slot size of `64-byte` is also sufficient to accommodate most of the defined
 RPMI services.
 ====
 
-=== Shared Memory Representation in Firmware
+==== Shared Memory Representation in Firmware
 The queue `slot-size` and queue shared memory region `base-address` and `size`
 in bytes can be discovered through supported hardware description mechanism.
 
