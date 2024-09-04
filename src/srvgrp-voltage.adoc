@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *VOLTAGE* (servicegroup_id: 0x00006)
+===  Service Group - *VOLTAGE* (SERVICEGROUP_ID: 0x00006)
 The system can be classified into multiple domains for voltage control.
 Each domain is the logical grouping of one or more devices powered by a single
 voltage source. Actions associated with messages within each domain control the
@@ -66,7 +66,7 @@ Below table lists the services in this group:
 ==== Notifications
 This service group does not support any event for notification.
 
-==== Service: *VOLT_ENABLE_NOTIFICATION*
+==== Service: VOLT_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
 This service allows the application processor to subscribe to VOLTAGE service
 group notifications. The platform can optionally support notifications of events
 which might occur in the platform. The platform microcontroller can send these
@@ -99,7 +99,7 @@ notification.
 - Other errors <<table_error_codes>>
 |===
 
-==== Service: *VOLT_GET_NUM_DOMAINS*
+==== Service: VOLT_GET_NUM_DOMAINS (SERVICE_ID: 0x02)
 Request for the number of voltage domains available in the system.
 
 [#table_voltage_getnumdomains_request_data]
@@ -122,7 +122,7 @@ as NUM_DOMAINS.
 | 1	|	NUM_DOMAINS 	| uint32 	| Number of voltage domains
 |===
 
-==== Service: *VOLT_GET_ATTRIBUTES*
+==== Service: VOLT_GET_ATTRIBUTES (SERVICE_ID: 0x03)
 Each domain may support multiple voltage levels, which are permitted by the domain
 for operation. For each domain, this message returns a domain name, represented as
 a NULL-terminated ASCII string of 16 bytes. The number of levels indicates the total
@@ -183,7 +183,7 @@ supported by the domain. Get the voltage levels with VOLT_GET_SUPPORTED_LEVELS.
 | 4:7	| VOLTAGE_DOMAIN_NAME	| uint8[16]	| Voltage domain name, a NULL-terminated ASCII string up to 16-bytes.
 |===
 
-==== Service: *VOLT_GET_SUPPORTED_LEVELS*
+==== Service: VOLT_GET_SUPPORTED_LEVELS (SERVICE_ID: 0x04)
 Each domain may support multiple voltage levels which are allowed by the domain
 to operate.
 Depending on the hardware, the voltage levels can be either discrete or stepwise range.
@@ -230,7 +230,7 @@ calls may be necessary to retrieve all the voltage levels.
 | 4	| VOLTAGE_LEVEL[N]	| struct | Voltage level. (<<table_voltage_level>>)
 |===
 
-==== Service: *VOLT_SET_CONFIG*
+==== Service: VOLT_SET_CONFIG (SERVICE_ID: 0x05)
 Set voltage config message enable or disable any voltage domain. Enabling the
 voltage means applying the domain with the voltage level to operate normally.
 The application processor can enable the voltage to any domain without knowing
@@ -275,7 +275,7 @@ specified voltage domain.
 - Other errors <<table_error_codes>>
 |===
 
-==== Service: *VOLT_GET_CONFIG*
+==== Service: VOLT_GET_CONFIG (SERVICE_ID: 0x06)
 Get voltage config message request for the configuration of the voltage domain
 currently set.
 [#table_voltage_getdomainconfig_request_data]
@@ -309,7 +309,7 @@ currently set.
 |===
 
 
-==== Service: *VOLT_SET_LEVEL*
+==== Service: VOLT_SET_LEVEL (SERVICE_ID: 0x07)
 Set the voltage level in microvolts (uV) of a voltage domain.
 
 [#table_voltage_setdomainlevel_request_data]
@@ -339,7 +339,7 @@ voltage domain.
 |===
 
 
-==== Service: *VOLT_GET_LEVEL*
+==== Service: VOLT_GET_LEVEL (SERVICE_ID: 0x08)
 Get the current voltage level in microvolts (uV) of a voltage domain.
 
 [#table_voltage_getdomainlevel_request_data]
