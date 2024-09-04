@@ -92,7 +92,7 @@ to them. Supported events are described in <<system-reset-notifications>>.
 | 0
 | STATUS
 | int32
-| Return Status Code
+| Return Error Code
 
 [cols="6,5a", options="header"]
 !===
@@ -102,20 +102,20 @@ to them. Supported events are described in <<system-reset-notifications>>.
 ! RPMI_SUCCESS
 ! Event is subscribed successfully.
 
-! RPMI_ERROR_NOT_FOUND
-! `EVENT_ID` is not supported or invalid.
+! RPMI_ERR_INVALID_PARAM
+! `EVENT_ID` is invalid.
 
-! RPMI_ERROR_NOT_SUPPORTED
+! RPMI_ERR_NOT_SUPPORTED
 ! Notifications are not supported.
 !===
 - Other errors <<table_error_codes>>
 |===
 
 ==== Service: SYSRST_GET_ATTRIBUTES (SERVICE_ID: 0x02)
-This service is used to discover system reset types supported by the platform. 
-*System Shutdown* and *System Cold Reset* are mandatory and supported by
-default. *System Warm Reset* is defined by the RPMI specification and its
-support can be discovered with this service.
+This service is used to discover the attributes of a reset type. The attribute
+flags indicates if a `RESET_TYPE` is supported or not apart from the 
+System Shutdown and System Cold Reset which are mandatory and supported by
+default. System Warm Reset support can be discovered with this service.
 
 [#table_sysreset_getsysresetattrs_request_data]
 .Request Data
@@ -144,15 +144,18 @@ support can be discovered with this service.
 | 0	
 | STATUS	
 | int32		
-| Return Status Code
+| Return Error Code
 
-[cols="2,5a", options="header"]
+[cols="5,5a", options="header"]
 !===
 ! Error Code	
 ! Description
 
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `RESET_TYPE` is invalid
 
 !===
 - Other errors <<table_error_codes>>
