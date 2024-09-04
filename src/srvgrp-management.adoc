@@ -57,13 +57,13 @@ notification.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return Error Code
 [cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Notifications are subscribed successfully.
-! RPMI_ERROR_NOT_FOUND ! EVENT_ID is not supported or invalid.
-! RPMI_ERROR_NOT_SUPPORTED ! Notifications not supported.
+! RPMI_SUCCESS	! Notification is subscribed successfully.
+! RPMI_ERR_INVALID_PARAM ! `EVENT_ID` is invalid.
+! RPMI_ERR_NOT_SUPPORTED ! Notification is not supported.
 !===
 - Other errors <<table_error_codes>>
 |===
@@ -82,12 +82,12 @@ This service returns the version of a Management Mode.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return Error Code
 [cols="4,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_DENIED ! Denied due to no permission.
+! RPMI_ERR_DENIED ! Denied due to no permission.
 !===
 - Other errors <<table_error_codes>>
 | 1	| MM_VERSION	| uint32 	| Management Mode version.
@@ -132,7 +132,7 @@ from non-secure to secure world.
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_DENIED ! Denied due to no permission.
+! RPMI_ERR_DENIED ! Denied due to no permission.
 !===
 - Other errors <<table_error_codes>>
 |===
@@ -155,7 +155,7 @@ service invoked.
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_DENIED ! Denied due to no permission.
+! RPMI_ERR_DENIED ! Denied due to no permission.
 !===
 - Other errors <<table_error_codes>>
 |===
