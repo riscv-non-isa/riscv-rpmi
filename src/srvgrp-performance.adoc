@@ -9,9 +9,9 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *PERFORMANCE* (servicegroup_id: 0x00009)
+===  Service Group - *PERFORMANCE* (SERVICEGROUP_ID: 0x00009)
 This PERFORMANCE service group is designed for managing the performance of a
-group of devices or Application Processors that operate in the same performance
+group of devices or application processors that operate in the same performance
 domain. Unlike legacy performance control mechanisms where the OS was responsible
 to directly control the voltage and clocks this mechanism instead operates on
 an metric less integer performance scale. Each integer value on this
@@ -23,9 +23,9 @@ hardware parameters such as voltage and frequency, etc. The mapping between leve
 and frequencies can be as simple as using a multiplication factor of 1000.
 
 The CPPC service group is also intended for performance control but it's only
-for the Application Processors. This service group is primarily intended for
-devices such as GPUs, accelerators, etc but can also be used for Application
-Processors.
+for the application processors. This service group is primarily intended for
+devices such as GPUs, accelerators, etc but can also be used for application
+processors.
 
 It is important to note that performance domains should not be confused with
 power domains. A performance domain is defined as a set of devices that must
@@ -65,7 +65,7 @@ purposes.
 When a client registers for performance change notifications, the platform will
 send notification to the client whenever there is a change in the performance
 level, performance limit or the performance power of a specific performance
-domain. This notification is typically sent by the Platform Microcontroller to
+domain. This notification is typically sent by the platform microcontroller to
 inform clients in the system about changes in the performance domain.
 
 [#table_perf_notification_events]
@@ -150,13 +150,13 @@ The Fast-channel currently supports only the following Performance services:
   message should be represented as `'uint32 MAX_PERF_LEVEL'` and
   `'uint32 MIN_PERF_LEVEL'`.
 
-==== Service: *PERF_ENABLE_NOTIFICATION*
+==== Service: PERF_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
 This service is to enable or disable the performance changed notification event.
-The notification is sent from the PuC when the performance level, performance
-limit or performance power of a performance domain has changed. This allows the
-system to adjust its behavior in response to performance changes and ensure that
-it is operating within its desired performance level. The supported events are
-described in <<performance-notifications>>.
+The notification is sent from the platform microcontroller when the performance
+level, performance limit or performance power of a performance domain has changed.
+This allows the system to adjust its behavior in response to performance changes
+and ensure that it is operating within its desired performance level. The
+supported events are described in <<performance-notifications>>.
 
 [#table_perf_ennotification_request_data]
 .Request Data
@@ -184,7 +184,7 @@ notification.
 |===
 
 
-==== Service: *PERF_GET_NUM_DOMAINS*
+==== Service: PERF_GET_NUM_DOMAINS (SERVICE_ID: 0x02)
 This service returns the number of performance domains supported by the system.
 The number of performance domains can vary depending on the hardware platform
 and implementation. In general, performance domains are used to group related
@@ -213,7 +213,7 @@ important for optimizing system performance and power consumption.
 |===
 
 
-==== Service: *PERF_GET_ATTRIBUTES*
+==== Service: PERF_GET_ATTRIBUTES (SERVICE_ID: 0x03)
 This service is used to retrieve the attributes of a specific performance
 domain. These attributes provide information about the performance capabilities
 and constraints of the domain, such as the performance limit and performance
@@ -271,7 +271,7 @@ pass between two consecutive requests, in microseconds (us).
 | 3:6	| PERF_DOMAIN_NAME | uint8[16]	| Performance domain name, a NULL-terminated ASCII string up to 16-bytes.
 |===
 
-==== Service: *PERF_GET_SUPPORTED_LEVELS*
+==== Service: PERF_GET_SUPPORTED_LEVELS (SERVICE_ID: 0x04)
 This service provides a list of the available performance levels or also called
 operating performance points (OPPs) for a specific performance domain. These
 represent different performance levels that can be set for the components in the
@@ -312,11 +312,11 @@ returned by the PERF_GET_ATTRIBUTES service.
 
 Total words required for the number of performance levels according to the
 format in one message cannot exceed the total words available in one message
-DATA field. If they exceed then PuC will return the number of levels which
-can be accommodated in one message and set the REMAINING field accordingly.
-AP, when REMAINING field is not 0 must call this service again with appropriate
-PERF_LEVEL_INDEX set to get the remaining levels. It's possible that multiple
-service calls may be required to get all the levels.
+DATA field. If they exceed then platform microcontroller will return the number
+of levels which can be accommodated in one message and set the REMAINING field
+accordingly. Application processor, when REMAINING field is not 0 must call this
+service again with appropriate PERF_LEVEL_INDEX set to get the remaining levels.
+It's possible that multiple service calls may be required to get all the levels.
 
 [#table_perf_getdomainlevels_request_data]
 .Request Data
@@ -351,7 +351,7 @@ First index starts from zero.
 |===
 
 
-==== Service: *PERF_GET_LEVEL*
+==== Service: PERF_GET_LEVEL (SERVICE_ID: 0x05)
 This service is used to obtain the current performance level of a specific
 performance domain in the system.
 
@@ -380,7 +380,7 @@ performance domain in the system.
 |===
 
 
-==== Service: *PERF_SET_LEVEL*
+==== Service: PERF_SET_LEVEL (SERVICE_ID: 0x06)
 This service is used to set the current performance level of a specific
 performance domain in the system.
 
@@ -414,7 +414,7 @@ performance level.
 |===
 
 
-==== Service: *PERF_GET_LIMIT*
+==== Service: PERF_GET_LIMIT (SERVICE_ID: 0x07)
 This service is used to obtain the current performance limit of a specific
 performance domain in the system.
 
@@ -444,7 +444,7 @@ performance domain in the system.
 |===
 
 
-==== Service: *PERF_SET_LIMIT*
+==== Service: PERF_SET_LIMIT (SERVICE_ID: 0x08)
 This service is used to set the current performance limit of a specific
 performance domain in the system.
 
@@ -479,7 +479,7 @@ performance level.
 |===
 
 
-==== Service: *PERF_GET_FAST_CHANNEL_ATTRIBUTES*
+==== Service: PERF_GET_FAST_CHANNEL_ATTRIBUTES (SERVICE_ID: 0x09)
 This service allows clients to query attributes of the Fast-channel for a specific performance domain and performance service.
 
 [#table_perf_getfastchanaddr_request_data]
