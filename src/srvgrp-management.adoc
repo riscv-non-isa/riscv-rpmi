@@ -84,7 +84,7 @@ in <<management-notifications>>.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -125,7 +125,7 @@ This service returns the version of a Management Mode.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 [cols="4,5", options="header"]
 !===
 ! Error Code

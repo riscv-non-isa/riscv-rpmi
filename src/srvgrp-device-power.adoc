@@ -145,7 +145,7 @@ described in <<device-power-notifications>>.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -185,7 +185,7 @@ the actual number of domains present with the platform.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="2,5", options="header"]
 !===
@@ -235,7 +235,7 @@ This service is used to query the attributes of a device power domain.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="7,5", options="header"]
 !===
@@ -306,7 +306,7 @@ and vendor specific power state. See Power States description in the
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -358,7 +358,7 @@ This service is used to get the current power state of a device power domain.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===

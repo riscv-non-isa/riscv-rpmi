@@ -122,7 +122,7 @@ in table <<table_base_srvgroup_events>>.
 | 0	
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5a", options="header"]
 !===
@@ -165,7 +165,7 @@ the `MAJOR` and `MINOR` numbers.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="2,5a", options="header"]
 !===
@@ -220,7 +220,7 @@ unique and listed in the table <<table_base_rpmi_impl_id>>
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="2,5a", options="header"]
 !===
@@ -262,7 +262,7 @@ version returned is a `32-bit` composite number containing the `MAJOR` and
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="2,5a", options="header"]
 !===
@@ -314,7 +314,7 @@ This service is used to get addition platform information if available.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5a", options="header"]
 !===
@@ -376,7 +376,7 @@ The first `16-bit` of the `uint32` field will store the `SERVICEGROUP_ID`.
 | 0     
 | STATUS	
 | int32		
-| Return Error Code
+| Return error code
 
 [cols="3,4a", options="header"]
 !===
@@ -420,7 +420,7 @@ service group.
 | 0
 | STATUS
 | int32		
-| Return Error Code
+| Return error code
 
 [cols="2,5a", options="header"]
 !===
@@ -531,7 +531,7 @@ processor will take the wired interrupt.
 | 0
 | STATUS
 | int32
-| Return Error Code 
+| Return error code
 
 [cols="7,5a", options="header"]
 !===

@@ -85,7 +85,7 @@ to them. Supported events are described in <<system-suspend-notifications>>.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5a", options="header"]
 !===
@@ -136,7 +136,7 @@ if a `SUSPEND_TYPE` supports resume address.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5a", options="header"]
 !===
@@ -239,7 +239,7 @@ after the `WFI` instruction.
 | 0	
 | STATUS	
 | int32		
-| Return Error Code
+| Return error code
 
 [cols="6,5a", options="header"]
 !===

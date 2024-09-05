@@ -132,7 +132,7 @@ described in <<clock-notifications>>.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -172,7 +172,7 @@ called CLOCK_ID. CLOCK_ID are sequential starting from `0`.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="2,5", options="header"]
 !===
@@ -231,7 +231,7 @@ the future, as needed.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="7,5", options="header"]
 !===
@@ -334,7 +334,7 @@ RETURNED field will be set to `3`.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5", options="header"]
 !===
@@ -421,7 +421,7 @@ Set clock config, enable or disable the clock.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -469,7 +469,7 @@ Get the current status of a clock, if it's enabled or disabled.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -559,7 +559,7 @@ Set clock rate.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5", options="header"]
 !===
@@ -606,7 +606,7 @@ Get the current clock rate value.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===

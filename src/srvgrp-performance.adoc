@@ -235,7 +235,7 @@ supported events are described in <<performance-notifications>>.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -281,7 +281,7 @@ important for optimizing system performance and power consumption.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="2,5", options="header"]
 !===
@@ -334,7 +334,7 @@ level.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -485,7 +485,7 @@ domain whose OPPs are being described.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5", options="header"]
 !===
@@ -554,7 +554,7 @@ performance domain in the system.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5", options="header"]
 !===
@@ -613,7 +613,7 @@ performance domain in the system.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5", options="header"]
 !===
@@ -671,7 +671,7 @@ performance domain in the system.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5", options="header"]
 !===
@@ -740,7 +740,7 @@ performance domain in the system.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5", options="header"]
 !===
@@ -802,7 +802,7 @@ This service allows clients to query attributes of the Fast-channel for a specif
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5", options="header"]
 !===

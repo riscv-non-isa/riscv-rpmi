@@ -82,7 +82,7 @@ described in <<ras-notifications>>.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="5,5", options="header"]
 !===
@@ -121,7 +121,7 @@ This service is used to query number of error sources available in the system.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="2,5", options="header"]
 !===
@@ -174,7 +174,7 @@ calls will use the next index of the remaining items.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="7,5", options="header"]
 !===
@@ -249,7 +249,7 @@ subsequent byte offset of the remaining bytes.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="7,5", options="header"]
 !===
