@@ -77,6 +77,52 @@ The following table shows the structure of a single performance level.
 | Transition latency (us)
 |===
 
+==== Performance Fast-channel
+This section provides an overview of the properties associated with the fast-channel
+for PERFORMANCE service group.
+
+*Supported Services*::
+The fast-channel currently supports only the following PERFORMANCE services:
+* PERF_GET_LEVEL
+* PERF_SET_LEVEL
+* PERF_GET_LIMIT
+* PERF_SET_LIMIT
+
+
+*Platform Dependency*::
+* Not all performance domains or performance services are required to support
+  fast-channel functionality.
+* Support for fast-channel depends on the platform implementation.
+
+
+*Discovering Fast-channel*::
+* Fast-channels support are discoverable through PERFORMANCE service calls.
+* To determine if a platform supports fast-channel for a specific performance
+  domain, use the `PERF_GET_ATTRIBUTES` service call.
+* If fast-channel support is available, retrieve fast-channel attributes for
+  specific PERFORMANCE service call using the `PERF_GET_FAST_CHANNEL_ATTRIBUTES`
+  service call.
+
+
+*Doorbell Support*::
+* Doorbell support is not available for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
+  service calls.
+* When fast-channels are implemented for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
+  service calls, the last known valid performance level or performance limits
+  are always accessible via the fast-channel without requiring a doorbell
+  trigger.
+* For other PERFORMANCE service calls that support fast-channel, doorbell
+  support is optional.
+
+
+*Payload Requirements*::
+* The payload of a fast-channel should exclusively include message specific
+  parameters and exclude the `DOMAIN_ID`. Since a fast-channel is specific to
+  both `DOMAIN_ID` and `SERVICE_ID`, there is no need to include `DOMAIN_ID`
+  or any other channel specific and message specific headers when using a
+  fast-channel. For instance, the payload of the `PERF_SET_LIMIT` message
+  should consist of a 32-bit `MAX_PERF_LEVEL` and a 32-bit `MIN_PERF_LEVEL`.
+
 [#performance-notifications]
 ==== Notifications
 When a client registers for performance change notifications, the platform will
@@ -158,53 +204,6 @@ inform clients in the system about changes in the performance domain.
 
 | Performance level changed notification.
 |===
-
-==== Performance Fast-channel
-This section provides an overview of the properties associated with the fast-channel
-for PERFORMANCE service group.
-
-*Supported Services*::
-The fast-channel currently supports only the following PERFORMANCE services:
-* PERF_GET_LEVEL
-* PERF_SET_LEVEL
-* PERF_GET_LIMIT
-* PERF_SET_LIMIT
-
-
-*Platform Dependency*::
-* Not all performance domains or performance services are required to support
-  fast-channel functionality.
-* Support for fast-channel depends on the platform implementation.
-
-
-*Discovering Fast-channel*::
-* Fast-channels support are discoverable through PERFORMANCE service calls.
-* To determine if a platform supports fast-channel for a specific performance
-  domain, use the `PERF_GET_ATTRIBUTES` service call.
-* If fast-channel support is available, retrieve fast-channel attributes for
-  specific PERFORMANCE service call using the `PERF_GET_FAST_CHANNEL_ATTRIBUTES`
-  service call.
-
-
-*Doorbell Support*::
-* Doorbell support is not available for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
-  service calls.
-* When fast-channels are implemented for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
-  service calls, the last known valid performance level or performance limits
-  are always accessible via the fast-channel without requiring a doorbell
-  trigger.
-* For other PERFORMANCE service calls that support fast-channel, doorbell
-  support is optional.
-
-
-*Payload Requirements*::
-* The payload of a fast-channel should exclusively include message specific
-  parameters and exclude the DOMAIN_ID. Given that a fast-channel is specific
-  to both DOMAIN_ID and SERVICE_ID, there is no requirement to include
-  DOMAIN_ID or any other channel specific and message specific headers when
-  utilizing a fast-channel. For instance, the payload of the `PERF_SET_LIMIT`
-  message should be represented as `'uint32 MAX_PERF_LEVEL'` and
-  `'uint32 MIN_PERF_LEVEL'`.
 
 ==== Service: PERF_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
 This service is to enable or disable the performance changed notification event.
