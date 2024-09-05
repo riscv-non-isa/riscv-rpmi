@@ -24,11 +24,25 @@ MM_COMPLETE facilitates synchronous call from the secure to the non-secure world
 .MANAGEMENT_MODE Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
 |===
-| Service ID	| Service Name 				| Request Type
-| 0x01		| MM_ENABLE_NOTIFICATION		| NORMAL_REQUEST
-| 0x02		| MM_VERSION				| NORMAL_REQUEST
-| 0x03		| MM_COMMUNICATE			| NORMAL_REQUEST
-| 0x04		| MM_COMPLETE				| NORMAL_REQUEST
+| Service ID
+| Service Name
+| Request Type
+
+| 0x01
+| MM_ENABLE_NOTIFICATION
+| NORMAL_REQUEST
+
+| 0x02
+| MM_VERSION
+| NORMAL_REQUEST
+
+| 0x03
+| MM_COMMUNICATE
+| NORMAL_REQUEST
+
+| 0x04
+| MM_COMPLETE
+| NORMAL_REQUEST
 |===
 
 [#management-notifications]
@@ -47,23 +61,45 @@ in <<management-notifications>>.
 .Request Data
 [cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| EVENT_ID	| uint32	| Event to be subscribed for 
-notification.
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| EVENT_ID
+| uint32
+| Event to be subscribed for notification.
 |===
 
 [#table_mm_ennotification_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Error Code
-[cols="5,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return Error Code
+
+[cols="5,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Notification is subscribed successfully.
-! RPMI_ERR_INVALID_PARAM ! `EVENT_ID` is invalid.
-! RPMI_ERR_NOT_SUPPORTED ! Notification is not supported.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Notification is subscribed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `EVENT_ID` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! Notification is not supported.
+
 !===
 - Other errors <<table_error_codes>>
 |===
@@ -81,21 +117,44 @@ This service returns the version of a Management Mode.
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Error Code
-[cols="4,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return Error Code
+[cols="4,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERR_DENIED ! Denied due to no permission.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_DENIED
+! Denied due to no permission.
+
 !===
 - Other errors <<table_error_codes>>
-| 1	| MM_VERSION	| uint32 	| Management Mode version.
-[cols="2,5"]
+
+| 1
+| MM_VERSION
+| uint32
+| Management Mode version.
+
+[cols="2,5", options="header"]
 !===
-! *Bits* 		!  *Description*
-! [31:16]		! Major Version
-! [15:0]	 	! Minor Version
+! Bits
+! Description
+
+! [31:16]
+! Major Version
+
+! [15:0]
+! Minor Version
 !===
 |===
 
@@ -109,30 +168,59 @@ world is signaled by the MM_COMPLETE call from the secure world.
 
 [#table_mm_communicate_request_data]
 .Request Data
-[cols="1, 4, 1, 7", width=100%, align="center", options="header"]
+[cols="1, 5, 1, 7", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		 		| Type		| Description
-| 0	| MM_COMM_DATA_ADDR_LOW | uint32	| Lower 32 bits of MM data's physical
-address from non-secure to secure world.
-| 1	| MM_COMM_DATA_ADDR_HIGH| uint32	| Upper 32 bits of MM data's physical
-address from non-secure to secure world.
-| 2	| MM_COMM_DATA_SIZE_LOW | uint32	| Lower 32 bits of MM data's length
-from non-secure to secure world.
-| 3	| MM_COMM_DATA_SIZE_HIGH| uint32	| Upper 32 bits of MM data's length
-from non-secure to secure world.
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| MM_COMM_DATA_ADDR_LOW
+| uint32
+| Lower 32 bits of MM data's physical address from non-secure to secure world.
+
+| 1
+| MM_COMM_DATA_ADDR_HIGH
+| uint32
+| Upper 32 bits of MM data's physical address from non-secure to secure world.
+
+| 2
+| MM_COMM_DATA_SIZE_LOW
+| uint32
+| Lower 32 bits of MM data's length from non-secure to secure world.
+
+| 3
+| MM_COMM_DATA_SIZE_HIGH
+| uint32
+| Upper 32 bits of MM data's length from non-secure to secure world.
 |===
 
 [#table_mm_communicate_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Status code return from MM service to non-secure world.
-[cols="4,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Status code return from MM service to non-secure world.
+
+[cols="4,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERR_DENIED ! Denied due to no permission.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_DENIED
+! Denied due to no permission.
+
 !===
 - Other errors <<table_error_codes>>
 |===
@@ -149,28 +237,57 @@ service invoked.
 .Request Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Status code sent from MM service to non-secure world.
-[cols="4,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Status code sent from MM service to non-secure world.
+
+[cols="4,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERR_DENIED ! Denied due to no permission.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_DENIED
+! Denied due to no permission.
+
 !===
 - Other errors <<table_error_codes>>
 |===
 
 [#table_mm_complete_response_data]
 .Response Data
-[cols="1, 4, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 5, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name				| Type		| Description
-| 0	| MM_COMM_DATA_ADDR_LOW | uint32	| Lower 32 bits of MM data's physical
-address from non-secure to secure world.
-| 1	| MM_COMM_DATA_ADDR_HIGH| uint32	| Upper 32 bits of MM data's physical
-address from non-secure to secure world.
-| 2	| MM_COMM_DATA_SIZE_LOW | uint32	| Lower 32 bits of MM data's length
-from non-secure to secure world.
-| 3	| MM_COMM_DATA_SIZE_HIGH| uint32	| Upper 32 bits of MM data's length
-from non-secure to secure world.
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| MM_COMM_DATA_ADDR_LOW
+| uint32
+| Lower 32 bits of MM data's physical address from non-secure to secure world.
+
+| 1
+| MM_COMM_DATA_ADDR_HIGH
+| uint32
+| Upper 32 bits of MM data's physical address from non-secure to secure world.
+
+| 2
+| MM_COMM_DATA_SIZE_LOW
+| uint32
+| Lower 32 bits of MM data's length from non-secure to secure world.
+
+| 3
+| MM_COMM_DATA_SIZE_HIGH
+| uint32
+| Upper 32 bits of MM data's length from non-secure to secure world.
 |===
