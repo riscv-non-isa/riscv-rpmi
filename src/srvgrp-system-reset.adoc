@@ -36,8 +36,8 @@ Below table lists the services in this group:
 | Service Name
 | Request Type
 
-| 0x01		
-| SYSRST_ENABLE_NOTIFICATION	
+| 0x01
+| SYSRST_ENABLE_NOTIFICATION
 | NORMAL_REQUEST
 
 | 0x02
@@ -45,7 +45,7 @@ Below table lists the services in this group:
 | NORMAL_REQUEST
 
 | 0x03
-| SYSRST_RESET	
+| SYSRST_RESET
 | POSTED_REQUEST
 |===
 
@@ -113,7 +113,7 @@ to them. Supported events are described in <<system-reset-notifications>>.
 
 ==== Service: SYSRST_GET_ATTRIBUTES (SERVICE_ID: 0x02)
 This service is used to discover the attributes of a reset type. The attribute
-flags indicates if a `RESET_TYPE` is supported or not apart from the 
+flags indicates if a `RESET_TYPE` is supported or not apart from the
 System Shutdown and System Cold Reset which are mandatory and supported by
 default. System Warm Reset support can be discovered with this service.
 
@@ -121,14 +121,14 @@ default. System Warm Reset support can be discovered with this service.
 .Request Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word  
-| Name         	
-| Type		
+| Word
+| Name
+| Type
 | Description
 
-| 0     
-| RESET_TYPE	
-| uint32	
+| 0
+| RESET_TYPE
+| uint32
 | Reset type
 |===
 
@@ -136,33 +136,33 @@ default. System Warm Reset support can be discovered with this service.
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	
-| Name 		
-| Type		
+| Word
+| Name
+| Type
 | Description
 
-| 0	
-| STATUS	
-| int32		
+| 0
+| STATUS
+| int32
 | Return error code
 
 [cols="5,5a", options="header"]
 !===
-! Error Code	
+! Error Code
 ! Description
 
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `RESET_TYPE` is invalid
+! `RESET_TYPE` is invalid.
 
 !===
 - Other errors <<table_error_codes>>
 
-| 1	
-| FLAGS		
-| uint32	
+| 1
+| FLAGS
+| uint32
 | `RESET_TYPE` Attributes
 
 [cols="2,5a", options="header"]
@@ -170,10 +170,10 @@ default. System Warm Reset support can be discovered with this service.
 ! Bits
 ! Description
 
-! [31:1]	
-! _Reserved, must be initialized to_ `0`.
+! [31:1]
+! _Reserved_ and must be `0`.
 
-! [0]		
+! [0]
 ! `RESET_TYPE` support.
 
 	0b1: Supported.
@@ -192,7 +192,7 @@ invalid state may result in the system entering a non-functional state.
 .Request Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word  
+| Word
 | Name
 | Type
 | Description

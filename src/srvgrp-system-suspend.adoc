@@ -9,10 +9,10 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *SYSTEM_SUSPEND* (SERVICEGROUP_ID: 0x0003)
+===  Service Group - SYSTEM_SUSPEND (SERVICEGROUP_ID: 0x0003)
 This service group defines services used to request platform microcontroller
 to transition the system into a suspend state, also called a sleep state.
-The suspend state `SUSPEND_TO_RAM` is supported by default by the platform and 
+The suspend state `SUSPEND_TO_RAM` is supported by default by the platform and
 if the application processor requests for `SUSPEND_TO_RAM`, it's implicit for the
 platform microcontroller that all the application processors except the one
 requesting are in `STOPPED` state and necessary state saving in the RAM has
@@ -62,12 +62,12 @@ to them. Supported events are described in <<system-suspend-notifications>>.
 .Request Data
 [cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
-| Word	
-| Name 	
+| Word
+| Name
 | Type
 | Description
 
-| 0	
+| 0
 | EVENT_ID
 | uint32
 | Event to be subscribed for notification.
@@ -113,8 +113,8 @@ if a `SUSPEND_TYPE` supports resume address.
 .Request Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word 
-| Name 
+| Word
+| Name
 | Type
 | Description
 
@@ -159,11 +159,11 @@ if a `SUSPEND_TYPE` supports resume address.
 
 [cols="2,5a", options="header"]
 !===
-! Bits 	
+! Bits
 ! Description
 
-! [31:2]	
-! _Reserved, must be initialized to_ `0`.
+! [31:2]
+! _Reserved_ and must be `0`.
 
 ! [1]		! Resume Address Support +
 If a `SUSPEND_TYPE` supports custom resume address
@@ -175,7 +175,7 @@ which platform must configure for the resuming application processor.
 
 	0b1: Supported
 	0b0: Not supported
-	
+
 !===
 |===
 
@@ -206,42 +206,42 @@ after the `WFI` instruction.
 | Type
 | Description
 
-| 0	
-| HART_ID	
-| uint32	
+| 0
+| HART_ID
+| uint32
 | Hart ID of the calling hart.
 
-| 1     
-| SUSPEND_TYPE	
-| uint32	
-| Suspend type.
+| 1
+| SUSPEND_TYPE
+| uint32
+| Suspend type
 
-| 2	
-| RESUME_ADDR_LOW	
-| uint32	
-| Lower `32 bits` address
+| 2
+| RESUME_ADDR_LOW
+| uint32
+| Lower 32-bit address.
 
-| 3	
-| RESUME_ADDR_HIGH	
-| uint32	
-| Upper `32 bits` address
+| 3
+| RESUME_ADDR_HIGH
+| uint32
+| Upper 32-bit address.
 |===
 
 [#table_syssuspend_syssuspend_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	
-| Name 		
-| Type		
+| Word
+| Name
+| Type
 | Description
 
-| 0	
-| STATUS	
-| int32		
+| 0
+| STATUS
+| int32
 | Return error code
 
-[cols="6,5a", options="header"]
+[cols="5,5a", options="header"]
 !===
 ! Error Code
 ! Description
