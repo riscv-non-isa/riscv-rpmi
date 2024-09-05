@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *CLOCK* (SERVICEGROUP_ID: 0x00007)
+===  Service Group - CLOCK (SERVICEGROUP_ID: 0x00007)
 This service group is for the management of system clocks. Services defined in
 this group are used to enable or disable clocks, and to set/get clock rates.
 
@@ -27,7 +27,7 @@ is designed and implementation specific. The OS can discover this topology
 through supported hardware description mechanisms.
 
 *Clock Rate Format*::
-Each clock rate is a array of two `32 bits` values `(uint32, uint32)` represented
+Each clock rate is a array of two 32-bit values `(uint32, uint32)` represented
 as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 `clock_rate_low` is at the lower index than the `clock_rate_high`.
 
@@ -38,17 +38,17 @@ as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 |===
 3+| *Discrete Format*
 | *Word*	| *Name*	| *Description*
-| 0		| rate_lower	| Lower 32 bits clock rate in Hz
-| 1		| rate_upper	| Upper 32 bits clock rate in Hz
+| 0		| rate_lower	| Lower 32-bit clock rate in Hz.
+| 1		| rate_upper	| Upper 32-bit clock rate in Hz.
 3+|
 3+| *Linear Format*
 | *Word*	| *Name*	| *Description*
-| 0		| min_lower	| Lower 32 bits of the lowest clock rate in Hz
-| 1		| min_upper	| Upper 32 bits of the lowest clock rate in Hz
-| 2		| max_lower	| Lower 32 bits of the highest clock rate in Hz
-| 3		| max_upper	| Upper 32 bits of the highest clock rate in Hz
-| 4		| step_lower	| Lower 32 bits of the step between two successive rates in Hz
-| 5		| step_upper	| Upper 32 bits of the step between two successive rates in Hz
+| 0		| min_lower	| Lower 32-bit of the lowest clock rate in Hz.
+| 1		| min_upper	| Upper 32-bit of the lowest clock rate in Hz.
+| 2		| max_lower	| Lower 32-bit of the highest clock rate in Hz.
+| 3		| max_upper	| Upper 32-bit of the highest clock rate in Hz.
+| 4		| step_lower	| Lower 32-bit of the step between two successive rates in Hz.
+| 5		| step_upper	| Upper 32-bit of the step between two successive rates in Hz.
 |===
 
 Below table lists the services in this group:
@@ -262,7 +262,7 @@ the future, as needed.
 0b01: Linear Range
 ----
 
-! [29:0]	! _Reserved_
+! [29:0]	! _Reserved_ and must be `0`.
 !===
 | 2
 | NUM_RATES
@@ -292,8 +292,8 @@ the lower index in the CLOCK_RATE field. If the CLOCK_FORMAT is a linear range,
 then the CLOCK_RATE array contains a triplet of `(min_Hz, max_Hz, step_Hz)` where
 each item in the triplet is a clock rate value.
 
-Total words required for the number of clock rates according to the format in 
-one message cannot exceed the total words available in one message DATA field. 
+Total words required for the number of clock rates according to the format in
+one message cannot exceed the total words available in one message DATA field.
 If they exceed then the platform microcontroller will return the number of
 clock rates which can be accommodated in one message and set the REMAINING field
 accordingly. The application processor, when REMAINING field is not `0` must
@@ -401,7 +401,7 @@ Set clock config, enable or disable the clock.
 ! Bits
 ! Description
 
-! [31:1]	! _Reserved_
+! [31:1]	! _Reserved_ and must be `0`.
 ! [0]		!
 
 	0b0: Disable clock
@@ -526,25 +526,26 @@ Set clock rate.
 ! Bits
 ! Description
 
-! [31:30]	! Clock rate roundup/rounddown
+! [31:30]	! Clock rate round up/round down
 ----
 0b00: Round down
 0b01: Round up
-0b10: Auto. Platform autonomously choose rate closest to the requested rate.
+0b10: Auto
+Platform autonomously choose rate closest to the requested rate.
 ----
 
-! [29:0]	! _Reserved_
+! [29:0]	! _Reserved_ and must be `0`.
 !===
 
 | 2
 | CLOCK_RATE_LOW
 | uint32
-| Lower 32 bits of the clock rate in Hertz.
+| Lower 32-bit of the clock rate in Hertz.
 
 | 3
 | CLOCK_RATE_HIGH
 | uint32
-| Upper 32 bits of the clock rate in Hertz.
+| Upper 32-bit of the clock rate in Hertz.
 |===
 
 [#table_clock_setrate_response_data]
@@ -625,10 +626,10 @@ Get the current clock rate value.
 | 1
 | CLOCK_RATE_LOW
 | uint32
-| Lower 32 bits of the clock rate in Hertz.
+| Lower 32-bit of the clock rate in Hertz.
 
 | 2
 | CLOCK_RATE_HIGH
 | uint32
-| Upper 32 bits of the clock rate in Hertz.
+| Upper 32-bit of the clock rate in Hertz.
 |===
