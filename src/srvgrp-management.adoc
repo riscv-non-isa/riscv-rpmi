@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *MANAGEMENT_MODE* (SERVICEGROUP_ID: 0x0000A)
+===  Service Group - MANAGEMENT_MODE (SERVICEGROUP_ID: 0x0000A)
 This MANAGEMENT_MODE service group is designed to be used for software invocation
 of Management Mode (MM) in a secure execution environment. For general background
 on Management Mode, refer to the Platform Initialization (PI) specifications
@@ -151,10 +151,10 @@ This service returns the version of a Management Mode.
 ! Description
 
 ! [31:16]
-! Major Version
+! Major version
 
 ! [15:0]
-! Minor Version
+! Minor version
 !===
 |===
 
@@ -178,22 +178,22 @@ world is signaled by the MM_COMPLETE call from the secure world.
 | 0
 | MM_COMM_DATA_ADDR_LOW
 | uint32
-| Lower 32 bits of MM data's physical address from non-secure to secure world.
+| Lower 32-bit of MM data's physical address from non-secure to secure world.
 
 | 1
 | MM_COMM_DATA_ADDR_HIGH
 | uint32
-| Upper 32 bits of MM data's physical address from non-secure to secure world.
+| Upper 32-bit of MM data's physical address from non-secure to secure world.
 
 | 2
 | MM_COMM_DATA_SIZE_LOW
 | uint32
-| Lower 32 bits of MM data's length from non-secure to secure world.
+| Lower 32-bit of MM data's length from non-secure to secure world.
 
 | 3
 | MM_COMM_DATA_SIZE_HIGH
 | uint32
-| Upper 32 bits of MM data's length from non-secure to secure world.
+| Upper 32-bit of MM data's length from non-secure to secure world.
 |===
 
 [#table_mm_communicate_response_data]
@@ -229,7 +229,7 @@ world is signaled by the MM_COMPLETE call from the secure world.
 
 ==== Service: MM_COMPLETE (SERVICE_ID: 0x04)
 Use this MM_COMPLETE as the “world-switch synchronous call” normally at the end
-of a synchronous MM_COMMUNICATE call to signal the readiness for handling the 
+of a synchronous MM_COMMUNICATE call to signal the readiness for handling the
 synchronous request. The MM_COMM_DATA contains the returned data of the MM
 service invoked.
 
@@ -274,20 +274,20 @@ service invoked.
 | 0
 | MM_COMM_DATA_ADDR_LOW
 | uint32
-| Lower 32 bits of MM data's physical address from non-secure to secure world.
+| Lower 32-bit of MM data's physical address from non-secure to secure world.
 
 | 1
 | MM_COMM_DATA_ADDR_HIGH
 | uint32
-| Upper 32 bits of MM data's physical address from non-secure to secure world.
+| Upper 32-bit of MM data's physical address from non-secure to secure world.
 
 | 2
 | MM_COMM_DATA_SIZE_LOW
 | uint32
-| Lower 32 bits of MM data's length from non-secure to secure world.
+| Lower 32-bit of MM data's length from non-secure to secure world.
 
 | 3
 | MM_COMM_DATA_SIZE_HIGH
 | uint32
-| Upper 32 bits of MM data's length from non-secure to secure world.
+| Upper 32-bit of MM data's length from non-secure to secure world.
 |===
