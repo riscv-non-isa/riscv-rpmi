@@ -9,13 +9,13 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *VOLTAGE* (SERVICEGROUP_ID: 0x00006)
+===  Service Group - VOLTAGE (SERVICEGROUP_ID: 0x00006)
 The system can be classified into multiple domains for voltage control.
 Each domain is the logical grouping of one or more devices powered by a single
 voltage source. Actions associated with messages within each domain control the
 voltage source, thereby influencing either the individual device or the collective
 group of devices sharing the same voltage source.
-Each domain is identified by `DOMAIN_ID` which is a `32 bits` integer starting from `0`.
+Each domain is identified by `DOMAIN_ID` which is a 32-bit integer starting from `0`.
 
 *Voltage Levels Format*::
 There are 4 types of voltage level formats supported in the voltage service
@@ -30,15 +30,15 @@ group. The voltage levels are represented as a group.
 3+|
 3+| *Simple Linear Format*
 | *Word*	| *Name*	| *Description*
-| 0		| min_uV	| Lower boundary of voltage level (uV)
-| 1		| max_uV	| Upper boundary of voltage level (uV)
+| 0		| min_uV	| Lower boundary of voltage level (uV).
+| 1		| max_uV	| Upper boundary of voltage level (uV).
 | 2		| step_uV	| Step size (uV)
 3+|
 3+| *Multi-Linear Format*
 | *Word*	| *Name*	| *Description*
-| 0		| min_uV	| Lower boundary of voltage level (uV)
-| 1		| min_sel	| Lowest selector for range
-| 2		| max_sel	| Highest selector for range
+| 0		| min_uV	| Lower boundary of voltage level (uV).
+| 1		| min_sel	| Lowest selector for range.
+| 2		| max_sel	| Highest selector for range.
 | 3		| step_uV	| Step size (uV)
 3+|
 3+| *Discrete Format*
@@ -88,7 +88,7 @@ notification.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return error code
 [cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
@@ -111,7 +111,7 @@ Request for the number of voltage domains available in the system.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return error code
 [cols="2,5"]
 !===
 ! *Error Code* 	!  *Description*
@@ -137,7 +137,7 @@ formats. Additional voltage formats can be accommodated in the future if require
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
+| 0	| DOMAIN_ID	| uint32	| Voltage domain ID
 |===
 
 [#table_voltage_getdomainattrs_response_data]
@@ -145,12 +145,12 @@ formats. Additional voltage formats can be accommodated in the future if require
 [cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return error code
 [cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_NOT_FOUND ! Voltage DOMAIN_ID not found
+! RPMI_ERROR_NOT_FOUND ! Voltage DOMAIN_ID not found.
 !===
 - Other errors <<table_error_codes>>
 | 1	| FLAGS		| uint32	|
@@ -160,12 +160,12 @@ formats. Additional voltage formats can be accommodated in the future if require
 ! [31:29]	! VOLTAGE_FORMAT (Refer to <<table_voltage_level>>)
 ----
 0b000: Fixed voltage
-0b001: Simple-linear.
-0b010: Multi-linear.
-0b011: Discrete range.
-0b100 - 0b111: Reserved.
+0b001: Simple-linear
+0b010: Multi-linear
+0b011: Discrete range
+0b100 - 0b111: Reserved
 ----
-! [28:1]	! _Reserved_
+! [28:1]	! _Reserved_ and must be `0`.
 ! [0]		! ALWAYS_ON
 
 	0b0: Voltage domain can be enabled/disabled.
@@ -176,8 +176,8 @@ supported by the domain. Get the voltage levels with VOLT_GET_SUPPORTED_LEVELS.
 [cols="2,5a"]
 !===
 ! *Value* 	!  *Description*
-! 1		! Fixed voltage format only
-! N		! Simple-linear, Multi-linear and Discrete
+! 1		! Fixed voltage format only.
+! N		! Simple-linear, Multi-linear and Discrete.
 !===
 | 3	| TRANSITION_LATENCY	| uint32	| Transition latency, in microsecond (us).
 | 4:7	| VOLTAGE_DOMAIN_NAME	| uint8[16]	| Voltage domain name, a NULL-terminated ASCII string up to 16-bytes.
@@ -206,7 +206,7 @@ calls may be necessary to retrieve all the voltage levels.
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
+| 0	| DOMAIN_ID	| uint32	| Voltage domain ID
 | 1	| VOLTAGE_LEVEL_INDEX | uint32	| Voltage level index
 |===
 
@@ -215,13 +215,13 @@ calls may be necessary to retrieve all the voltage levels.
 [cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return error code
 [cols="7,5"]
 !===
 ! *Error Code* 	!  *Description*
 ! RPMI_SUCCESS	! Service completed successfully and voltage levels returned.
 ! RPMI_ERROR_NOT_FOUND ! Voltage DOMAIN_ID not found.
-! RPMI_ERROR_INVALID_PARAMETER	! VOLTAGE_LEVEL_INDEX is not valid
+! RPMI_ERROR_INVALID_PARAMETER	! VOLTAGE_LEVEL_INDEX is not valid.
 !===
 - Other errors <<table_error_codes>>
 | 1	| FLAGS			| uint32 | _Reserved_ and must be `0`.
@@ -245,16 +245,16 @@ processor to know the voltage level.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
+| 0	| DOMAIN_ID	| uint32	| Voltage domain ID
 | 1	| CONFIG	| uint32	| Voltage domain config
 [cols="2,5a"]
 !===
 ! *Bits* 	!  *Description*
-! [31:1]	! _Reserved_
+! [31:1]	! _Reserved_ and must be `0`.
 ! [0]		!
 
-	0b0: Disable voltage for domain
-	0b1: Enable voltage for domain
+	0b0: Disable voltage supply
+	0b1: Enable voltage supply
 !===
 |===
 
@@ -263,7 +263,7 @@ processor to know the voltage level.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return error code
 [cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
@@ -283,7 +283,7 @@ currently set.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
+| 0	| DOMAIN_ID	| uint32	| Voltage domain ID
 |===
 
 [#table_voltage_getdomainconfig_response_data]
@@ -291,7 +291,7 @@ currently set.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return error code
 [cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
@@ -317,7 +317,7 @@ Set the voltage level in microvolts (uV) of a voltage domain.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
+| 0	| DOMAIN_ID	| uint32	| Voltage domain ID
 | 1	| VOLTAGE_LEVEL	| int32		| Voltage level, in microvolts (uV).
 |===
 
@@ -326,7 +326,7 @@ Set the voltage level in microvolts (uV) of a voltage domain.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return error code
 [cols="6,5"]
 !===
 ! *Error Code* 	!  *Description*
@@ -347,7 +347,7 @@ Get the current voltage level in microvolts (uV) of a voltage domain.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Voltage Domain ID
+| 0	| DOMAIN_ID	| uint32	| Voltage domain ID
 |===
 
 [#table_voltage_getdomainlevel_response_data]
@@ -355,7 +355,7 @@ Get the current voltage level in microvolts (uV) of a voltage domain.
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
+| 0	| STATUS	| int32		| Return error code
 [cols="5,5"]
 !===
 ! *Error Code* 	!  *Description*
