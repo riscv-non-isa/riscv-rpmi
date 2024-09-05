@@ -92,7 +92,7 @@ to them. Supported events are described in <<system-reset-notifications>>.
 | 0
 | STATUS
 | int32
-| Return Error Code
+| Return error code
 
 [cols="6,5a", options="header"]
 !===
@@ -144,7 +144,7 @@ default. System Warm Reset support can be discovered with this service.
 | 0	
 | STATUS	
 | int32		
-| Return Error Code
+| Return error code
 
 [cols="5,5a", options="header"]
 !===

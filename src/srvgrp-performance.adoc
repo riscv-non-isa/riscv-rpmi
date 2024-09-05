@@ -36,12 +36,23 @@ purposes.
 *Performance Level Structure*::
 [#table_performance_level]
 .Performance Level Structure
-[cols="1,1,5" width=100%, align="center"]
+[cols="1,2,5" width=100%, align="center", options="header"]
 |===
-| *Word*	| *Name*		| *Description*
-| 0		| Clock Frequency	| Clock frequency (in kHz)
-| 1		| Power Cost		| Power cost (in uW)
-| 2		| Transition Latency	| Latency (in us)
+| Word
+| Name
+| Description
+
+| 0
+| Clock Frequency
+| Clock frequency (in kHz)
+
+| 1
+| Power Cost
+| Power cost (in uW)
+
+| 2
+| Transition Latency
+| Latency (in us)
 |===
 
 [#table_perf_services]
@@ -72,34 +83,73 @@ inform clients in the system about changes in the performance domain.
 .Performance Notification Events
 [cols="1, 3, 5a, 2", width=100%, align="center", options="header"]
 |===
-| Event ID 	| Name 		| Event Data	| Description
-| 0x001	| PERF_POWER_CHANGE	|
-[cols="2,2,5"]
+| Event ID
+| Name
+| Event Data
+| Description
+
+| 0x001
+| PERF_POWER_CHANGE
+|
+[cols="2,2,5", options="header"]
 !===
-! *Word* 	! Type 		!	 *Description*
-! 0		! uint32	! Performance domain ID whose power changed.
-! 1		! uint32	! New power value (uW)
+! Word
+! Type
+! Description
+
+! 0
+! uint32
+! Performance domain ID whose power changed.
+
+! 1
+! uint32
+! New power value (uW)
+
 !===
 | Performance power changed notification.
 
-| 0x002	| PERF_LIMIT_CHANGE	|
-[cols="2,2,5"]
+| 0x002
+| PERF_LIMIT_CHANGE
+|
+[cols="2,2,5", options="header"]
 !===
-! *Word* 	! Type 		!	 *Description*
-! 0		! uint32	! Performance domain ID whose performance limit
-changed.
-! 1		! uint32	! New maximum performance level.
-! 2		! uint32	! New minimum performance level.
+! Word
+! Type
+! Description
+
+! 0
+! uint32
+! Performance domain ID whose performance limit changed.
+
+! 1
+! uint32
+! New maximum performance level.
+
+! 2
+! uint32
+! New minimum performance level.
+
 !===
 | Performance limit changed notification.
 
-| 0x003	| PERF_LEVEL_CHANGE	|
-[cols="2,2,5"]
+| 0x003
+| PERF_LEVEL_CHANGE
+|
+[cols="2,2,5", options="header"]
 !===
-! *Word* 	! Type 		!	 *Description*
-! 0		! uint32	! Performance domain ID whose performance level changed.
-! 1		! uint32	! New performance level.
+! Word
+! Type
+! Description
+
+! 0
+! uint32
+! Performance domain ID whose performance level changed.
+
+! 1
+! uint32
+! New performance level.
 !===
+
 | Performance level changed notification.
 |===
 
@@ -162,23 +212,45 @@ supported events are described in <<performance-notifications>>.
 .Request Data
 [cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| EVENT_ID	| uint32	| Event to be subscribed for
-notification.
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| EVENT_ID
+| uint32
+| Event to be subscribed for notification.
 |===
 
 [#table_perf_ennotification_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="5,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="5,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Notifications are subscribed successfully.
-! RPMI_ERROR_NOT_FOUND ! EVENT_ID is not supported or invalid.
-! RPMI_ERROR_NOT_SUPPORTED ! Notifications not supported.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Notification is subscribed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `EVENT_ID` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! Notification is not supported.
+
 !===
 - Other errors <<table_error_codes>>
 |===
@@ -201,15 +273,31 @@ important for optimizing system performance and power consumption.
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="2,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="2,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
 !===
 - Other errors <<table_error_codes>>
-| 1	| NUM_DOMAINS	| uint32 	| Number of performance domains
+
+| 1
+| NUM_DOMAINS
+| uint32
+| Number of performance domains
 |===
 
 
@@ -223,52 +311,98 @@ level.
 .Request Data
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Performance domain ID
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| DOMAIN_ID
+| uint32
+| Performance domain ID
 |===
 
 [#table_perf_getattrs_response_data]
 .Response Data
-[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="5,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="5,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_NOT_FOUND ! Performance domain not found
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `DOMAIN_ID` is invalid.
+
 !===
 - Other errors <<table_error_codes>>
-| 1	| FLAGS			| uint32	|
-[cols="2,5a"]
+
+| 1
+| FLAGS
+| uint32
+|
+[cols="2,5a", options="header"]
 !===
-! *Bits* 	!  *Description*
-! [31]		! PERF_LIMIT_SETTING +
+! Bits
+! Description
+
+! [31]
+! PERF_LIMIT_SETTING
+
 This attribute indicates whether the platform allows software to set the
 performance limit/range for a specific performance domain.
 
 	0b0: Performance limit change not allowed.
 	0b1: Performance limit change allowed.
-! [30]		! PERF_LEVEL_SETTING +
+
+! [30]
+! PERF_LEVEL_SETTING
+
 This attribute indicates whether the platform allows software to set the
 performance level for a specific performance domain.
 
 	0b0: Performance level change not allowed.
 	0b1: Performance level change allowed.
-! [29]		! FAST_CHANNEL_SUPPORT +
+
+! [29]
+! FAST_CHANNEL_SUPPORT
+
 This attribute indicates whether the platform supports low latency communication
 channels for performance domain management.
 
 	0b0: Not supported
 	0b1: Supported
-! [28:21]	! TOTAL_NUM_PERF_LEVELS +
-Total number of performance levels supported.
+
+! [28:21]
+! TOTAL_NUM_PERF_LEVELS
+
+The total number of supported performance levels.
+
 ! [20:0]	! _Reserved_
+
 !===
-| 2	| RATE_LIMIT_US	| uint32 	| Minimum amount of time that needs to
-pass between two consecutive requests, in microseconds (us).
-| 3:6	| PERF_DOMAIN_NAME | uint8[16]	| Performance domain name, a NULL-terminated ASCII string up to 16-bytes.
+| 2
+| RATE_LIMIT_US
+| uint32
+| Minimum amount of time that needs to pass between two consecutive requests, in microseconds (us).
+
+| 3:6
+| DOMAIN_NAME
+| uint8[16]
+| Performance domain name, a NULL-terminated ASCII string up to 16-bytes.
 |===
 
 ==== Service: PERF_GET_SUPPORTED_LEVELS (SERVICE_ID: 0x04)
@@ -322,32 +456,70 @@ It's possible that multiple service calls may be required to get all the levels.
 .Request Data
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Performance Domain ID. This field
-specifies the identifier of the performance domain whose OPPs are being
-described.
-| 1	| PERF_LEVEL_INDEX | uint32	| Start array index to read.
-First index starts from zero.
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| DOMAIN_ID
+| uint32
+| Performance Domain ID. This field specifies the identifier of the performance
+domain whose OPPs are being described.
+
+| 1
+| PERF_LEVEL_INDEX
+| uint32
+| Start array index to read. First index starts from zero.
 |===
 
 [#table_perf_getdomainlevels_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="6,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="6,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
-! RPMI_ERROR_INVALID_PARAMETER	! PERF_LEVEL_INDEX is invalid.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `DOMAIN_ID` or `PERF_LEVEL_INDEX` is invalid.
+
 !===
 - Other errors <<table_error_codes>>
-| 1	| FLAGS		| uint32    | _Reserved_ and must be `0`.
-| 2	| REMAINING	| uint32    | Remaining number of levels. (number of arrays)
-| 3	| RETURNED	| uint32    | Number of levels returned. (number of arrays)
-| 4	| LEVEL[N]	| uint32[3] | Performance level (<<table_performance_level>>)
+
+| 1
+| FLAGS
+| uint32
+| _Reserved_ and must be `0`.
+
+| 2
+| REMAINING
+| uint32
+| Remaining number of levels (number of arrays).
+
+| 3
+| RETURNED
+| uint32
+| Number of levels returned (number of arrays).
+
+| 4
+| LEVEL[N]
+| uint32[3]
+| Performance level (<<table_performance_level>>)
 |===
 
 
@@ -359,24 +531,49 @@ performance domain in the system.
 .Request Data
 [cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| DOMAIN_ID
+| uint32
+| Performance Domain ID
 |===
 
 [#table_perf_getlevel_response_data]
 .Response Data
 [cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="5,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="6,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `DOMAIN_ID` is invalid.
+
 !===
 - Other errors <<table_error_codes>>
-| 1	| LEVEL	| uint32	| Current performance level of the domain
+
+| 1
+| LEVEL
+| uint32
+| Current performance level of the domain.
 |===
 
 
@@ -388,27 +585,56 @@ performance domain in the system.
 .Request Data
 [cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
-| 1	| LEVEL		| uint32	| Performance level
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| DOMAIN_ID
+| uint32
+| Performance Domain ID
+
+| 1
+| LEVEL
+| uint32
+| Performance level
 |===
 
 [#table_perf_setlevel_response_data]
 .Response Data
 [cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="6,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="6,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
-! RPMI_ERROR_INVALID_PARAMETER	! Invalid performance level.
-! RPMI_ERROR_NOT_SUPPORTED	! Performance level change not allowed.
-! RPMI_ERROR_DENIED	! Client does not have permission to change the
-performance level.
-! RPMI_ERROR_HW		! Operation failed due to hardware error.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `DOMAIN_ID` or `LEVEL` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! Performance level change not allowed.
+
+! RPMI_ERR_DENIED	
+! Client does not have permission to change the performance level.
+
+! RPMI_ERR_HW_FAULT
+! Operation failed due to hardware error.
+
 !===
 - Other errors <<table_error_codes>>
 |===
@@ -422,25 +648,54 @@ performance domain in the system.
 .Request Data
 [cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| DOMAIN_ID
+| uint32
+| Performance Domain ID
 |===
 
 [#table_perf_getlimit_response_data]
 .Response Data
 [cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="5,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="6,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `DOMAIN_ID` is invalid.
+
 !===
 - Other errors <<table_error_codes>>
-| 1	| MAX_PERF_LEVEL | uint32	| Maximum allowed performance level.
-| 2	| MIN_PERF_LEVEL | uint32	| Minimum allowed performance level.
+
+| 1
+| MAX_PERF_LEVEL
+| uint32
+| Maximum allowed performance level.
+
+| 2
+| MIN_PERF_LEVEL
+| uint32
+| Minimum allowed performance level.
 |===
 
 
@@ -452,28 +707,61 @@ performance domain in the system.
 .Request Data
 [cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
-| 1	| MAX_PERF_LEVEL	| uint32 | Maximum allowed performance level
-| 1	| MIN_PERF_LEVEL	| uint32 | Minimum allowed performance level
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| DOMAIN_ID
+| uint32
+| Performance Domain ID
+
+| 1
+| MAX_PERF_LEVEL
+| uint32
+| Maximum allowed performance level
+
+| 2
+| MIN_PERF_LEVEL
+| uint32
+| Minimum allowed performance level
 |===
 
 [#table_perf_setlimit_response_data]
 .Response Data
 [cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="6,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="6,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_NOT_FOUND ! Performance domain not found.
-! RPMI_ERROR_INVALID_PARAMETER	! Invalid performance level.
-! RPMI_ERROR_NOT_SUPPORTED	! Performance limit change not allowed.
-! RPMI_ERROR_DENIED	! Client does not have permission to change the
-performance level.
-! RPMI_ERROR_HW		! Operation failed due to hardware error.
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `DOMAIN_ID` or performance level is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! Performance limit change not allowed.
+
+! RPMI_ERR_DENIED
+! Client does not have permission to change the performance level.
+
+! RPMI_ERR_HW_FAULT
+! Operation failed due to hardware error.
+
 !===
 - Other errors <<table_error_codes>>
 |===
@@ -486,57 +774,119 @@ This service allows clients to query attributes of the Fast-channel for a specif
 .Request Data
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| DOMAIN_ID	| uint32	| Performance Domain ID
-| 1	| SERVICE_ID	| uint32	| Performance Service ID, see service ID in <<table_perf_services>>
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| DOMAIN_ID
+| uint32
+| Performance Domain ID
+
+| 1
+| SERVICE_ID
+| uint32
+| Performance Service ID, see service ID in <<table_perf_services>>
 |===
 
 [#table_perf_getfastchanaddr_response_data]
 .Response Data
 [cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
-| Word	| Name 		| Type		| Description
-| 0	| STATUS	| int32		| Return Status Code
-[cols="6,5"]
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="6,5", options="header"]
 !===
-! *Error Code* 	!  *Description*
-! RPMI_SUCCESS	! Service completed successfully.
-! RPMI_ERROR_NOT_FOUND ! Performance domain not found
-! RPMI_ERROR_NOT_SUPPORTED ! Fast-channel not implemented
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `DOMAIN_ID` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! Fast-channel not implemented.
+
 !===
 - Other errors <<table_error_codes>>
-| 1	| FLAGS		| uint32	|
-[cols="2,5a"]
+
+| 1
+| FLAGS
+| uint32
+|
+[cols="2,5a", options="header"]
 !===
-! *Bits* 	!  *Description*
-! [31:3]	! _Reserved_
-! [2:1]		! Doorbell register width. This field is unused if
-doorbell is not supported.
+! Bits
+! Description
+
+! [31:3]
+! _Reserved_
+
+! [2:1]
+! Doorbell register width. This field is unused if doorbell is not supported.
 
 	0b00: 8 bits
 	0b01: 16 bits
 	0b10: 32 bits
 	0b11: 64 bits
+
 ! [0]	!
 
 	0b0: Doorbell not supported
 	0b1: Doorbell supported
 !===
-| 2	|PHYS_ADDR_LOW	 | uint32	| Lower `32 bits` of physical address
-| 3	|PHYS_ADDR_HIGH  | uint32	| Upper `32 bits` of physical address
-| 4	|DB_ADDR_LOW	 | uint32	| Lower `32 bits` of doorbell address. This field is unused if
-doorbell is not supported.
-| 5	|DB_ADDR_HIGH	 | uint32	| Upper `32 bits` of doorbell address. This field is unused if
-doorbell is not supported.
-| 6	|DB_ID_LOW	 | uint32	| Lower `32 bits` of doorbell ID. This field is unused if
-doorbell is not supported.
-| 7	|DB_ID_HIGH	 | uint32	| Upper `32 bits` of doorbell ID. This field is unused if
-doorbell is not supported.
-| 8	|DB_PRESERVED_LOW | uint32	| A lower `32 bits` doorbell preserved
-mask to apply for this service before ring the doorbell. This field is unused if
-doorbell is not supported.
-| 9	|DB_PRESERVED_HIGH | uint32	| An upper `32 bits` doorbell preserved
-mask to apply for this service before ring the doorbell. This field is only
-valid if the doorbell register width is 64 bits. This field is unused if
-doorbell is not supported.
+
+| 2
+|PHYS_ADDR_LOW
+| uint32
+| Lower `32 bits` of physical address
+
+| 3
+| PHYS_ADDR_HIGH
+| uint32
+| Upper `32 bits` of physical address
+
+| 4
+| DB_ADDR_LOW
+| uint32
+| Lower `32 bits` of doorbell address. This field is unused if doorbell is not supported.
+
+| 5
+| DB_ADDR_HIGH
+| uint32
+| Upper `32 bits` of doorbell address. This field is unused if doorbell is not supported.
+
+| 6
+|DB_ID_LOW
+| uint32
+| Lower `32 bits` of doorbell ID. This field is unused if doorbell is not supported.
+
+| 7
+| DB_ID_HIGH
+| uint32
+| Upper `32 bits` of doorbell ID. This field is unused if doorbell is not supported.
+
+| 8
+| DB_PRESERVED_LOW
+| uint32
+| A lower `32 bits` doorbell preserved mask to apply for this service before
+ring the doorbell. This field is unused if doorbell is not supported.
+
+| 9
+| DB_PRESERVED_HIGH
+| uint32
+| An upper `32 bits` doorbell preserved mask to apply for this service before
+ring the doorbell. This field is only valid if the doorbell register width is
+64 bits. This field is unused if doorbell is not supported.
 |===
