@@ -64,6 +64,18 @@ The below table lists the services in this group:
 | NORMAL_REQUEST
 |===
 
+==== RPMI Implementation IDs
+[#table_base_rpmi_impl_id]
+.RPMI Implementation IDs
+[cols="2, 3a", width=100%, align="center", options="header"]
+|===
+| Implementation ID
+| Name
+
+|
+|
+|===
+
 [#base-notifications]
 ==== Notifications
 This service is used by the platform microcontroller to send the asynchronous
@@ -533,16 +545,4 @@ service to discover this capability and then use this service.
 ! MSI address is not `4-byte` aligned.
 !===
 - Other errors <<table_error_codes>>
-|===
-
-==== RPMI Implementation IDs
-[#table_base_rpmi_impl_id]
-.RPMI Implementation IDs
-[cols="2, 3a", width=100%, align="center", options="header"]
-|===
-| Implementation ID
-| Name
-
-|
-|
 |===
