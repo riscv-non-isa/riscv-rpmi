@@ -349,5 +349,5 @@ violates the extension specification or the extension version mismatch.
 | Input/Output error.
 
 |	| -14 to -127 	| _Reserved_
-|	| > -127	| _Vendor specific_
+|	| < -127	| _Vendor specific_
 |===
