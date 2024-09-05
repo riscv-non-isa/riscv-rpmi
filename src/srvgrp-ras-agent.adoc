@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *RAS_AGENT* (SERVICEGROUP_ID: 0x0000B)
+===  Service Group - RAS_AGENT (SERVICEGROUP_ID: 0x0000B)
 The RAS agent service group provides services to enumerate various error
 sources in a system and to get their descriptors. These services are provided
 by RAS Agent.
@@ -281,7 +281,7 @@ source descriptor is in GHESv2 format. Rest of the values (1-15) are
 implementation specific.
 
 ! [31:4]
-! _Reserved_
+! _Reserved_ and must be `0`.
 
 !===
 
