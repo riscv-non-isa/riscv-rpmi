@@ -43,6 +43,32 @@ Below table lists the services in this group:
 | NORMAL_REQUEST
 |===
 
+==== Error Source Descriptor Format
+===== ACPI Systems
+For systems that support ACPI/APEI, the format of the error source descriptor
+is as defined in ACPI specification v6.4 or above, (GHESv2) cite:[ACPI].
+If the value of `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]` is `0`, it indicates that the
+error source descriptor format is GHESv2.
+
+The RAS agent populates the error source descriptor fields according to the
+error source specified by `RAS_ERR_SRC_ID`.
+
+NOTE: The error source descriptor has an `error_status_structure` field which
+is a generic address structure (`GAS`) as defined in ACPI v6.4 (GHESv2)
+cite:[ACPI]. This field specifies the location of a register that contains the
+physical address of a block of memory that holds the error status data for the
+specified error source. This block of memory is referred to as
+`error_status_block`. The allocation of `error_status_block` is platform
+dependent and is done by the RAS agent. The physical address of
+`error_status_block` is stored in the `error_status_structure` field of the
+error source descriptor being returned.
+
+===== Non-ACPI Systems
+RAS is not standardized for non-ACPI systems. Such systems may define custom
+format for an error source descriptor. The type of custom error source
+descriptor format can be read from `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]`. The
+values from 1 to 15 are reserved for custom format types.
+
 [#ras-notifications]
 ==== Notifications
 This service group does not support any event for notification.
@@ -300,29 +326,3 @@ implementation specific.
 | uint8
 | Full or partial descriptor N is equal to the `RETURNED` bytes in this request.
 |===
-
-==== Error Source Descriptor Format
-===== ACPI Systems
-For systems that support ACPI/APEI, the format of the error source descriptor
-is as defined in ACPI specification v6.4 or above, (GHESv2) cite:[ACPI].
-If the value of `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]` is `0`, it indicates that the
-error source descriptor format is GHESv2.
-
-The RAS agent populates the error source descriptor fields according to the
-error source specified by `RAS_ERR_SRC_ID`.
-
-NOTE: The error source descriptor has an `error_status_structure` field which
-is a generic address structure (`GAS`) as defined in ACPI v6.4 (GHESv2)
-cite:[ACPI]. This field specifies the location of a register that contains the
-physical address of a block of memory that holds the error status data for the
-specified error source. This block of memory is referred to as
-`error_status_block`. The allocation of `error_status_block` is platform
-dependent and is done by the RAS agent. The physical address of
-`error_status_block` is stored in the `error_status_structure` field of the
-error source descriptor being returned.
-
-===== Non-ACPI Systems
-RAS is not standardized for non-ACPI systems. Such systems may define custom
-format for an error source descriptor. The type of custom error source
-descriptor format can be read from `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]`. The
-values from 1 to 15 are reserved for custom format types.
