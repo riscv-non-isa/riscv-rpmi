@@ -9,51 +9,31 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *PERFORMANCE* (SERVICEGROUP_ID: 0x00009)
-This PERFORMANCE service group is designed for managing the performance of a
+===  Service Group - PERFORMANCE (SERVICEGROUP_ID: 0x00009)
+This PERFORMANCE service group is used to manage the performance of a
 group of devices or application processors that operate in the same performance
-domain. Unlike legacy performance control mechanisms where the OS was responsible
-to directly control the voltage and clocks this mechanism instead operates on
-an metric less integer performance scale. Each integer value on this
+domain. Unlike tranditional performance control mechanisms, where the OS is
+responsible to directly controlling voltages and clocks, this mechanism instead
+operates on an metric less integer performance scale. Each integer value on this
 scale represents a performance operating point. What this scale represents and
-the metric is completely platform dependent. Values on this scale are discrete
-and the platform is given complete control over mapping these performance
-operating points to performance states which eventually gets converted into
-hardware parameters such as voltage and frequency, etc. The mapping between levels
-and frequencies can be as simple as using a multiplication factor of 1000.
+the metric is entirely platform-dependent. Values on this scale are discrete,
+and the platform has complete control over mapping these performance operating
+points to performance states, which are eventually converted into hardware
+parameters such as voltages and frequencies. For example, the mapping between
+levels and frequencies can be as straightforward as using a multiplication
+factor of 1000.
 
-The CPPC service group is also intended for performance control but it's only
-for the application processors. This service group is primarily intended for
-devices such as GPUs, accelerators, etc but can also be used for application
-processors.
+The CPPC service group is designed for performance control, but it is only
+intended for application processors. This service group is primarily meant for
+devices such as GPUs and accelerators, though it can also be used for
+application processors.
 
-It is important to note that performance domains should not be confused with
-power domains. A performance domain is defined as a set of devices that must
-always run at the same performance level, while a power domain is defined as a
-set of devices that can be turned on or off together for power management
-purposes.
+It is important to distinguish between performance domains and power domains.
+A performance domain refers to a set of devices that must always operate at the
+same performance level, whereas a power domain refers to a set of devices that
+can be turned on or off together for power management purposes.
 
-*Performance Level Structure*::
-[#table_performance_level]
-.Performance Level Structure
-[cols="1,2,5" width=100%, align="center", options="header"]
-|===
-| Word
-| Name
-| Description
-
-| 0
-| Clock Frequency
-| Clock frequency (in kHz)
-
-| 1
-| Power Cost
-| Power cost (in uW)
-
-| 2
-| Transition Latency
-| Latency (in us)
-|===
+The following table lists the services in the PERFORMANCE service group:
 
 [#table_perf_services]
 .PERFORMANCE Services
@@ -69,6 +49,32 @@ purposes.
 | 0x07		| PERF_GET_LIMIT			| NORMAL_REQUEST
 | 0x08		| PERF_SET_LIMIT			| NORMAL_REQUEST
 | 0x09		| PERF_GET_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
+|===
+
+
+*Performance Level Structure*::
+
+The following table shows the structure of a single performance level.
+
+[#table_performance_level]
+.Performance Level Structure
+[cols="1,2,5" width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Description
+
+| 0
+| CLOCK_FREQ
+| Clock frequency (kHz)
+
+| 1
+| POWER_COST
+| Power cost (uW)
+
+| 2
+| TRANSITION_LATENCY
+| Transition latency (us)
 |===
 
 [#performance-notifications]
@@ -99,11 +105,11 @@ inform clients in the system about changes in the performance domain.
 
 ! 0
 ! uint32
-! Performance domain ID whose power changed.
+! Performance domain ID for which the power has changed.
 
 ! 1
 ! uint32
-! New power value (uW)
+! New power value (uW).
 
 !===
 | Performance power changed notification.
@@ -119,7 +125,7 @@ inform clients in the system about changes in the performance domain.
 
 ! 0
 ! uint32
-! Performance domain ID whose performance limit changed.
+! Performance domain ID for which the performance limit has changed.
 
 ! 1
 ! uint32
@@ -143,7 +149,7 @@ inform clients in the system about changes in the performance domain.
 
 ! 0
 ! uint32
-! Performance domain ID whose performance level changed.
+! Performance domain ID for which the performance level has changed.
 
 ! 1
 ! uint32
@@ -153,12 +159,12 @@ inform clients in the system about changes in the performance domain.
 | Performance level changed notification.
 |===
 
-==== Performance Fast-Channels
-This section provides an overview of the properties associated with the Fast-channel
+==== Performance Fast-channel
+This section provides an overview of the properties associated with the fast-channel
 for PERFORMANCE service group.
 
 *Supported Services*::
-The Fast-channel currently supports only the following Performance services:
+The fast-channel currently supports only the following PERFORMANCE services:
 * PERF_GET_LEVEL
 * PERF_SET_LEVEL
 * PERF_GET_LIMIT
@@ -166,37 +172,37 @@ The Fast-channel currently supports only the following Performance services:
 
 
 *Platform Dependency*::
-* Not all Performance domains or Performance services are required to support
-  Fast-channel functionality.
-* Support for Fast-channel depends on the platform implementation.
+* Not all performance domains or performance services are required to support
+  fast-channel functionality.
+* Support for fast-channel depends on the platform implementation.
 
 
-*Discovering Fast-channels*::
-* Fast-channels support are discoverable through Performance service calls.
-* To determine if a platform supports Fast-channel for a specific performance
+*Discovering Fast-channel*::
+* Fast-channels support are discoverable through PERFORMANCE service calls.
+* To determine if a platform supports fast-channel for a specific performance
   domain, use the `PERF_GET_ATTRIBUTES` service call.
-* If Fast-channel support is available, retrieve Fast-channel attributes for
-  specific Performance service call using the `PERF_GET_FAST_CHANNEL_ATTRIBUTES`
+* If fast-channel support is available, retrieve fast-channel attributes for
+  specific PERFORMANCE service call using the `PERF_GET_FAST_CHANNEL_ATTRIBUTES`
   service call.
 
 
 *Doorbell Support*::
 * Doorbell support is not available for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
   service calls.
-* When Fast-channels are implemented for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
+* When fast-channels are implemented for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
   service calls, the last known valid performance level or performance limits
-  are always accessible via the Fast-channel without requiring a doorbell
+  are always accessible via the fast-channel without requiring a doorbell
   trigger.
-* For other Performance service calls that support Fast-channel, doorbell
+* For other PERFORMANCE service calls that support fast-channel, doorbell
   support is optional.
 
 
 *Payload Requirements*::
-* The payload of a Fast-channel should exclusively include message specific
-  parameters and exclude the DOMAIN_ID. Given that a Fast-channel is specific
+* The payload of a fast-channel should exclusively include message specific
+  parameters and exclude the DOMAIN_ID. Given that a fast-channel is specific
   to both DOMAIN_ID and SERVICE_ID, there is no requirement to include
   DOMAIN_ID or any other channel specific and message specific headers when
-  utilizing a Fast-channel. For instance, the payload of the `PERF_SET_LIMIT`
+  utilizing a fast-channel. For instance, the payload of the `PERF_SET_LIMIT`
   message should be represented as `'uint32 MAX_PERF_LEVEL'` and
   `'uint32 MIN_PERF_LEVEL'`.
 
@@ -243,7 +249,7 @@ supported events are described in <<performance-notifications>>.
 ! Description
 
 ! RPMI_SUCCESS
-! Notification is subscribed successfully.
+! Event is subscribed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
 ! `EVENT_ID` is invalid.
@@ -258,8 +264,8 @@ supported events are described in <<performance-notifications>>.
 
 ==== Service: PERF_GET_NUM_DOMAINS (SERVICE_ID: 0x02)
 This service returns the number of performance domains supported by the system.
-The number of performance domains can vary depending on the hardware platform
-and implementation. In general, performance domains are used to group related
+The number of performance domains may vary depending on the hardware platform
+and its implementation. In general, performance domains are used to group related
 hardware components, such as CPUs, GPUs, memory, and peripherals, into separate
 domains that can be independently controlled and managed. This allows for more
 fine-grained control over the performance of specific components, which can be
@@ -297,7 +303,7 @@ important for optimizing system performance and power consumption.
 | 1
 | NUM_DOMAINS
 | uint32
-| Number of performance domains
+| Number of performance domains.
 |===
 
 
@@ -363,10 +369,10 @@ level.
 ! PERF_LIMIT_SETTING
 
 This attribute indicates whether the platform allows software to set the
-performance limit/range for a specific performance domain.
+performance limit for a specific performance domain.
 
-	0b0: Performance limit change not allowed.
-	0b1: Performance limit change allowed.
+	0b0: Performance limit change is not allowed.
+	0b1: Performance limit change is allowed.
 
 ! [30]
 ! PERF_LEVEL_SETTING
@@ -374,20 +380,20 @@ performance limit/range for a specific performance domain.
 This attribute indicates whether the platform allows software to set the
 performance level for a specific performance domain.
 
-	0b0: Performance level change not allowed.
-	0b1: Performance level change allowed.
+	0b0: Performance level change is not allowed.
+	0b1: Performance level change is allowed.
 
 ! [29]
 ! FAST_CHANNEL_SUPPORT
 
-This attribute indicates whether the platform supports low latency communication
-channels for performance domain management.
+This attribute indicates whether the platform supports fast-channel
+for a specific performance domain.
 
-	0b0: Not supported
-	0b1: Supported
+	0b0: Fast-channel is not supported.
+	0b1: Fast-channel is supported.
 
 ! [28:21]
-! TOTAL_NUM_PERF_LEVELS
+! NUM_PERF_LEVELS
 
 The total number of supported performance levels.
 
@@ -397,7 +403,8 @@ The total number of supported performance levels.
 | 2
 | RATE_LIMIT_US
 | uint32
-| Minimum amount of time that needs to pass between two consecutive requests, in microseconds (us).
+| Minimum amount of time that needs to pass between two consecutive requests,
+in microseconds (us).
 
 | 3:6
 | DOMAIN_NAME
@@ -410,11 +417,11 @@ This service provides a list of the available performance levels or also called
 operating performance points (OPPs) for a specific performance domain. These
 represent different performance levels that can be set for the components in the
 domain, and are defined by a combination of frequency, power cost and other
-parameters. By utilizing this information, the OS can choose the optimal
-performance level for the system workload and power constraints.
+parameters. By using this information, the OS can select the optimal
+performance level based on the system's workload and power constraints.
 
 ```c
-/* Pseudocode to retrieve the list of the supported OPP */
+/* Pseudocode to retrieve the list of the supported performance levels. */
 
 index = 0;
 num = 0;
@@ -426,7 +433,7 @@ loop:
 	entry_num = 0;
 
 	for (i = 0; i < list.returned; i++, num++) {
-		opp[num].level = list.entry[entry_num++];
+		opp[num].freq = list.entry[entry_num++];
 		opp[num].power = list.entry[entry_num++];
 		opp[num].rate_limit = list.entry[entry_num++];
 	}
@@ -441,16 +448,17 @@ loop:
 ```
 The pseudocode above demonstrates the process for retrieving the level
 information for a specific performance domain. First, the number of
-performance levels is determined by checking the FLAGS[28:21] parameter
-returned by the PERF_GET_ATTRIBUTES service.
+performance levels is determined by checking the `FLAGS[28:21]` parameter
+returned by the `PERF_GET_ATTRIBUTES` service.
 
-Total words required for the number of performance levels according to the
-format in one message cannot exceed the total words available in one message
-DATA field. If they exceed then platform microcontroller will return the number
-of levels which can be accommodated in one message and set the REMAINING field
-accordingly. Application processor, when REMAINING field is not 0 must call this
-service again with appropriate PERF_LEVEL_INDEX set to get the remaining levels.
-It's possible that multiple service calls may be required to get all the levels.
+The total number of performance levels included in one message must not exceed
+the available word count in the message's `DATA` field. If the performance levels
+exceed this limit, the platform microcontroller will return the number of
+levels that can be accommodated in one message and set the `REMAINING` field
+accordingly. When the `REMAINING` field is not zero, the application processor
+must call this service again with the appropriate `PERF_LEVEL_INDEX` to retrieve
+the remaining levels. Multiple service calls may be required to obtain all the
+levels.
 
 [#table_perf_getdomainlevels_request_data]
 .Request Data
@@ -464,13 +472,12 @@ It's possible that multiple service calls may be required to get all the levels.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance Domain ID. This field specifies the identifier of the performance
-domain whose OPPs are being described.
+| Performance domain ID
 
 | 1
 | PERF_LEVEL_INDEX
 | uint32
-| Start array index to read. First index starts from zero.
+| Start array index to read. The first index starts at zero.
 |===
 
 [#table_perf_getdomainlevels_response_data]
@@ -519,7 +526,8 @@ domain whose OPPs are being described.
 | 4
 | LEVEL[N]
 | uint32[3]
-| Performance level (<<table_performance_level>>)
+| List of performance levels. Refer to <<table_performance_level>> for the
+structure of performance level.
 |===
 
 
@@ -539,7 +547,7 @@ performance domain in the system.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance Domain ID
+| Performance domain ID
 |===
 
 [#table_perf_getlevel_response_data]
@@ -583,7 +591,7 @@ performance domain in the system.
 
 [#table_perf_setlevel_request_data]
 .Request Data
-[cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -593,7 +601,7 @@ performance domain in the system.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance Domain ID
+| Performance domain ID
 
 | 1
 | LEVEL
@@ -626,11 +634,8 @@ performance domain in the system.
 ! RPMI_ERR_INVALID_PARAM
 ! `DOMAIN_ID` or `LEVEL` is invalid.
 
-! RPMI_ERR_NOT_SUPPORTED
-! Performance level change not allowed.
-
 ! RPMI_ERR_DENIED	
-! Client does not have permission to change the performance level.
+! The client does not have permission to change the performance level.
 
 ! RPMI_ERR_HW_FAULT
 ! Operation failed due to hardware error.
@@ -656,7 +661,7 @@ performance domain in the system.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance Domain ID
+| Performance domain ID
 |===
 
 [#table_perf_getlimit_response_data]
@@ -700,7 +705,7 @@ performance domain in the system.
 
 
 ==== Service: PERF_SET_LIMIT (SERVICE_ID: 0x08)
-This service is used to set the current performance limit of a specific
+This service is used to set the performance limit of a specific
 performance domain in the system.
 
 [#table_perf_setlimit_request_data]
@@ -715,17 +720,17 @@ performance domain in the system.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance Domain ID
+| Performance domain ID
 
 | 1
 | MAX_PERF_LEVEL
 | uint32
-| Maximum allowed performance level
+| Maximum allowed performance level.
 
 | 2
 | MIN_PERF_LEVEL
 | uint32
-| Minimum allowed performance level
+| Minimum allowed performance level.
 |===
 
 [#table_perf_setlimit_response_data]
@@ -754,7 +759,7 @@ performance domain in the system.
 ! `DOMAIN_ID` or performance level is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
-! Performance limit change not allowed.
+! Performance limit change is not allowed.
 
 ! RPMI_ERR_DENIED
 ! Client does not have permission to change the performance level.
@@ -768,7 +773,8 @@ performance domain in the system.
 
 
 ==== Service: PERF_GET_FAST_CHANNEL_ATTRIBUTES (SERVICE_ID: 0x09)
-This service allows clients to query attributes of the Fast-channel for a specific performance domain and performance service.
+This service allows clients to query attributes of the fast-channel for a
+specific performance domain and performance service.
 
 [#table_perf_getfastchanaddr_request_data]
 .Request Data
@@ -782,7 +788,7 @@ This service allows clients to query attributes of the Fast-channel for a specif
 | 0
 | DOMAIN_ID
 | uint32
-| Performance Domain ID
+| Performance domain ID
 
 | 1
 | SERVICE_ID
@@ -836,57 +842,57 @@ This service allows clients to query attributes of the Fast-channel for a specif
 ! [2:1]
 ! Doorbell register width. This field is unused if doorbell is not supported.
 
-	0b00: 8 bits
-	0b01: 16 bits
-	0b10: 32 bits
-	0b11: 64 bits
+	0b00: 8-bit
+	0b01: 16-bit
+	0b10: 32-bit
+	0b11: 64-bit
 
-! [0]	!
+! [0]	! Doorbell support
 
-	0b0: Doorbell not supported
-	0b1: Doorbell supported
+	0b0: Doorbell is not supported.
+	0b1: Doorbell is supported.
 !===
 
 | 2
 |PHYS_ADDR_LOW
 | uint32
-| Lower `32 bits` of physical address
+| Lower 32-bit of physical address.
 
 | 3
 | PHYS_ADDR_HIGH
 | uint32
-| Upper `32 bits` of physical address
+| Upper 32-bit of physical address.
 
 | 4
 | DB_ADDR_LOW
 | uint32
-| Lower `32 bits` of doorbell address. This field is unused if doorbell is not supported.
+| Lower 32-bit of doorbell address. This field is unused if the doorbell is not supported.
 
 | 5
 | DB_ADDR_HIGH
 | uint32
-| Upper `32 bits` of doorbell address. This field is unused if doorbell is not supported.
+| Upper 32-bit of doorbell address. This field is unused if the doorbell is not supported.
 
 | 6
 |DB_ID_LOW
 | uint32
-| Lower `32 bits` of doorbell ID. This field is unused if doorbell is not supported.
+| Lower 32-bit of doorbell ID. This field is unused if the doorbell is not supported.
 
 | 7
 | DB_ID_HIGH
 | uint32
-| Upper `32 bits` of doorbell ID. This field is unused if doorbell is not supported.
+| Upper 32-bit of doorbell ID. This field is unused if the doorbell is not supported.
 
 | 8
 | DB_PRESERVED_LOW
 | uint32
-| A lower `32 bits` doorbell preserved mask to apply for this service before
-ring the doorbell. This field is unused if doorbell is not supported.
+| A lower 32-bit doorbell preserved mask to apply for this service before
+ringing the doorbell. This field is unused if the doorbell is not supported.
 
 | 9
 | DB_PRESERVED_HIGH
 | uint32
-| An upper `32 bits` doorbell preserved mask to apply for this service before
-ring the doorbell. This field is only valid if the doorbell register width is
-64 bits. This field is unused if doorbell is not supported.
+| An upper 32-bit doorbell preserved mask to apply for this service before
+ringing the doorbell. This field is only valid if the doorbell register width
+is 64-bit. This field is unused if the doorbell is not supported.
 |===
