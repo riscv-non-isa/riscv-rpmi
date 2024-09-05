@@ -209,7 +209,7 @@ events may also have additional data associated with them. Any action required
 on behalf of an event depends on the application processor.
 <<img-notification-format>> shows the notification message format.
 
-Each service group has one service with a fixed `SERVICE_ID=0x00` to subscribe
+Each service group has one service with a fixed `SERVICE_ID=0x01` to subscribe
 to events. By default the event notification is disabled for each service
 group and the application processor must subscribe to the supported events in
 each service group to receive notification messages. Notification messages are
