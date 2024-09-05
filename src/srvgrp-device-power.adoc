@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - *DEVICE_POWER* (SERVICEGROUP_ID: 0x00008)
+===  Service Group - DEVICE_POWER (SERVICEGROUP_ID: 0x00008)
 This DEVICE_POWER service group provides messages to manage the power states of
 a device power domain. This service group is used only for device power
 management since System and CPU power management is handled by already defined
@@ -47,7 +47,7 @@ and start from 0.
 
 | POWER_STATE[30:16]
 | RESERVED
-| _Reserved_
+| _Reserved_ and must be `0`.
 
 | POWER_STATE[15:0]
 | VALUE
@@ -61,16 +61,16 @@ and start from 0.
 ! ON with POWER_STATE[31] = 0
 
 ! 0x0001
-! _Reserved_
+! _Reserved_ and must be `0`.
 
 ! 0x0002
-! _Reserved_
+! _Reserved_ and must be `0`.
 
 ! 0x0003
 ! OFF with POWER_STATE[31] = 1
 
 ! 0x0004 - 0x0FFF
-! _Reserved_
+! _Reserved_ and must be `0`.
 
 ! 0x1000 - 0xFFFF
 ! Vendor specific states
@@ -253,7 +253,7 @@ This service is used to query the attributes of a device power domain.
 | 1
 | FLAGS
 | uint32
-| _Reserved_
+| _Reserved_ and must be `0`.
 
 | 2
 | TRANSITION_LATENCY
