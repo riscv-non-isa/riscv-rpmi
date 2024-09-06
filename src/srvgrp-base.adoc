@@ -21,7 +21,7 @@ microcontroller.
 
 * Discovering platform specific information.
 
-The below table lists the services in this group:
+The following table lists the services in the BASE service group:
 
 [#table_base_services]
 .BASE Services
@@ -81,7 +81,7 @@ The below table lists the services in this group:
 This service is used by the platform microcontroller to send the asynchronous
 message of type notification to the application processor. The message
 transfers the events defined by this service group. The events defined are
-listed in the table below.
+listed in the below table.
 
 [#table_base_srvgroup_events]
 .BASE Service Group Events

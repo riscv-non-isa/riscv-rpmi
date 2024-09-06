@@ -26,12 +26,12 @@ tasks. RPMI enables the communication between the application processors and the
 platform microcontrollers. It abstracts the system complexity and provides a
 message-based interface for system management and control.
 
-RPMI is not limited to a single application processor and platform 
+RPMI is not limited to a single application processor and platform
 microcontroller. It can support multiple application processors and multiple
 platform microcontrollers.
 
 The platform microcontroller or in short PuC abstracts low-level platform
-control and management from the application processor. 
+control and management from the application processor.
 
 In addition, RPMI provides a OS-agnostic scalable and extensible interface that
 can support the addition of new capabilities and services over time. This
@@ -40,14 +40,14 @@ existing systems, making it easier for system designers to keep up with changing
 requirements and adapt to evolving industry standards.
 
 === Abstractions provided by RPMI
-*Transport*: Describes the mechanism by which the messages are exchanged 
-between the application processor and the platform microcontroller. 
+*Transport*: Describes the mechanism by which the messages are exchanged
+between the application processor and the platform microcontroller.
 
 *Messaging Protocol*: Provides the messaging interface between the application
-processors and the platform microcontrollers to communicate with each other via 
-messages to make requests for various services supported by the hardware 
-platform. This is accomplished by grouping each management interface into 
-service groups. With each service group implementing several individual 
+processors and the platform microcontrollers to communicate with each other via
+messages to make requests for various services supported by the hardware
+platform. This is accomplished by grouping each management interface into
+service groups. With each service group implementing several individual
 services within.
 
 In addition to the standard services, RPMI can also be extended to allow vendors
@@ -56,13 +56,24 @@ to add their own services.
 .High Level Architecture
 image::highlevel-arch.png[width=800,height=800, align="center"]
 
-An RPMI instance is an implementation of the RPMI messaging protocol and the
-transport which handles the packing and unpacking of RPMI messages, as well as
-the delivery of messages via the RPMI transport to the other side.
+RPMI is designed to work with a single or multi-tenant topology as shown
+below.
 
 [#img-transport-topologies]
 .Transport for M-Mode and S-Mode
 image::transport-topologies.png[width=800,height=800, align="center"]
 
-RPMI is designed to work with a single or multi-tenant topology as shown
-above.
+==== RPMI Client
+An RPMI client is a software or a driver which is capable of sending and
+receiving RPMI messages.
+
+==== RPMI Context
+An RPMI context consists of an RPMI transport instance with RPMI message protocol
+layer. Each RPMI context has a mandatory BASE service group enabled along with
+one or more optional service groups. 
+
+An RPMI context is specific to a RISC-V privilege level in an application
+processor. An RPMI context must only be accessible at a given privilege level.
+Each service group in RPMI defines the privilege level at which it can be accessed.
+An RPMI context must only enable service group which are allowed as per the
+service group privilege level requirement.
