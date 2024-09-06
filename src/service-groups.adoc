@@ -19,15 +19,15 @@ provision to add more service groups as required in the future. The
 service group ID namespace also provides a means to platform vendors to add
 their implementation-specific service groups.
 
-All service groups except the `BASE` service group are optional. If a service
+All service groups except the BASE service group are optional. If a service
 group is implemented, it must implement all its services except a dedicated
-notification service (SERVICE_ID: 0x00) meant to deliver events.
+notification service (`SERVICE_ID: 0x00`) meant to deliver events.
 A service group must not implement defined services partially unless it also
 defines a mechanism to discover its implemented services.
 If a service group defines events then it must also implement notification
-service (SERVICE_ID: 0x00).
+service (`SERVICE_ID: 0x00`).
 
-The following table lists the service group
+The following table lists the service groups.
 
 [#table_service_groups]
 .RPMI Service Groups
@@ -45,8 +45,8 @@ The following table lists the service group
 | 0x0009		| PERFORMANCE
 | 0x000A		| MANAGEMENT_MODE
 | 0x000B		| RAS_AGENT
-| 0x000C - 0x7FFF	| _Reserved for Future Use_
-| 0x8000 - 0xFFFF	| _Implementation Specific Service Groups_
+| 0x000C - 0x7FFF	| _Reserved for future use_
+| 0x8000 - 0xFFFF	| _Implementation specific service groups_
 |===
 NOTE: The services listed within each service group do not have a specific order.
 Additionally, the sequence in which services are defined in the specification

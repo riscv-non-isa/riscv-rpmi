@@ -13,7 +13,7 @@ endif::rootpath[]
 The RPMI protocol defines the message format and different messages
 for system management and control tasks. A message is called a Service if its
 designated to perform a specific task. Multiple similar services are grouped
-logically into a Service Group like Clock, Voltage, Perf Management, etc.
+logically into a Service Group like Clock, Voltage, Performance, etc.
 A service call results in a request message being sent on a transport
 channel from the application processor to the platform microcontroller or
 vice-versa. If the request has an associated response, the platform

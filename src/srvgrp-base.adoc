@@ -81,7 +81,7 @@ The below table lists the services in this group:
 This service is used by the platform microcontroller to send the asynchronous
 message of type notification to the application processor. The message
 transfers the events defined by this service group. The events defined are
-listed in the below table.
+listed in the table below.
 
 [#table_base_srvgroup_events]
 .BASE Service Group Events
