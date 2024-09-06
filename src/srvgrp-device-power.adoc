@@ -31,51 +31,7 @@ The DEVICE_POWER services take a 32-bit integer identifier known as `DOMAIN_ID`
 to specify the device power domain. These `DOMAIN_ID` identifiers are sequential
 and start from 0.
 
-[#table_devpower_powerstate_data]
-.Power States Encoding
-[cols="2, 1, 5a", width=100%, align="center", options="header"]
-|===
-| POWER_STATE
-| Field
-| Description
-
-| POWER_STATE[31]
-| CONTEX
-|
-	0b0: Context is preserved
-	0b1: Context is lost
-
-| POWER_STATE[30:16]
-| RESERVED
-| _Reserved_ and must be `0`.
-
-| POWER_STATE[15:0]
-| VALUE
-|
-[cols="2,5", options="header"]
-!===
-! Value
-! Description
-
-! 0x0000
-! ON with POWER_STATE[31] = 0
-
-! 0x0001
-! _Reserved_ and must be `0`.
-
-! 0x0002
-! _Reserved_ and must be `0`.
-
-! 0x0003
-! OFF with POWER_STATE[31] = 1
-
-! 0x0004 - 0x0FFF
-! _Reserved_ and must be `0`.
-
-! 0x1000 - 0xFFFF
-! Vendor specific states
-!===
-|===
+The following table lists the services in the DEVICE_POWER service group:
 
 [#table_devpower_services]
 .DEVICE_POWER Services
@@ -104,6 +60,58 @@ and start from 0.
 | 0x05
 | DPWR_GET_STATE
 | NORMAL_REQUEST
+|===
+
+[#section-power-state]
+Power State Format::
+
+The power state is represented as a 32-bit value. The following table shows the
+encoding for the power state.
+
+[#table_devpower_powerstate_data]
+.Power State Encoding
+[cols="2, 1, 5a", width=100%, align="center", options="header"]
+|===
+| Bit
+| Name
+| Description
+
+| [31]
+| CONTEX
+|
+	0b0: Context is preserved
+	0b1: Context is lost
+
+| [30:16]
+| RESERVED
+| _Reserved_ and must be `0`.
+
+| [15:0]
+| VALUE
+|
+[cols="2,5", options="header"]
+!===
+! Value
+! Description
+
+! 0x0000
+! ON with POWER_STATE[31] = 0
+
+! 0x0001
+! _Reserved_ and must be `0`.
+
+! 0x0002
+! _Reserved_ and must be `0`.
+
+! 0x0003
+! OFF with POWER_STATE[31] = 1
+
+! 0x0004 - 0x0FFF
+! _Reserved_ and must be `0`.
+
+! 0x1000 - 0xFFFF
+! Vendor specific states
+!===
 |===
 
 [#device-power-notifications]
@@ -153,7 +161,7 @@ described in <<device-power-notifications>>.
 ! Description
 
 ! RPMI_SUCCESS
-! Notification is subscribed successfully.
+! Event is subscribed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
 ! `EVENT_ID` is invalid.
@@ -166,8 +174,8 @@ described in <<device-power-notifications>>.
 
 ==== Service: DPWR_GET_NUM_DOMAINS (SERVICE_ID: 0x02)
 This service is used to query the number of device power domains available which
-can be controlled by the client. The number of domains returned can be less than
-the actual number of domains present with the platform.
+can be controlled by the client. The number of domains returned may be less than
+the actual number of domains present on the platform.
 
 [#table_devpower_getdomains_request_data]
 .Request Data
@@ -213,7 +221,7 @@ This service is used to query the attributes of a device power domain.
 
 [#table_devpower_getattrs_request_data]
 .Request Data
-[cols="1, 4, 1, 6", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 6", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -228,7 +236,7 @@ This service is used to query the attributes of a device power domain.
 
 [#table_devpower_getattrs_response_data]
 .Response Data
-[cols="1, 4, 2, 6a", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 6a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -240,7 +248,7 @@ This service is used to query the attributes of a device power domain.
 | int32
 | Return error code
 
-[cols="7,5", options="header"]
+[cols="8,5", options="header"]
 !===
 ! Error Code
 ! Description
@@ -259,7 +267,7 @@ This service is used to query the attributes of a device power domain.
 | _Reserved_ and must be `0`.
 
 | 2
-| TRANSITION_LATENCY
+| TRANS_LATENCY
 | uint32
 | Worst case transition latency of domain from one power state to another, in microseconds (us).
 
@@ -293,8 +301,8 @@ This service is used to change the power state of a device power domain.
 | This field indicates the power state to which the power domain should
 transition. The specific power states and their meanings may vary depending on
 the implementation, but generally, they include values such as "ON", "OFF"
-and vendor specific power state. See Power States description in the
-<<table_devpower_powerstate_data>>.
+and vendor specific power state. See <<section-power-state, Power State Format>>
+for more details.
 |===
 
 [#table_devpower_setstate_response_data]
@@ -384,6 +392,6 @@ This service is used to get the current power state of a device power domain.
 | uint32
 | This field indicates the current power state of the specified domain. The
 power state can be one of several predefined values, such as ON, OFF, or vendor
-specific implementation. See Power States description in the
-<<table_devpower_powerstate_data>>.
+specific implementation. See <<section-power-state, Power State Format>>
+for more details.
 |===
