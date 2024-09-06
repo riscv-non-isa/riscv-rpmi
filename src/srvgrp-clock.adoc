@@ -330,21 +330,21 @@ domain to operate. Message can also pass the `CLOCK_RATE_INDEX` which is the ind
 to the first rate value to be described in the return rate array. If all
 supported rate values are required then this index value can be `0`.
 
-If the CLOCK_FORMAT is discrete then the clock rate in the received data is an
+If the `CLOCK_FORMAT` is discrete then the clock rate in the received data is an
 array of supported discrete rate values packed in ascending order starting from
-the lower index in the CLOCK_RATE field. If the CLOCK_FORMAT is a linear range,
-then the CLOCK_RATE array contains a triplet of `(min_Hz, max_Hz, step_Hz)` where
+the lower index in the `CLOCK_RATE` field. If the `CLOCK_FORMAT` is a linear range,
+then the `CLOCK_RATE` array contains a triplet of `(min_Hz, max_Hz, step_Hz)` where
 each item in the triplet is a clock rate value.
 
 Total words required for the number of clock rates according to the format in
 one message cannot exceed the total words available in one message DATA field.
 If they exceed then the platform microcontroller will return the number of
-clock rates which can be accommodated in one message and set the REMAINING field
-accordingly. The application processor, when REMAINING field is not `0` must
-call this service again with appropriate CLOCK_RATE_INDEX set to get the
+clock rates which can be accommodated in one message and set the `REMAINING` field
+accordingly. The application processor, when `REMAINING` field is not `0` must
+call this service again with appropriate `CLOCK_RATE_INDEX` set to get the
 remaining clock rates. It's possible that multiple service calls may be required
-to get all the clock rates. In case the CLOCK_FORMAT is a linear range the
-RETURNED field will be set to `3`.
+to get all the clock rates. In case the `CLOCK_FORMAT` is a linear range the
+`RETURNED` field will be set to `3`.
 
 [#table_clock_getsupprates_request_data]
 .Request Data
@@ -421,7 +421,7 @@ Refer to <<clock-rate-format-section>> for more details.
 |===
 
 ==== Service: CLK_SET_CONFIG (SERVICE_ID: 0x05)
-This service is used to configure a clock device.
+This service is used to configure a clock domain.
 
 [#table_clock_setconfig_request_data]
 .Request Data
@@ -486,7 +486,7 @@ This service is used to configure a clock device.
 
 
 ==== Service: CLK_GET_CONFIG (SERVICE_ID: 0x06)
-This serivce is used to get the configuration of a clock device.
+This service is used to get the configuration of a clock domain.
 
 [#table_clock_getconfig_request_data]
 .Request Data
