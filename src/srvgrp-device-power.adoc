@@ -171,7 +171,10 @@ the actual number of domains present with the platform.
 
 [#table_devpower_getdomains_request_data]
 .Request Data
-- NA
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
 
 [#table_devpower_getdomains_response_data]
 .Response Data

@@ -104,7 +104,10 @@ Request for the number of voltage domains available in the system.
 
 [#table_voltage_getnumdomains_request_data]
 .Request Data
-- NA
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
 
 [#table_voltage_getnumdomains_response_data]
 .Response Data

@@ -111,7 +111,10 @@ This service returns the version of a Management Mode.
 
 [#table_mm_version_request_data]
 .Request Data
-- NA
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
 
 [#table_mm_version_response_data]
 .Response Data
