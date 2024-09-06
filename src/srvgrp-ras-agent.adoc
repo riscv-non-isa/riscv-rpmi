@@ -133,7 +133,10 @@ This service is used to query number of error sources available in the system.
 
 [#table_ras_agent_getnum_err_srcs_request_data]
 .Request Data
-- NA
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
 
 [#table_ras_agent_getnum_err_srcs_response_data]
 .Response Data

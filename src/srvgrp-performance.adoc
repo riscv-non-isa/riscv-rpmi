@@ -272,7 +272,10 @@ important for optimizing system performance and power consumption.
 
 [#table_perf_getdomains_request_data]
 .Request Data
-- NA
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
 
 [#table_perf_getdomains_response_data]
 .Response Data
