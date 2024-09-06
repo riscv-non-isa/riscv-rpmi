@@ -51,8 +51,8 @@ The following table lists the services in the PERFORMANCE service group:
 | 0x09		| PERF_GET_FAST_CHANNEL_ATTRIBUTES	| NORMAL_REQUEST
 |===
 
-
-*Performance Level Structure*::
+[#section-perf-level]
+==== Performance Level
 
 The following table shows the structure of a single performance level.
 
@@ -528,7 +528,7 @@ levels.
 | 4
 | LEVEL[N]
 | uint32[3]
-| List of performance levels. Refer to <<table_performance_level>> for the
+| List of performance levels. Refer to <<section-perf-level>> for the
 structure of performance level.
 |===
 

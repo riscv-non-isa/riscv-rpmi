@@ -70,13 +70,11 @@ The following table lists the services in the CLOCK service group:
 | NORMAL_REQUEST
 |===
 
-Clock Rate Representation::
+[#clock-rate-format-section]
+==== Clock Rate Format
 Each clock rate is a array of two 32-bit values `(uint32, uint32)` represented
 as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 `clock_rate_low` is at the lower index than the `clock_rate_high`.
-
-[#clock-rate-format-section]
-Clock Rate Format::
 
 * Discrete Clock Format
 
@@ -302,7 +300,7 @@ the future, as needed.
 
 ! [31:30]	! CLOCK_FORMAT
 
-Refer to <<clock-rate-format-section, Clock Rate Format>> for more details.
+Refer to <<clock-rate-format-section>> for more details.
 ----
 0b00: Discrete Format
 0b01: Linear Range
@@ -419,7 +417,7 @@ RETURNED field will be set to `3`.
 | uint32[2]
 | Clock rate.
 
-Refer to <<clock-rate-format-section, Clock Rate Format>> for more details.
+Refer to <<clock-rate-format-section>> for more details.
 |===
 
 ==== Service: CLK_SET_CONFIG (SERVICE_ID: 0x05)
@@ -540,16 +538,19 @@ This serivce is used to get the configuration of a clock device.
 
 [cols="2,5a", options="header"]
 !===
-! Value
+! Bits
 ! Description
 
-! 0x0		! Disabled
-! 0x1		! Enabled
+! [31:1]	! _Reserved_
+! [0]		! Disable/enable
+
+	0b0: Clock is disabled.
+	0b1: Clock is enabled.
 !===
 |===
 
 ==== Service: CLK_SET_RATE (SERVICE_ID: 0x07)
-Set clock rate.
+This service is used to set the clock rate of a specific clock.
 
 [#table_clock_setrate_request_data]
 .Request Data
@@ -626,7 +627,7 @@ Platform autonomously choose rate closest to the requested rate.
 |===
 
 ==== Service: CLK_GET_RATE (SERVICE_ID: 0x08)
-Get the current clock rate value.
+This service is used to get the current clock rate.
 
 [#table_clock_getrate_request_data]
 .Request Data

@@ -17,7 +17,8 @@ by RAS Agent.
 Each error source in a system has a unique 32-bit identification number called
 as `RAS_ERR_SRC_ID`.
 
-Below table lists the services in this group:
+The following table lists the services in the RAS_AGENT service group:
+
 [#table_ras_agent_services]
 .RAS Agent Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]
@@ -116,7 +117,7 @@ described in <<ras-notifications>>.
 ! Description
 
 ! RPMI_SUCCESS
-! Notification is subscribed successfully.
+! Event is subscribed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
 ! `EVENT_ID` is invalid.

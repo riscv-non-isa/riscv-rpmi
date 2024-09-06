@@ -16,9 +16,11 @@ on Management Mode, refer to the Platform Initialization (PI) specifications
 cite:[PI], Volume 4: Management Mode Core Interface. Management Mode provides an
 environment for implementing OS agnostic services (MM services) like secure variable
 storage, and firmware updates in system firmware. This service group describes the
-interfaces for invoking MM services synchronously, the MM_COMMUNICATE serves as the
+interfaces for invoking MM services synchronously, the `MM_COMMUNICATE` serves as the
 world-switch synchronous call from the non-secure to the secure world while the
-MM_COMPLETE facilitates synchronous call from the secure to the non-secure world.
+`MM_COMPLETE` facilitates synchronous call from the secure to the non-secure world.
+
+The following table lists the services in the MANAGEMENT_MODE service group:
 
 [#table_mm_services]
 .MANAGEMENT_MODE Services
@@ -92,7 +94,7 @@ in <<management-notifications>>.
 ! Description
 
 ! RPMI_SUCCESS
-! Notification is subscribed successfully.
+! Event is subscribed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
 ! `EVENT_ID` is invalid.
@@ -164,10 +166,11 @@ This service returns the version of a Management Mode.
 
 
 ==== Service: MM_COMMUNICATE (SERVICE_ID: 0x03)
-Calling this MM_COMMUNICATE api invokes a MM service that is implemented in the
-secure execution environment. The MM_COMM_DATA contains data to identify and
-invoke the MM service. The readiness of this synchronous request from the non-secure
-world is signaled by the MM_COMPLETE call from the secure world.
+This service invokes an MM service implemented in the secure execution
+environment. The `MM_COMM_DATA` contains data needed to identify and
+invoke the MM service. The readiness of this synchronous request from
+the non-secure world is signaled by the `MM_COMPLETE` call from the secure
+world.
 
 [#table_mm_communicate_request_data]
 .Request Data
@@ -181,22 +184,22 @@ world is signaled by the MM_COMPLETE call from the secure world.
 | 0
 | MM_COMM_DATA_ADDR_LOW
 | uint32
-| Lower 32-bit of MM data's physical address from non-secure to secure world.
+| Lower 32-bit of the MM data's physical address from non-secure to secure world.
 
 | 1
 | MM_COMM_DATA_ADDR_HIGH
 | uint32
-| Upper 32-bit of MM data's physical address from non-secure to secure world.
+| Upper 32-bit of the MM data's physical address from non-secure to secure world.
 
 | 2
 | MM_COMM_DATA_SIZE_LOW
 | uint32
-| Lower 32-bit of MM data's length from non-secure to secure world.
+| Lower 32-bit of the MM data's length from non-secure to secure world.
 
 | 3
 | MM_COMM_DATA_SIZE_HIGH
 | uint32
-| Upper 32-bit of MM data's length from non-secure to secure world.
+| Upper 32-bit of the MM data's length from non-secure to secure world.
 |===
 
 [#table_mm_communicate_response_data]
@@ -211,7 +214,7 @@ world is signaled by the MM_COMPLETE call from the secure world.
 | 0
 | STATUS
 | int32
-| Status code return from MM service to non-secure world.
+| Return error code
 
 [cols="4,5", options="header"]
 !===
@@ -231,10 +234,10 @@ world is signaled by the MM_COMPLETE call from the secure world.
 
 
 ==== Service: MM_COMPLETE (SERVICE_ID: 0x04)
-Use this MM_COMPLETE as the “world-switch synchronous call” normally at the end
-of a synchronous MM_COMMUNICATE call to signal the readiness for handling the
-synchronous request. The MM_COMM_DATA contains the returned data of the MM
-service invoked.
+This service is used as the world-switch synchronous call, typically at the end
+of a synchronous `MM_COMMUNICATE` call, to signal the readiness for handling
+the synchronous request. The `MM_COMM_DATA` contains the returned data from the
+invoked MM service.
 
 [#table_mm_complete_request_data]
 .Request Data
@@ -248,7 +251,7 @@ service invoked.
 | 0
 | STATUS
 | int32
-| Status code sent from MM service to non-secure world.
+| Return error code
 
 [cols="4,5", options="header"]
 !===
@@ -277,20 +280,20 @@ service invoked.
 | 0
 | MM_COMM_DATA_ADDR_LOW
 | uint32
-| Lower 32-bit of MM data's physical address from non-secure to secure world.
+| Lower 32-bit of the MM data's physical address from non-secure to secure world.
 
 | 1
 | MM_COMM_DATA_ADDR_HIGH
 | uint32
-| Upper 32-bit of MM data's physical address from non-secure to secure world.
+| Upper 32-bit of the MM data's physical address from non-secure to secure world.
 
 | 2
 | MM_COMM_DATA_SIZE_LOW
 | uint32
-| Lower 32-bit of MM data's length from non-secure to secure world.
+| Lower 32-bit of the MM data's length from non-secure to secure world.
 
 | 3
 | MM_COMM_DATA_SIZE_HIGH
 | uint32
-| Upper 32-bit of MM data's length from non-secure to secure world.
+| Upper 32-bit of the MM data's length from non-secure to secure world.
 |===

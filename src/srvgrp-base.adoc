@@ -81,7 +81,7 @@ The below table lists the services in this group:
 This service is used by the platform microcontroller to send the asynchronous
 message of type notification to the application processor. The message
 transfers the events defined by this service group. The events defined are
-listed in the below table.
+listed in the table below.
 
 [#table_base_srvgroup_events]
 .BASE Service Group Events
@@ -142,13 +142,13 @@ in table <<table_base_srvgroup_events>>.
 ! Description
 
 ! RPMI_SUCCESS
-! Notifications are subscribed successfully.
+! Event is subscribed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
 ! `EVENT_ID` is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
-! Notifications not supported.
+! Notification is not supported.
 !===
 - Other errors <<table_error_codes>>
 |===
