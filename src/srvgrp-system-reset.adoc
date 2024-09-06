@@ -106,7 +106,7 @@ to them. Supported events are described in <<system-reset-notifications>>.
 ! `EVENT_ID` is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
-! Notifications are not supported.
+! Notification is not supported.
 !===
 - Other errors <<table_error_codes>>
 |===

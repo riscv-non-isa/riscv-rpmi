@@ -142,13 +142,13 @@ in table <<table_base_srvgroup_events>>.
 ! Description
 
 ! RPMI_SUCCESS
-! Notifications are subscribed successfully.
+! Event is subscribed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
 ! `EVENT_ID` is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
-! Notifications not supported.
+! Notification is not supported.
 !===
 - Other errors <<table_error_codes>>
 |===
