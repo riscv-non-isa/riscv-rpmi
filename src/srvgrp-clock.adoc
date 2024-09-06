@@ -540,16 +540,19 @@ This serivce is used to get the configuration of a clock device.
 
 [cols="2,5a", options="header"]
 !===
-! Value
+! Bits
 ! Description
 
-! 0x0		! Disabled
-! 0x1		! Enabled
+! [31:1]	! _Reserved_
+! [0]		! Disable/enable
+
+	0b0: Clock is disabled.
+	0b1: Clock is enabled.
 !===
 |===
 
 ==== Service: CLK_SET_RATE (SERVICE_ID: 0x07)
-Set clock rate.
+This service is used to set the clock rate of a specific clock.
 
 [#table_clock_setrate_request_data]
 .Request Data
@@ -626,7 +629,7 @@ Platform autonomously choose rate closest to the requested rate.
 |===
 
 ==== Service: CLK_GET_RATE (SERVICE_ID: 0x08)
-Get the current clock rate value.
+This service is used to get the current clock rate.
 
 [#table_clock_getrate_request_data]
 .Request Data
