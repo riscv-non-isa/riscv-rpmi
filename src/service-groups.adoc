@@ -21,33 +21,82 @@ their implementation-specific service groups.
 
 All service groups except the BASE service group are optional. If a service
 group is implemented, it must implement all its services except a dedicated
-notification service (`SERVICE_ID: 0x00`) meant to deliver events.
-A service group must not implement defined services partially unless it also
-defines a mechanism to discover its implemented services.
+notification service (`SERVICE_ID: 0x00`) meant to deliver events. A service
+group must not implement defined services partially unless it also defines a
+mechanism to discover its implemented services.
+
 If a service group defines events then it must also implement notification
-service (`SERVICE_ID: 0x00`).
+service (`SERVICE_ID: 0x00`). Each service group has another dedicated
+service with (`SERVICE_ID = 0x01`) to subscribe to events for notification.
+
+If the `BASE_PROBE_SERVICE_GROUP` service indicates that a service group is
+implemented and returns the implemented version, then the service group
+version must conform to the version returned by the `BASE_GET_SPEC_VERSION`.
+
 
 The following table lists the service groups.
 
 [#table_service_groups]
 .RPMI Service Groups
-[cols="2, 4", width=100%, align="center", options="header"]
+[cols="2, 2, 4", width=100%, align="center", options="header"]
 |===
-| Service Group ID	| Service Group Name
-| 0x0001		| BASE
-| 0x0002		| SYSTEM_RESET
-| 0x0003		| SYSTEM_SUSPEND
-| 0x0004		| HART_STATE_MANAGEMENT
-| 0x0005		| CPPC
-| 0x0006		| VOLTAGE
-| 0x0007		| CLOCK
-| 0x0008		| DEVICE_POWER
-| 0x0009		| PERFORMANCE
-| 0x000A		| MANAGEMENT_MODE
-| 0x000B		| RAS_AGENT
-| 0x000C - 0x7FFF	| _Reserved for future use_
-| 0x8000 - 0xFFFF	| _Implementation specific service groups_
+| Service Group ID
+| Version (Major:Minor)
+| Service Group Name
+
+| 0x0001
+|
+| BASE
+
+| 0x0002
+|
+| SYSTEM_RESET
+
+| 0x0003
+|
+| SYSTEM_SUSPEND
+
+| 0x0004
+|
+| HART_STATE_MANAGEMENT
+
+| 0x0005
+|
+| CPPC
+
+| 0x0006
+|
+| VOLTAGE
+
+| 0x0007
+|
+| CLOCK
+
+| 0x0008
+|
+| DEVICE_POWER
+
+| 0x0009
+|
+| PERFORMANCE
+
+| 0x000A
+|
+| MANAGEMENT_MODE
+
+| 0x000B
+|
+| RAS_AGENT
+
+| 0x000C - 0x7FFF
+|
+| _Reserved for Future Use_
+
+| 0x8000 - 0xFFFF
+|
+| _Implementation Specific Service Groups_
 |===
+
 NOTE: The services listed within each service group do not have a specific order.
 Additionally, the sequence in which services are defined in the specification
 does not necessarily reflect the order in which they should be called in the
