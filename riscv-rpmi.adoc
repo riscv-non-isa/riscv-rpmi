@@ -64,6 +64,8 @@ include::src/transport.adoc[]
 
 include::src/message-protocol.adoc[]
 
+include::src/rpmi-mpxy.adoc[]
+
 include::src/service-groups.adoc[]
 
 include::src/srvgrp-base.adoc[]

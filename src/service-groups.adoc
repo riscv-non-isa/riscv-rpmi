@@ -38,63 +38,77 @@ The following table lists the service groups.
 
 [#table_service_groups]
 .RPMI Service Groups
-[cols="2, 2, 4", width=100%, align="center", options="header"]
+[cols="2, 2, 4, 3", width=100%, align="center", options="header"]
 |===
 | Service Group ID
 | Version (Major:Minor)
 | Service Group Name
+| RISC-V Privilege Mode
 
 | 0x0001
 |
 | BASE
+| M-mode, S-mode
 
 | 0x0002
 |
 | SYSTEM_RESET
+| M-mode
 
 | 0x0003
 |
 | SYSTEM_SUSPEND
+| M-mode
 
 | 0x0004
 |
 | HART_STATE_MANAGEMENT
+| M-mode
 
 | 0x0005
 |
 | CPPC
+| M-mode, S-mode
 
 | 0x0006
 |
 | VOLTAGE
+| M-mode, S-mode
 
 | 0x0007
 |
 | CLOCK
+| M-mode, S-mode
 
 | 0x0008
 |
 | DEVICE_POWER
+| M-mode, S-mode
 
 | 0x0009
 |
 | PERFORMANCE
+| M-mode, S-mode
 
 | 0x000A
 |
 | MANAGEMENT_MODE
+| M-mode, S-mode
 
 | 0x000B
 |
 | RAS_AGENT
+| M-mode, S-mode
 
 | 0x000C - 0x7FFF
 |
 | _Reserved for Future Use_
+|
 
 | 0x8000 - 0xFFFF
 |
 | _Implementation Specific Service Groups_
+|
 |===
 
 NOTE: The services listed within each service group do not have a specific order.
