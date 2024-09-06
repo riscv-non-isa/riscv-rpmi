@@ -291,7 +291,7 @@ condition.
 
 | RPMI_SUCCESS
 | 0
-| Service has been completed successfully
+| Service has been completed successfully.
 
 | RPMI_ERR_FAILED
 | -1
@@ -299,11 +299,11 @@ condition.
 
 | RPMI_ERR_NOT_SUPPORTED
 | -2
-| Service or feature not supported
+| Service or feature is not supported.
 
 | RPMI_ERR_INVALID_PARAM
 | -3
-| One or more parameters passed are invalid
+| One or more parameters passed are invalid.
 
 | RPMI_ERR_DENIED
 | -4
@@ -334,20 +334,20 @@ violates the extension specification or the extension version mismatch.
 
 | RPMI_ERR_INVALID_STATE
 | -10
-| Invalid state
+| Invalid state.
 
 | RPMI_ERR_BAD_RANGE
 | -11
-| Index out of range
+| Index out of range.
 
 | RPMI_ERR_TIMEOUT
 | -12
-| Failed due to timeout
+| Failed due to timeout.
 
 | RPMI_ERR_IO
 | -13
 | Input/Output error.
 
-|	| -14 to -127 	| _Reserved_
-|	| < -127	| _Vendor specific_
+|	| -14 to -127 	| _Reserved_.
+|	| < -127	| _Vendor specific_.
 |===
