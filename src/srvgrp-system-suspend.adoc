@@ -40,6 +40,7 @@ Below if the list of services in this group:
 | NORMAL_REQUEST
 |===
 
+[#section-suspend-types]
 ==== Suspend Types
 RPMI supports suspend types and their values as defined by SBI
 specification.
@@ -121,7 +122,7 @@ if a `SUSPEND_TYPE` supports resume address.
 | 0
 | SUSPEND_TYPE
 | uint32
-| Suspend type
+| Suspend type. See <<section-suspend-types>> for more details.
 |===
 
 [#table_syssuspend_getsysuspendattrs_response_data]
@@ -214,7 +215,7 @@ after the `WFI` instruction.
 | 1
 | SUSPEND_TYPE
 | uint32
-| Suspend type
+| Suspend type. See <<section-suspend-types>> for more details.
 
 | 2
 | RESUME_ADDR_LOW

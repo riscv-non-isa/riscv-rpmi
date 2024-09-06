@@ -49,6 +49,7 @@ Below table lists the services in this group:
 | POSTED_REQUEST
 |===
 
+[#section-reset-types]
 ==== Reset Types
 RPMI supports reset types and their values as defined by SBI specification.
 Refer to https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-sys-reset.adoc#table_srst_system_reset_types[*SRST System Reset Types*^]
@@ -129,7 +130,7 @@ default. System Warm Reset support can be discovered with this service.
 | 0
 | RESET_TYPE
 | uint32
-| Reset type
+| Reset type. See <<section-reset-types>> for more details.
 |===
 
 [#table_sysreset_getsysresetattrs_response_data]
@@ -200,7 +201,7 @@ invalid state may result in the system entering a non-functional state.
 | 0
 | RESET_TYPE
 | uint32
-| Reset type
+| Reset type. See <<section-reset-types>> for more details.
 
 |===
 
