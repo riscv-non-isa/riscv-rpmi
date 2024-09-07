@@ -12,7 +12,7 @@ endif::rootpath[]
 ===  Service Group - PERFORMANCE (SERVICEGROUP_ID: 0x0009)
 This PERFORMANCE service group is used to manage the performance of a
 group of devices or application processors that operate in the same performance
-domain. Unlike tranditional performance control mechanisms, where the OS is
+domain. Unlike traditional performance control mechanisms, where the OS is
 responsible to directly controlling voltages and clocks, this mechanism instead
 operates on an metric less integer performance scale. Each integer value on this
 scale represents a performance operating point. What this scale represents and
@@ -140,7 +140,7 @@ inform clients in the system about changes in the performance domain.
 | Event Data
 | Description
 
-| 0x001
+| 0x01
 | PERF_POWER_CHANGE
 |
 [cols="2,2,5", options="header"]
@@ -160,7 +160,7 @@ inform clients in the system about changes in the performance domain.
 !===
 | Performance power changed notification.
 
-| 0x002
+| 0x02
 | PERF_LIMIT_CHANGE
 |
 [cols="2,2,5", options="header"]
@@ -184,7 +184,7 @@ inform clients in the system about changes in the performance domain.
 !===
 | Performance limit changed notification.
 
-| 0x003
+| 0x03
 | PERF_LEVEL_CHANGE
 |
 [cols="2,2,5", options="header"]
@@ -637,7 +637,7 @@ performance domain in the system.
 ! `DOMAIN_ID` or `LEVEL` is invalid.
 
 ! RPMI_ERR_DENIED	
-! The client does not have permission to change the performance level.
+! Denied due to no permission.
 
 ! RPMI_ERR_HW_FAULT
 ! Operation failed due to hardware error.
@@ -764,7 +764,7 @@ performance domain in the system.
 ! Performance limit change is not allowed.
 
 ! RPMI_ERR_DENIED
-! Client does not have permission to change the performance level.
+! Denied due to no permission.
 
 ! RPMI_ERR_HW_FAULT
 ! Operation failed due to hardware error.
@@ -824,7 +824,7 @@ specific performance domain and performance service.
 ! `DOMAIN_ID` is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
-! Fast-channel not implemented.
+! Fast-channel is not implemented.
 
 !===
 - Other errors <<table_error_codes>>
