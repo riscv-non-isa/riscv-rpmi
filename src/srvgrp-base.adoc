@@ -72,8 +72,8 @@ The following table lists the services in the BASE service group:
 | Implementation ID
 | Name
 
-|
-|
+| 0x0
+| libRPMI
 |===
 
 [#base-notifications]
@@ -105,7 +105,7 @@ group notifications. The platform can optionally support notifications of
 events that might occur in the platform. The platform microcontroller can send
 the supported events through notification message if the application processor
 has subscribed to them. The supported events are described
-in table <<table_base_srvgroup_events>>.
+in <<table_base_srvgroup_events>>.
 
 [#table_base_ennotification_request_data]
 .Request Data
@@ -210,7 +210,7 @@ the `MAJOR` and `MINOR` numbers.
 ==== Service: BASE_GET_IMPLEMENTATION_ID (SERVICE_ID: 0x03)
 This service is used to get a 32-bit RPMI implementation ID assigned to the
 software which implements the RPMI specification. Every implementation ID is
-unique and listed in the table <<table_base_rpmi_impl_id>>
+unique and listed in the <<table_base_rpmi_impl_id>>.
 
 [#table_base_getimplid_request_data]
 .Request Data
