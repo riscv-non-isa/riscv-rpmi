@@ -11,7 +11,7 @@ endif::rootpath[]
 
 == Message Protocol
 The RPMI protocol defines the message format and different messages
-for system management and control tasks. A message is called a Service if its
+for system management and control tasks. A message is called a Service if it is
 designated to perform a specific task. Multiple similar services are grouped
 logically into a Service Group like Clock, Voltage, Performance, etc.
 A service call results in a request message being sent on a transport
@@ -21,7 +21,7 @@ microcontroller after processing and servicing the request can send the
 response message with status and additional data.
 
 === Message Types
-Three categories of message are supported - REQUEST, ACKNOWLEDGEMENT
+Three categories of message are supported: REQUEST, ACKNOWLEDGEMENT
 and NOTIFICATION.
 
 A Request message represents a specific control and management task which needs
@@ -63,7 +63,7 @@ the system.
 ! Request without Acknowledgement.
 !===
 
-| Messages for requesting a service from platform microcontroller.
+| Messages for requesting a service from the platform microcontroller.
 
 | ACKNOWLEDGEMENT
 | _Not applicable_
@@ -76,9 +76,9 @@ application processor for sending events.
 |===
 
 === Message Format
-Each message regardless of its type consists of two parts - message header
+Each message regardless of its type consists of two parts: message header
 and data. The size of the message header is fixed, but the size of the data
-is implementation-defined, based on the layout of the transport queues. All the
+is implementation-defined, based on the layout of the transport queues. All
 messages must follow the byte order as defined by the RPMI transport.
 
 .RPMI Message Format
@@ -143,7 +143,7 @@ Each message is given a unique identity in an RPMI context by its header.
 
 ! [23:16]
 ! SERVICE_ID +
-8-bit identifier representing a service(message). This identifier is
+8-bit identifier representing a service (message). This identifier is
 unique within a given service group.
 
 ! [15:0]
@@ -278,7 +278,7 @@ packing of multiple events and its implementation defined.
 === Return Error Codes
 The following table lists all the error codes that can be returned by a service
 in the `STATUS` field of the acknowledgement message. The `STATUS` field returns
-`0` on success otherwise a negative 32-bit integer to indicate a error
+`0` on success, otherwise a negative 32-bit integer to indicate an error
 condition.
 
 [#table_error_codes]
