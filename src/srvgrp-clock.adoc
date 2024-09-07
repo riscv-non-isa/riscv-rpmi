@@ -78,7 +78,9 @@ as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 
 * Discrete Clock Format
 
-The following table shows the structure of the Discrete clock format.
+A set of discrete clock rate arranged in a sequence, starting from the
+lowest value at the lowest index and increasing sequentially to higher clock
+rate. The following table shows the structure of the Discrete clock format.
 
 .Discrete Clock Format Structure
 [cols="1,2,5" width=100%, align="center", options="header"]
@@ -98,6 +100,7 @@ The following table shows the structure of the Discrete clock format.
 
 * Linear Clock Format
 
+A linear range of clock rate with a constant step size.
 The following table shows the structure of the Linear clock format.
 
 .Linear Clock Format Structure
@@ -193,7 +196,7 @@ described in <<clock-notifications>>.
 ==== Service: CLK_GET_NUM_CLOCKS (SERVICE_ID: 0x02)
 This service is used to query the number of clocks available in the system.
 All supported clocks in the system are designated by an integer identifier
-called CLOCK_ID. CLOCK_ID are sequential starting from `0`.
+called `CLOCK_ID`. `CLOCK_ID` are sequential starting from `0`.
 
 [#table_clock_getnumclocks_request_data]
 .Request Data
@@ -238,13 +241,8 @@ This service provides detailed attributes of a clock, including its name,
 represented as a 16-byte array of ASCII strings. It also specifies the
 transition latency, which denotes the maximum time for the clock to stabilize
 after a configuration change. Moreover, it indicates the number of clock rates
-supported by the requested clock. The FLAGS field encodes the clock formats
+supported by the requested clock. The `FLAGS` field encodes the clock formats
 supported by the clock.
-
-Currently supported clock formats include `discrete` format, represented as an
-array where each value represents a clock rate, and `linear` format represented
-as `(min_Hz, max_Hz, step_Hz)`. Additional clock formats may be supported in
-the future, as needed.
 
 [#table_clock_getattrs_request_data]
 .Request Data
@@ -304,8 +302,8 @@ the future, as needed.
 
 Refer to <<clock-rate-format-section>> for more details.
 ----
-0b00: Discrete Format
-0b01: Linear Range
+0b00: Discrete format
+0b01: Linear format
 ----
 
 !===
@@ -331,12 +329,6 @@ Each domain may support multiple clock rate values which are allowed by the
 domain to operate. Message can also pass the `CLOCK_RATE_INDEX` which is the index
 to the first rate value to be described in the return rate array. If all
 supported rate values are required then this index value can be `0`.
-
-If the `CLOCK_FORMAT` is discrete then the clock rate in the received data is an
-array of supported discrete rate values packed in ascending order starting from
-the lower index in the `CLOCK_RATE` field. If the `CLOCK_FORMAT` is a linear range,
-then the `CLOCK_RATE` array contains a triplet of `(min_Hz, max_Hz, step_Hz)` where
-each item in the triplet is a clock rate value.
 
 Total words required for the number of clock rates according to the format in
 one message cannot exceed the total words available in one message DATA field.
