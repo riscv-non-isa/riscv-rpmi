@@ -234,7 +234,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 | STATUS	
 | int32		
 | Return error code
-[cols="6,5a"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code 	
 ! Description
@@ -307,7 +307,7 @@ items.
 | STATUS	
 | int32		
 | Return error code
-[cols="7,5a"]
+[cols="7,5a", options="header"]
 !===
 ! Error Code 	
 ! Description
@@ -529,7 +529,7 @@ Once the hart is stopped, it can only be restarted by explicitly invoking the
 | STATUS	
 | int32		
 | Return error code
-[cols="6,5a"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code
 ! Description
@@ -609,7 +609,7 @@ _Only used for non-retentive suspend types._
 | STATUS	
 | int32		
 | Return error code
-[cols="6,5a"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code 	
 ! Description
