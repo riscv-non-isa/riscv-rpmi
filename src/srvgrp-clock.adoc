@@ -298,7 +298,9 @@ the future, as needed.
 ! Bits
 ! Description
 
-! [31:30]	! CLOCK_FORMAT
+! [31:2]	! _Reserved_ and must be `0`.
+
+! [1:0]	! CLOCK_FORMAT
 
 Refer to <<clock-rate-format-section>> for more details.
 ----
@@ -306,12 +308,12 @@ Refer to <<clock-rate-format-section>> for more details.
 0b01: Linear Range
 ----
 
-! [29:0]	! _Reserved_ and must be `0`.
 !===
+
 | 2
 | NUM_RATES
 | uint32
-| Number of clock rates depending on CLOCK_FORMAT.
+| Number of clock rates.
 
 | 3
 | TRANSITION_LATENCY
@@ -321,7 +323,7 @@ Refer to <<clock-rate-format-section>> for more details.
 | 4:7
 | CLOCK_NAME
 | uint8[16]
-| Clock name
+| Clock name, a NULL-terminated ASCII string up to 16-bytes.
 |===
 
 ==== Service: CLK_GET_SUPPORTED_RATES (SERVICE_ID: 0x04)

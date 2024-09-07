@@ -367,7 +367,9 @@ level.
 ! Bits
 ! Description
 
-! [31]
+! [31:11]	! _Reserved_ and must be `0`.
+
+! [10]
 ! PERF_LIMIT_SETTING
 
 This attribute indicates whether the platform allows software to set the
@@ -376,7 +378,7 @@ performance limit for a specific performance domain.
 	0b0: Performance limit change is not allowed.
 	0b1: Performance limit change is allowed.
 
-! [30]
+! [9]
 ! PERF_LEVEL_SETTING
 
 This attribute indicates whether the platform allows software to set the
@@ -385,7 +387,7 @@ performance level for a specific performance domain.
 	0b0: Performance level change is not allowed.
 	0b1: Performance level change is allowed.
 
-! [29]
+! [8]
 ! FAST_CHANNEL_SUPPORT
 
 This attribute indicates whether the platform supports fast-channel
@@ -394,12 +396,10 @@ for a specific performance domain.
 	0b0: Fast-channel is not supported.
 	0b1: Fast-channel is supported.
 
-! [28:21]
+! [7:0]
 ! NUM_PERF_LEVELS
 
 The total number of supported performance levels.
-
-! [20:0]	! _Reserved_
 
 !===
 | 2
@@ -427,8 +427,8 @@ performance level based on the system's workload and power constraints.
 
 index = 0;
 num = 0;
-/* Allocate a buffer based on the value returned from the flags[28:21] */
-total_num_levels = perf_domain_attributes.flags[28:21];
+/* Allocate a buffer based on the value returned from the flags[7:0] */
+total_num_levels = perf_domain_attributes.flags[7:0];
 
 loop:
 	list = get_domain_opp_list(index, domain_id);
@@ -450,7 +450,7 @@ loop:
 ```
 The pseudocode above demonstrates the process for retrieving the level
 information for a specific performance domain. First, the number of
-performance levels is determined by checking the `FLAGS[28:21]` parameter
+performance levels is determined by checking the `FLAGS[7:0]` parameter
 returned by the `PERF_GET_ATTRIBUTES` service.
 
 The total number of performance levels included in one message must not exceed

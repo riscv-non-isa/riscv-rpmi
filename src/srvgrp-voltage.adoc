@@ -251,8 +251,8 @@ for operation. The number of levels indicates the total count of voltage levels
 supported within a voltage domain. Transition latency denotes the maximum time
 required for the voltage to stabilize upon a change in the regulator. Depending
 on the hardware, voltage levels can be of various formats, and the current
-service supports Simple-linear, Multi-linear, and Discrete range formats.
-Additional voltage formats can be accommodated in the future if required.
+service supports Fixed voltage, Simple-linear, Multi-linear, and Discrete range
+formats. Additional voltage formats can be accommodated in the future if required.
 
 [#table_voltage_getdomainattrs_request_data]
 .Request Data
@@ -303,7 +303,10 @@ Additional voltage formats can be accommodated in the future if required.
 ! Bits
 ! Description
 
-! [31:29]
+! [31:4]
+! _Reserved_ and must be `0`.
+
+! [3:1]
 ! VOLTAGE_FORMAT
 
 Refer to <<voltage-level-format-section>> for more details.
@@ -314,8 +317,7 @@ Refer to <<voltage-level-format-section>> for more details.
 0b011: Discrete range
 0b100 - 0b111: Reserved
 ----
-! [28:1]
-! _Reserved_ and must be `0`.
+
 ! [0]
 ! ALWAYS_ON
 
@@ -581,7 +583,7 @@ This service is used to get the configuration of a voltage domain.
 
 
 ==== Service: VOLT_SET_LEVEL (SERVICE_ID: 0x07)
-Set the voltage level in microvolts of a voltage domain.
+This service is used to set the voltage level in microvolts of a voltage domain.
 
 [#table_voltage_setdomainlevel_request_data]
 .Request Data
@@ -636,7 +638,8 @@ Set the voltage level in microvolts of a voltage domain.
 
 
 ==== Service: VOLT_GET_LEVEL (SERVICE_ID: 0x08)
-Get the current voltage level in microvolts of a voltage domain.
+This service is used to get the current voltage level in microvolts of a
+voltage domain.
 
 [#table_voltage_getdomainlevel_request_data]
 .Request Data

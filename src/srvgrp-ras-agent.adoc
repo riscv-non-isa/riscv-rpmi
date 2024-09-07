@@ -305,13 +305,13 @@ subsequent byte offset of the remaining bytes.
 ! Bits
 ! Description
 
+! [31:4]
+! _Reserved_ and must be `0`.
+
 ! [3:0]
 ! Format of the error source descriptor. Value `0` indicates that the error
 source descriptor is in GHESv2 format. Rest of the values (1-15) are
 implementation specific.
-
-! [31:4]
-! _Reserved_ and must be `0`.
 
 !===
 

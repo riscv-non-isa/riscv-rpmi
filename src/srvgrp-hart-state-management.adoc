@@ -65,6 +65,7 @@ The following table lists the services in the HSM service group:
 
 |===
 
+[#section-hart-states]
 ==== Hart States
 Hart HSM states and the HSM state machine supported by the RPMI
 are defined in the RISC-V SBI Specification cite:[SBI]. Refer to
@@ -75,9 +76,11 @@ instructions and stop state means that hart is not executing the instructions.
 The platform can implement the stop state either by powering down the hart or
 just putting the hart in a platform supported low-power state.
 
-The RPMI supports the hart suspend states encoding as defined in
-RISC-V SBI Specification:[SBI].
-Refer to https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-hsm.adoc#table_hsm_hart_suspend_types[*HSM Suspend States*^]. The values for the
+[#section-hart-suspend-types]
+==== Hart Suspend Types
+The RPMI supports the hart suspend types encoding as defined in
+RISC-V SBI Specification cite:[SBI].
+Refer to https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-hsm.adoc#table_hsm_hart_suspend_types[*HSM Suspend Types*^]. The values for the
 platform supported suspend types are discovered through a service defined in
 this service group.
 
@@ -190,7 +193,7 @@ set in `STATUS` field.
 
 | 1	
 | HART_STATE	
-| uint32	| Hart HSM state
+| uint32	| Hart state. See <<section-hart-states>> for more details.
 |===
 
 ==== Service: HSM_GET_HART_LIST (SERVICE_ID: 0x03)
@@ -255,19 +258,9 @@ may need to call this service again with the appropriate `START_INDEX` until the
 | Number of Hart IDs returned in this request.
 
 | 3	
-| HART_ID[0]	
-| uint32	
-| Hart ID
-
-| 4	
-| HART_ID[1]	
-| uint32	
-| Hart ID
-
-| N+2	
-| HART_ID[N - 1] 
-| uint32	
-| Hart ID
+| HART_ID[N]
+| uint32
+| Hart IDs
 |===
 
 ==== Service: HSM_GET_SUSPEND_TYPES (SERVICE_ID: 0x04)
@@ -338,19 +331,9 @@ items.
 | Number of suspend types returned in this request.
 
 | 3	
-| SUSPEND_TYPE[0] 
+| SUSPEND_TYPE[N]
 | uint32	
-| Suspend type
-
-| 4	
-| SUSPEND_TYPE[1] 
-| uint32	
-| Suspend type
-
-| N+2	
-| SUSPEND_TYPE[N - 1]  
-| uint32	
-| Suspend type
+| Suspend types. See <<section-hart-suspend-types>> for more details.
 |===
 
 ==== Service: HSM_GET_SUSPEND_INFO (SERVICE_ID: 0x05)
@@ -368,7 +351,7 @@ This service is used to get the attributes of a suspend type.
 | 0	
 | SUSPEND_TYPE	
 | uint32	
-| Suspend type.
+| Suspend type. See <<section-hart-suspend-types>> for more details.
 |===
 
 [#table_hsm_getsuspendinfo_response_data]
@@ -598,7 +581,7 @@ provided resume address.
 | 1	
 | SUSPEND_TYPE	
 | uint32	
-| Hart suspend type
+| Suspend type. See <<section-hart-suspend-types>> for more details.
 
 | 2	
 | RESUME_ADDR_LOW 

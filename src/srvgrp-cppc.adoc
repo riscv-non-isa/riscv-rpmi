@@ -668,17 +668,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 | Number of Hart IDs returned in this request.
 
 | 3
-| HART_ID[0]
+| HART_ID[N]
 | uint32
-| Hart ID
-
-| 4
-| HART_ID[1]
-| uint32
-| Hart ID
-
-| N+2
-| HART_ID[N-1]
-| uint32
-| Hart ID
+| Hart IDs
 |===
