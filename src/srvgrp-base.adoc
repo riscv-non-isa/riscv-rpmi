@@ -73,7 +73,7 @@ The following table lists the services in the BASE service group:
 | Name
 
 | 0x0
-| libRPMI
+| libRPMI cite:[libRPMI]
 |===
 
 [#base-notifications]
