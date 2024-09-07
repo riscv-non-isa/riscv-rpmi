@@ -92,7 +92,7 @@ listed in the below table.
 | Event Data
 | Description
 
-| 0x001
+| 0x01
 | REQUEST_HANDLE_ERROR
 | NA
 | This event indicates that the the platform microcontroller is unable to
