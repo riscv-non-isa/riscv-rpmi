@@ -1,0 +1,11 @@
+== Terms and Abbreviations
+
+[cols="1,4", width=95%, options="header"]
+|===
+| Term  | Meaning
+
+| AP    | Application Processor
+| ACPI  | Advanced Configuration and Power Interface Specification
+| CPPC  | Collaborative Processor Performance Control
+| PuC   | Platform Microcontroller
+|===

@@ -1,0 +1,46 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+== RPMI Integration with SBI MPXY Extension
+The SBI MPXY (Message Proxy) extension is defined by the RISC-V SBI Specification
+cite:[SBI] for sending and receiving the message data from the S-mode.
+
+.RPMI and MPXY Integration
+image::mpxy-rpmi.png[350,350, align="center"]
+
+RPMI service groups that are M-mode only, including BASE, which is an exception
+must not be accessible via SBI MPXY interface. A MPXY channel
+corresponds to a single RPMI service group bound to that MPXY channel.
+
+The following table lists the RPMI message protocol specific attributes for
+a MPXY channel.
+
+[#table_rpmi_mpxy_attributes]
+.RPMI Attributes for MPXY Channel
+[cols="3, 2, 1, 3", width=100%, align="center", options="header"]
+|===
+| Attribute Name
+| Attribute ID
+| Access
+| Description
+
+| SERVICEGROUP_ID
+| 0x80000000
+| RO
+| RPMI service group ID
+
+| SERVICEGROUP_VERSION
+| 0x80000001
+| RO
+| RPMI service group version
+|===
+
+TODO: Link to the MPXY Extension chapter in SBI spec (does not exist in SBI spec)

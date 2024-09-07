@@ -108,7 +108,7 @@ and indexed starting from `0`.
 
 ==== Message Header
 The `8-byte` message header has a fixed layout consisting of several fields.
-Each message is given a unique identity in an RPMI instance by its header.
+Each message is given a unique identity in an RPMI context by its header.
 
 [#table_message_header]
 .Message Header

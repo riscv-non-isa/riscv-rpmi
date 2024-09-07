@@ -27,7 +27,8 @@ necessary to categorize it as a graceful or forceful shutdown. In the case of
 a shutdown request, it is implicit for the platform microcontroller that the
 application processor has prepared itself for a successful shutdown.
 
-Below table lists the services in this group:
+The following table lists the services in the SYSTEM_RESET service group:
+
 [#table_sysreset_services]
 .SYSTEM_RESET Services
 [cols="1, 3, 2", width=100%, align="center", options="header"]

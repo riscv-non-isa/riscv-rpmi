@@ -86,7 +86,8 @@ made through a fast-channel.
 If the fast-channels are implemented, the application processor will either write
 the desired performance level in case of normal mode or the minimum
 and maximum level in case of Autonomous (CPPC2) mode in the fast-channel.
-Otherwise the application processor can call the service `CPPC_WRITE_REG` for the `DesiredPerformanceRegister` or `MinimumPerformanceRegister` and
+Otherwise the application processor can call the service `CPPC_WRITE_REG` for the
+`DesiredPerformanceRegister` or `MinimumPerformanceRegister` and
 `MaximumPerformanceRegister`.
 
 [#table_cppc_fastchan]
