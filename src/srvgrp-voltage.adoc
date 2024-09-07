@@ -67,7 +67,8 @@ group. The voltage levels are represented as a group.
 
 * Fixed Voltage Format
 
-The following table shows the structure of the fixed voltage format.
+A constant voltage level. The following table shows the structure of the fixed
+voltage format.
 
 .Fixed Voltage Structure
 [cols="1,2,5" width=100%, align="center", options="header"]
@@ -83,7 +84,8 @@ The following table shows the structure of the fixed voltage format.
 
 * Simple-Linear Format
 
-The following table shows the structure of the simple-linear voltage format.
+A linear range of voltage levels with a constant step size. The following table
+shows the structure of the simple-linear voltage format.
 
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
@@ -106,7 +108,8 @@ The following table shows the structure of the simple-linear voltage format.
 
 * Multi-Linear Format
 
-The following table shows the structure of the multi-linear voltage format.
+Multiple linear ranges of voltage levels, each with its own step size. The
+following table shows the structure of the multi-linear voltage format.
 
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
@@ -133,6 +136,8 @@ The following table shows the structure of the multi-linear voltage format.
 
 * Discrete Format
 
+A set of discrete voltage levels arranged in a sequence, starting from the
+lowest value at the lowest index and increasing sequentially to higher levels.
 The following table shows the structure of the discrete format.
 
 [cols="1,2,5" width=100%, align="center", options="header"]
@@ -356,11 +361,8 @@ supported by the domain. Get the voltage levels with `VOLT_GET_SUPPORTED_LEVELS`
 
 ==== Service: VOLT_GET_SUPPORTED_LEVELS (SERVICE_ID: 0x04)
 Each domain may support multiple voltage levels which are allowed by the domain
-to operate. Depending on the hardware, the voltage levels can be either discrete
-or stepwise range. In a discrete voltage range, the voltages will be arranged in
-sequence, starting from the lowest voltage value at the lowest index and
-increasing sequentially to higher voltage levels. The number of voltage levels
-returned depends on the format of the voltage level.
+to operate. The number of voltage levels returned depends on the format of the
+voltage level.
 
 The total number of words required to represent the voltage levels in one message
 cannot exceed the total words available in one message `DATA` field. If the number

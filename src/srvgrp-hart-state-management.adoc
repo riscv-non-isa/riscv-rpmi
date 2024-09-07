@@ -21,7 +21,7 @@ the entire hierarchical group in which the hart is located, requiring coordinati
 for the power state change. RPMI supports the coordination mechanisms and hart
 power states defined by the RISC-V SBI Specification cite:[SBI].
 
-The following table lists the services in the HSM service group:
+The following table lists the services in the HART_STATE_MANAGEMENT service group:
 
 [#table_hsm_services]
 .HART_STATE_MANAGEMENT Services
@@ -234,7 +234,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 | STATUS	
 | int32		
 | Return error code
-[cols="6,5a"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code 	
 ! Description
@@ -307,7 +307,7 @@ items.
 | STATUS	
 | int32		
 | Return error code
-[cols="7,5a"]
+[cols="7,5a", options="header"]
 !===
 ! Error Code 	
 ! Description
@@ -529,7 +529,7 @@ Once the hart is stopped, it can only be restarted by explicitly invoking the
 | STATUS	
 | int32		
 | Return error code
-[cols="6,5a"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code
 ! Description
@@ -609,7 +609,7 @@ _Only used for non-retentive suspend types._
 | STATUS	
 | int32		
 | Return error code
-[cols="6,5a"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code 	
 ! Description

@@ -92,7 +92,7 @@ listed in the below table.
 | Event Data
 | Description
 
-| 0x001
+| 0x01
 | REQUEST_HANDLE_ERROR
 | NA
 | This event indicates that the the platform microcontroller is unable to
@@ -506,7 +506,7 @@ microcontroller can use as a doorbell to the application processor. The
 application processor must first discover the MSI support via
 `BASE_GET_ATTRIBUTES` service.
 
-If the MSI support is not present then this this service will be ignored with
+If the MSI support is not present then this service will be ignored with
 appropriate `STATUS` returned.
 
 The platform microcontroller will enable MSI only if support is present and

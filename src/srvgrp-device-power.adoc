@@ -331,7 +331,7 @@ for more details.
 ! `DOMAIN_ID` or `POWER_STATE` is invalid.
 
 ! RPMI_ERR_DENIED
-! Client does not have permissions to change the device power domain power state.
+! Denied due to no permission.
 
 ! RPMI_ERR_HW_FAULT
 ! Failed due to hardware error.
@@ -382,8 +382,6 @@ This service is used to get the current power state of a device power domain.
 ! RPMI_ERR_INVALID_PARAM
 ! `DOMAIN_ID` is invalid.
 
-! RPMI_ERR_DENIED
-! Client does not have permissions to change the device power domain power state.
 !===
 - Other errors <<table_error_codes>>
 

@@ -17,9 +17,9 @@ RPMI transport is the abstraction over a physical medium used to send and
 receive messages between the application processor and the platform
 microcontroller. 
 
-An RPMI transport instance provides bi-directional communication channels between
-a RISC-V privilege level a application processors and a platform
-microcontroller. A application processors can have multiple RPMI transport
+An RPMI transport instance provides bi-directional communication channels
+between a RISC-V privilege-level of an application processor and a platform
+microcontroller. An application processor can have multiple RPMI transport
 instances with a platform microcontroller. Similarly, a system can have multiple
 platform microcontrollers each with its own RPMI transport instance to a set of
 application processors. The <<img-transport-topologies>> shows different RPMI
@@ -231,20 +231,21 @@ trigger the interrupt. If the doorbell interrupt is a MSI then a RPMI message
 defined in the `BASE` service group can be used by the application processor to
 configure the MSI at the platform microcontroller side.
 
-=== Fast Channels
-Fast channels are shared memory based transport required for use cases
-that require lower latency and faster processing of commands. A Fast channel
-layout and message format are specific to service groups and not all service
-group needs to support these. A service group that supports fast channels may
-only enable some services to be used over fast channels.
+=== Fast-channels
+Fast-channels are shared memory based channel per application processor
+required for use cases that require lower latency and faster processing
+of commands. A Fast-channel layout and message format are specific to
+service groups and not all service group needs to support these. A service
+group that supports fast-channels may only enable some services to be used
+over fast-channels.
 
 NOTE: To avoid the caching side-effects, the platform can configure the shared
 memory as IO or non-cacheable memory for both the application processor and the
 platform microcontroller.
 
-If the support for fast channels is defined by a service group, its implementation
+If the support for fast-channels is defined by a service group, its implementation
 and attributes like physical memory address are discovered dynamically through
 service defined by that particular service group.
 
-Fast channels may support doorbells but its optional. Attributes of doorbell
+Fast-channels may support doorbells but its optional. Attributes of doorbell
 if supported are discovered dynamically via a service defined by the service group.
