@@ -18,8 +18,8 @@ receive messages between the application processor and the platform
 microcontroller. 
 
 An RPMI transport instance provides bi-directional communication channels between
-a RISC-V privilege level of a set of application processors and a platform
-microcontroller. A set of application processors can have multiple RPMI transport
+a RISC-V privilege level a application processors and a platform
+microcontroller. A application processors can have multiple RPMI transport
 instances with a platform microcontroller. Similarly, a system can have multiple
 platform microcontrollers each with its own RPMI transport instance to a set of
 application processors. The <<img-transport-topologies>> shows different RPMI
@@ -32,10 +32,10 @@ An RPMI transport instance consists of two logical bi-directional channels for
 message delivery. Each channel is capable to transfer messages in 
 request-response pairs. A channel which transfers a request message from the
 application processor to the platform microcontroller and its
-response/acknowledgement back to the application processor is called an A2P channel.
-Similarly, the channel for request messages from the platform microcontroller to
-the application processor is called a P2A channel. The P2A channel also transfers
-notification messages to the application processor.
+response/acknowledgement back to the application processor is called an A2P
+channel. Similarly, the channel for request messages from the platform
+microcontroller to the application processor is called a P2A channel. The P2A
+channel also transfers notification messages to the application processor.
 
 An RPMI transport instance must implement the A2P channel. The P2A channel is
 optional if the system does not support requests  and notification messages from
@@ -70,9 +70,9 @@ hardware description mechanisms.
 image::highlevel-arch-queues.png[align="center"]
 
 ==== Shared Memory Queues
-The RPMI shared memory based transport consists of four queues where each queue is
-unidirectional. The type of message and the direction of message delivery is fixed
-for each queue.
+The RPMI shared memory based transport consists of four queues where each queue
+is unidirectional. The type of message and the direction of message delivery is
+fixed for each queue.
 
 .Shared Memory Transport Queues
 [cols="2,6,8a", width=100%, align="center", options="header"]
