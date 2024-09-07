@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - CLOCK (SERVICEGROUP_ID: 0x00007)
+===  Service Group - CLOCK (SERVICEGROUP_ID: 0x0007)
 This service group is for the management of system clocks. Services defined in
 this group are used to enable or disable clocks, and to set/get clock rates.
 

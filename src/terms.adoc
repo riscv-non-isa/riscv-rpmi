@@ -5,7 +5,12 @@
 | Term  | Meaning
 
 | AP    | Application Processor
+| A2P   | Application Processor to Platform Microcontroller
+| P2A   | Platform Microcontroller to Application Processor
 | ACPI  | Advanced Configuration and Power Interface Specification
 | CPPC  | Collaborative Processor Performance Control
+| MSI   | Message Signaled Interrupt
 | PuC   | Platform Microcontroller
+| PMA   | Physical Memory Attributes
+| PMP   | Physical Memory Protection
 |===

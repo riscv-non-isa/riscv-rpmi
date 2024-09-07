@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-=== Service Group - CPPC (SERVICEGROUP_ID: 0x00005)
+=== Service Group - CPPC (SERVICEGROUP_ID: 0x0005)
 This service group defines the services to control application processor
 performance by managing a set of registers per application processor
 that are used for performance management and control. The ACPI CPPC

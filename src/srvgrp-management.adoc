@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - MANAGEMENT_MODE (SERVICEGROUP_ID: 0x0000A)
+===  Service Group - MANAGEMENT_MODE (SERVICEGROUP_ID: 0x000A)
 This MANAGEMENT_MODE service group is designed to be used for software invocation
 of Management Mode (MM) in a secure execution environment. For general background
 on Management Mode, refer to the Platform Initialization (PI) specifications
