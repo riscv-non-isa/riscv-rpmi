@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - DEVICE_POWER (SERVICEGROUP_ID: 0x00008)
+===  Service Group - DEVICE_POWER (SERVICEGROUP_ID: 0x0008)
 This DEVICE_POWER service group provides messages to manage the power states of
 a device power domain. This service group is used only for device power
 management since System and CPU power management is handled by already defined
