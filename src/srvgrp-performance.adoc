@@ -839,7 +839,7 @@ specific performance domain and performance service.
 ! Description
 
 ! [31:3]
-! _Reserved_
+! _Reserved_ and must be `0`.
 
 ! [2:1]
 ! Doorbell register width. This field is unused if doorbell is not supported.
