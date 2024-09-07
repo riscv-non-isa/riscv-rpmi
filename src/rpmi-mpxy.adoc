@@ -25,7 +25,7 @@ a MPXY channel.
 
 [#table_rpmi_mpxy_attributes]
 .RPMI Attributes for MPXY Channel
-[cols="2, 2, 1, 3", width=100%, align="center", options="header"]
+[cols="3, 2, 1, 3", width=100%, align="center", options="header"]
 |===
 | Attribute Name
 | Attribute ID
@@ -36,6 +36,11 @@ a MPXY channel.
 | 0x80000000
 | RO
 | RPMI service group ID
+
+| SERVICEGROUP_VERSION
+| 0x80000001
+| RO
+| RPMI service group version
 |===
 
 TODO: Link to the MPXY Extension chapter in SBI spec (does not exist in SBI spec)
