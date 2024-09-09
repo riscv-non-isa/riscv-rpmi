@@ -22,7 +22,7 @@ between a RISC-V privilege-level of an application processor and a platform
 microcontroller. An application processor can have multiple RPMI transport
 instances with a platform microcontroller. Similarly, a system can have multiple
 platform microcontrollers each with its own RPMI transport instance to a set of
-application processors. The <<img-transport-topologies>> shows different RPMI
+application processors. The <<fig_intro_trans_topology>> shows different RPMI
 transport topologies.
 
 This specification defines a shared memory based transport but other transport
