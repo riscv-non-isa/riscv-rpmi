@@ -70,8 +70,6 @@ include::src/transport.adoc[]
 
 include::src/message-protocol.adoc[]
 
-include::src/rpmi-mpxy.adoc[]
-
 include::src/service-groups.adoc[]
 
 include::src/srvgrp-base.adoc[]
@@ -95,6 +93,8 @@ include::src/srvgrp-performance.adoc[]
 include::src/srvgrp-management.adoc[]
 
 include::src/srvgrp-ras-agent.adoc[]
+
+include::src/rpmi-mpxy.adoc[]
 
 // The index must precede the bibliography
 //include::src/index.adoc[]
