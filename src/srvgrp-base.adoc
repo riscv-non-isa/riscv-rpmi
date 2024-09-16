@@ -466,10 +466,10 @@ service group.
 ! _Reserved_, must be initialized to `0`.
 
 ! [2]
-! RPMI instance privilege level.
+! RPMI context privilege level.
 
 	0b1: M-mode
-	0b0: Non M-mode
+	0b0: S-mode
 
 ! [1]
 ! EVENT_NOTIFICATION +

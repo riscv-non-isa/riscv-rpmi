@@ -10,31 +10,41 @@ ifndef::rootpath[]
 endif::rootpath[]
 
 == Service Groups
-A service group is a collection of services that are logically grouped
-according to the functionality they provide. For example, all the voltage
-related services are collectively called the Voltage service group.
+An RPMI service group is a collection of RPMI services that are logically
+grouped based on functionality. For example, all the voltage related services
+are grouped into a voltage service group. The functionality implemented by
+certain RPMI service groups may impact the architectural state of application
+processors due to this each RPMI service group specifies the RISC-V privilege
+levels of the application processor which can be access it. For example, the
+clock service groups can be accessed from M-mode and S-mode but the HSM service
+group can be only accessed from M-mode.
 
-This specification defines standard service groups and services with the
-provision to add more service groups as required in the future. The
-service group ID namespace also provides a means to platform vendors to add
-their implementation-specific service groups.
+All RPMI service groups except the BASE service group are optional. If
+the `BASE_PROBE_SERVICE_GROUP` service indicates that a service group is
+implemented then the RPMI service group version must conform to the RPMI
+specification version returned by the `BASE_GET_SPEC_VERSION` service.
+All implemented RPMI service groups must satisfy the following requirements:
 
-All service groups except the BASE service group are optional. If a service
-group is implemented, it must implement all its services except a dedicated
-notification service (`SERVICE_ID: 0x00`) meant to deliver events. A service
-group must not implement defined services partially unless it also defines a
-mechanism to discover its implemented services.
+. The RPMI service group must be accessible from the RISC-V privilege
+level associated with the RPMI context which includes it.
+. All RPMI services of the RPMI service groups must be supported except
+the dedicated notification service (`SERVICE_ID = 0x00`) which is reserved
+for RPMI notification messages. A RPMI service group may be partially
+implement its RPMI services only if defines mechanism to discover supported
+RPMI services.
+. The RPMI service group must implement a dedicated RPMI service with
+`SERVICE_ID = 0x01` to subscribe for event notifications.
 
-If a service group defines events then it must also implement notification
-service (`SERVICE_ID: 0x00`). Each service group has another dedicated
-service with (`SERVICE_ID = 0x01`) to subscribe to events for notification.
+NOTE: The RPMI services listed within each RPMI service group do not have
+a specific order. Additionally, the sequence in which services are defined
+in the specification does not necessarily reflect the order in which they
+should be invoked.
 
-If the `BASE_PROBE_SERVICE_GROUP` service indicates that a service group is
-implemented and returns the implemented version, then the service group
-version must conform to the version returned by the `BASE_GET_SPEC_VERSION`.
-
-
-The following table lists the service groups.
+This specification defines standard RPMI service groups and RPMI services
+with the provision to add more service groups as required in the future.
+The platform vendors can provide implementation specific RPMI service groups.
+The <<table_service_groups>> below list all standard RPMI service groups
+defined by this specification.
 
 [#table_service_groups]
 .RPMI Service Groups
@@ -43,7 +53,7 @@ The following table lists the service groups.
 | Service Group ID
 | Version (Major:Minor)
 | Service Group Name
-| RISC-V Privilege Mode
+| Allowed RISC-V Privilege Levels on Application Processors
 
 | 0x0001
 |
@@ -110,9 +120,3 @@ The following table lists the service groups.
 | _Implementation Specific Service Groups_
 |
 |===
-
-NOTE: The services listed within each service group do not have a specific order.
-Additionally, the sequence in which services are defined in the specification
-does not necessarily reflect the order in which they should be called in the
-implementation.
-
