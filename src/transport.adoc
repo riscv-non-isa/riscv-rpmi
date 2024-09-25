@@ -210,7 +210,7 @@ M = (X / slot-size) : Total slot count in a queue
 An RPMI transport may also provide doorbell interrupts to either application
 processor or platform microcontroller or both to signal the arrival of new
 messages. The doorbell mechanism is optional for RPMI transport and
-implementations an always use a polling mechanism for checking the arrival of
+implementations can always use a polling mechanism for checking the arrival of
 messages.
 
 ==== A2P Doorbell
