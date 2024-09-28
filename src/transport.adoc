@@ -11,74 +11,120 @@ endif::rootpath[]
 
 :stem: latexmath
 
-
 == Transport
-RPMI transport is the abstraction over a physical medium used to send and
-receive messages between the application processor and the platform
-microcontroller. 
-
-An RPMI transport instance provides bi-directional communication channels
-between a RISC-V privilege-level of an application processor and a platform
-microcontroller. An application processor can have multiple RPMI transport
-instances with a platform microcontroller. Similarly, a system can have multiple
-platform microcontrollers each with its own RPMI transport instance to a set of
-application processors. The <<img-transport-topologies>> shows different RPMI
-transport topologies.
-
-This specification defines a shared memory based transport but other transport
-types can be added in future.
+An RPMI transport is an abstraction over a physical medium used to send and
+receive messages between the application processors (APs) and the platform
+microcontroller (PuC). It provides bi-directional communication between a
+RISC-V privilege-level of application processors and a platform microcontroller.
+The application processors can have multiple RPMI transport instances with a
+platform microcontroller. Also, a platform can also have multiple microcontrollers
+each with its own RPMI transport instance as shown in the <<fig_intro_trans_topology>>
+below.
 
 An RPMI transport instance consists of two logical bi-directional channels for
-message delivery. Each channel is capable to transfer messages in 
-request-response pairs. A channel which transfers a request message from the
-application processor to the platform microcontroller and its
-response/acknowledgement back to the application processor is called an A2P
-channel. Similarly, the channel for request messages from the platform
-microcontroller to the application processor is called a P2A channel. The P2A
-channel also transfers notification messages to the application processor.
+message delivery as shown in the <<transport_bidir_comm>> below. Each channel is
+capable of transferring messages in request-response pairs. A channel which
+transfers a request message from the application processors (APs) to the
+platform microcontroller (PuC) and response/acknowledgement back in opposite
+direction is called an A2P channel. Similarly, the channel for request messages
+from the platform microcontroller (PuC) to the application processors (APs) is
+called a P2A channel. The P2A channel also transfers notification messages to
+the application processors.
 
-An RPMI transport instance must implement the A2P channel. The P2A channel is
-optional if the system does not support requests  and notification messages from
-the platform microcontroller.
+An RPMI transport instance must implement the A2P channel but the P2A channel is
+optional. Platforms which do not require requests and notification messages from
+the platform microcontroller can avoid implementing the P2A channel.
 
+The current RPMI specification only defines a shared memory based transport but
+other transport types can be added in the future.
+
+[#transport_bidir_comm]
 .Bi-directional Communication
 image::transport-bidirectional.png[400,400, align="center"]
 
+=== Doorbell Interrupt
+An RPMI transport may also provide optional doorbell interrupts for application
+processors and/or platform microcontroller to signal the arrival of new messages.
+This doorbell interrupt can be either a message-signaled interrupt (MSI) or a
+wired interrupt. The RPMI implementations may ignore the doorbell mechanism of
+RPMI transport and always use polling mechanism to check arrival of new messages.
+
+==== A2P Doorbell
+The A2P doorbell is a signal for new messages from the application processors
+(APs) to the platform microcontroller (PuC).
+
+The platform should support A2P doorbell interrupt triggering from application
+processors through a write operation or a read-modify-write sequence on a
+memory-mapped register which can be easily discovered by the application
+processors using hardware description mechanisms such as device tree or ACPI.
+
+==== P2A Doorbell
+The P2A doorbell is a signal for new messages from the platform microcontroller
+(PuC) to the application processors (APs).
+
+If the P2A doorbell is a wired interrupt then the platform must provide a
+way to the platform microcontroller to trigger the interrupt and application
+processors must discover it using standard hardware description mechanisms
+such as device tree or ACPI.
+
+If the P2A doorbell is a MSI then the application processors must configure
+the MSI on the platform microcontroller side using RPMI messages defined by
+the `BASE` service group.
+
+=== Fast-channels
+Fast-channels are special shared memory based channels for use cases that
+require lower latency and faster processing of requests from application
+processors to the platform microcontroller.
+
+The layout and request format of fast-channels are service group specific
+and only a few service groups may support fast-channels. A service group
+that supports fast-channels:
+
+* May only enable some services to be used over fast-channels
+* Must provide physical address and other attributes (such as optional
+  fast-channel doorbell) of the fast-channels via a services defined by
+  the service group
+
+NOTE: To avoid the caching side-effects, the platform can configure the
+fast-channel shared memory as non-cacheable or IO memory for both the
+application processors and the platform microcontroller.
+
 === Shared Memory Transport
-The physical memory of the RPMI shared memory transport can be either a
-dedicated SRAM or a portion of DRAM or some other device memory. The RPMI
-shared memory transport does not specify where the shared memory resides, but
-it should be accessible from both the application processor and the platform
-microcontroller with the necessary configurations to ensure that caching
-side-effects do not occur.
+The RPMI shared memory transport defines a mechanism to exchange messages via
+shared memory which can be on-chip SRAM or a reserved portion of DRAM or some
+device memory. The RPMI shared memory transport does not specify where the
+shared memory resides in a platform, but it must be accessible from both the
+application processors and the platform microcontroller.
 
 NOTE: To avoid the caching side-effects, the platform can configure the shared
-memory as IO or non-cacheable memory for both the application processor and the
+memory as non-cacheable or IO memory for both the application processor and the
 platform microcontroller.
 
-All the data sent or received through the RPMI shared memory transport follows
-little-endian byte-order, unless, the byte-order is changed through hardware 
-description mechanism.
+All data sent or received through the RPMI shared memory transport must follow
+little-endian byte-order.
 
-The following sections describe the layout and attributes of shared memory
-which should be consistent across both the application processor and the
-platform microcontroller. These attributes may be static for the platform
-microcontroller and discoverable by the application processor through supported
-hardware description mechanisms.
+The <<transport_shared_memory_arch>> below shows the high-level architecture
+of the RPMI shared memory transport. The layout and attributes of a RPMI shared
+memory transport may be static for the platform microcontroller but must be
+discoverable by the application processors through hardware description mechanisms
+such as device tree or ACPI.
 
+[#transport_shared_memory_arch]
 .Shared Memory Transport Architecture
 image::highlevel-arch-queues.png[align="center"]
 
-==== Shared Memory Queues
-The RPMI shared memory based transport consists of four queues where each queue
-is unidirectional. The type of message and the direction of message delivery is
-fixed for each queue.
+==== Queue Types
+The RPMI shared memory transport consists of four unidirectional queues. The
+type of messages and the direction of message delivery is fixed for each RPMI
+shared memory trasport queue. The <<transport_shared_memory_queues>> below
+provides a more detailed description of all RPMI shared memory tranpsort queues.
 
+[#transport_shared_memory_queues]
 .Shared Memory Transport Queues
 [cols="2,6,8a", width=100%, align="center", options="header"]
 |===
-| Name	
-| Message Type		
+| Name
+| Message Type
 | Description
 
 | A2P REQ
@@ -100,100 +146,103 @@ processor. This queue is also used for sending the notification messages.
 | ACKNOWLEDGEMENT
 | The acknowledgement message queue from the application processor to the
 platform microcontroller.
-
 |===
 
-The A2P REQ queue is paired with P2A ACK to form a channel. Similarly, the
-P2A REQ is paired with A2P ACK queue to form another channel.
+The A2P REQ queue is paired with P2A ACK queue to form the A2P channel of the
+RPMI shared memory transport. Similarly, the P2A REQ queue is paired with the
+A2P ACK queue to form the P2A channel of the RPMI shared memory transport. The
+<<transport_shared_memory_msgflow>> below shows the high-level flow of messages
+in a RPMI shared memory transport.
 
-
-.Shared Memory Transport Queues
+[#transport_shared_memory_msgflow]
+.Shared Memory Transport Message Flow
 image::highlevel-flow.png[400,400, align="center"]
 
-==== Layout of Transport Shared Memory
-An RPMI transport instance requires four shared memory regions for four queues.
-Each channel, A2P and P2A gets two memory regions respectively for REQ-ACK
-queue pair. In each channel, both the REQ and ACK queue shared memory regions
-must be of the same size to have equal number of slots count(queue capacity).
-The shared memory regions size (or queue capacity) between A2P and P2A channel
-can be different. For each queue the shared memory region size must be a multiple
-of the slot size. Refer <<Queue Layout>> section for details and requirements
-on queue internals and slots.
-
-NOTE: A platform must reserve queue shared memory region sizes in each channel
-such that the number of slots (queue capacity) does not become a bottleneck in
-message communication. The number of slots in an A2P channel can be a function of
-the number of application processors sharing the that transport instance and the
-number of RPMI clients actively requesting service from the platform
-microcontroller via messaging on a application processor.
-
-NOTE: A platform may allocate separate non-contiguous shared memory regions for
-queues which may require multiple PMA entries to define the memory attributes.
-To avoid this the platform can allocate contiguous regions for all four queues.
-For example, the platform may allocate `4096-byte` (Page) of shared memory for
-all the four queues and memory attributes can be covered with single PMA entry.
-
-[#img-shmem-layout]
-.Memory Layout of Shared Memory
-image::shmem-layout.png[600,600, align="center"]
-
 ==== Queue Layout
-A shared memory region representing a single queue is further divided into
-a contiguous `M` number of equal size slots. The arrangement of slots is used
-as a circular queue by the RPMI transport implementation.
+An RPMI shared memory queue is divided into `M` contiguous slots of equal size
+which are used to form a circular queue. The size of each slot (or slot size)
+must be a `power-of-2` and must be at least `64 bytes`. The slot size is same
+accross all RPMI shared memory queues and the physical address of each slot
+must be aligned at slot size boundary.
 
-Each slot size is `power-of-2` and at least `64-byte`. Each slot must be
-aligned at a natural boundary. In each queue shared memory starting from offset
-`0x0`, the first two slots are used to store head and tail for queue
-management. The rest of the `(M-2)` slots are message slots. The first
-`4-byte` of the first slot are used as head and the first `4-byte` of the
-second slot are used as tail for enqueuing and dequeuing of messages.
+NOTE: The slot size should match with the maximum cache line size used in a
+platform. The requirement of `power-of-2` slot size with minimum value of
+`64 bytes` is because usual CPU cache line size is `64 bytes` or some
+`power-of-2` value.
 
-.Queue Internals
+The slots of the RPMI shared memory queue are assigned sequentially increasing
+indices starting with `0`. The slot at index `0` is referred to as `head slot`
+and the slot at index `1` is referred to as `tail slot`. The remaining `(M - 2)`
+slots of the RPMI shared memory queue are message slots. The first `4 bytes`
+of the head slot is used as the `head` of the circular queue which contains
+a `slot index - 2` value pointing to the message slot from where the next
+message can be dequeued. The first `4 bytes` of the tail slot is used as the
+`tail` of the circular queue which contains a `slot index - 2` value pointing
+to the message slot from where the next message can be enqueued. The pictorial
+view of the RPMI shared memory queue internals is shown in the
+<<transport_shared_memory_qint>> below.
+
+NOTE: The requirement of keeping `head` and `tail` in separate slots is
+to prevent both `head` and `tail` using the same cache line so that cache
+maintainence can be done separately for both `head` and `tail`.
+
+[#transport_shared_memory_qint]
+.Shared Memory Queue Internals
 image::queue-internals.png[500,500, align="center"]
 
-The queue slots are assigned indices starting with `0`, which increases
-sequentially. The slot with index `0` slot is the first message slot just after
-the tail slot. The slots can be accessed using head and tail, which store
-the slot indices. Head is be used to dequeue the message and tail is used to
-enqueue the message.
+A message consumer dequeues pending message from the message slot pointed
+by the `head` of the RPMI shared memory queue whereas a message producer
+enqueues new message at the message slot pointed by the `tail` of the RPMI
+shared memory queue. If there are no messages in the RPMI shared memory queue
+then message consumer must wait for messages to be available. If all message
+slots in the RPMI shared memory queue are occupied then message producer must
+wait for messages to be consumed. The ownership of `head` and `tail` is mutually
+exclusive where only the message consumer should update the `head` and only the
+message producer should update `tail` of the RPMI shared memory queue.
 
-The ownership of head and tail is mutually exclusive and only the owner is
-allowed to write to it. For example, on the A2P REQ queue, the application
-processor will enqueue the message and it will own the tail and only it will be
-allowed to write to the tail, similarly, the platform microcontroller will own 
-the head to dequeue the messages and only the platform
-microcontroller will write to the head. Such restrictions are not applicable
-in case of reading of head and tail.
+NOTE: For example, only application processors should enqueue new messages
+and update `head` of the A2P REQ queue whereas only platform microcontroller
+should dequeue messages and update `tail` of the A2P REQ queue.
 
-NOTE: The arrangement of slot indices and ownership of head and tail is
-necessary to make sure that the RPMI implementation on the application processor
-does not conflict with the implementation of the platform microcontroller.
+==== Queue Placement
+The RPMI shared memory transport divides the underlying shared memory region
+into two parts where one part belongs to the A2P channel and other belongs
+to the P2A channel. The shared memory region sizes of the A2P and P2A channel
+can be different. For each channel (A2P or P2A), the corresponding REQ and ACK
+queues must be of the same size hence equal number of slots (or queue capacity).
+The size of each RPMI shared shared queue must be a multiple of the slot size.
 
-Messages which are not consumed yet should not be overwritten and the enqueue
-operation must be blocked until the slot is available for sending messages.
+NOTE: A platform should provide sufficient shared memory for all RPMI shared
+memory queues such that the number of slots (queue capacity) does not become
+a bottleneck in message communication. It is recommended that the number of
+slots in queues belonging to A2P channel should be proportional to the number
+of application processors accessing the A2P channel.
 
-[NOTE]
-====
-The requirement of minimum slot size of `64-byte` and keeping head and tail in
-separate slots is because that usual CPU cache line size is of `64-byte`. This
-may prevent both head and tail to share same cache line preventing any undefined
-behavior. It's possible that the platform microcontroller may belong in
-non-coherent domain and if the head and tail share same cache line and the
-platform microcontroller is responsible to write to `TAIL` then the platform 
-microcontroller will need to flush the cache with each write to make sure that
-updated copy of tail is being read by the application processor.
+The RPMI shared memory queues can be placed anywhere in the underlying
+shared memory region but there must be no overlap among the queues. The
+<<transport_shared_memory_qplace>> below shows a recommended way of placing
+RPMI queues in shared memory.
 
-The slot size of `64-byte` is also sufficient to accommodate most of the defined
-RPMI services.
-====
+NOTE: A platform may allocate separate non-contiguous shared memory regions
+for queues which may require multiple PMA entries to define the memory attributes.
+To avoid this the platform can allocate contiguous regions for all four queues.
+For example, the platform may allocate `4096 bytes` of shared memory for all
+four queues and memory attributes can be covered with single PMA entry.
 
-==== Shared Memory Representation in Firmware
-The queue `slot-size` and queue shared memory region `base-address` and `size`
-in bytes can be discovered through supported hardware description mechanism.
+[#transport_shared_memory_qplace]
+.Recommended Placement of Queues in Shared Memory
+image::shmem-layout.png[600,600, align="center"]
 
-Total number of slots in each queue can easily be calculated by implementation
-which is same for all four queues.
+==== Queue Discovery
+The slot size of the RPMI shared memory queues may be fixed for the platform
+microcontroller but the application processors must discover it through hardware
+description mechanisms such as device tree or ACPI. Similarly, the physical base
+address and size of each RPMI shared memory queue may be fixed for the platform
+microcontroller but the application processors must discover it through hardware
+description mechanisms such as device tree or ACPI.
+
+The total number of slots in each RPMI shared memory queue can easily be calculated
+by dividing the queue size with slot size.
 
 [NOTE]
 ====
@@ -205,47 +254,3 @@ M = (X / slot-size) : Total slot count in a queue
 (M-2) : Message slot count (2 slots less for `HEAD` and `TAIL`)
 ```
 ====
-
-=== Doorbell Interrupt
-An RPMI transport may also provide doorbell interrupts to either application
-processor or platform microcontroller or both to signal the arrival of new
-messages. The doorbell mechanism is optional for RPMI transport and
-implementations an always use a polling mechanism for checking the arrival of
-messages.
-
-==== A2P Doorbell
-The doorbell interrupts from the application processor to the platform
-microcontroller can be either a message-signaled interrupt (MSI) or a wired
-interrupt. If a doorbell is available then it must be supported through a
-read-modify-write sequence to a memory-mapped register.
-This read-modify-write mechanism can be discovered by the application processor
-through the hardware description mechanisms using properties such as 
-register physical address, register width, set mask, and preserve mask.
-
-==== P2A Doorbell
-The doorbell interrupts from the platform microcontroller to the application
-processor can be either a message-signaled interrupt (MSI) or a wired interrupt.
-If the doorbell interrupt from the platform microcontroller to the application
-processor is a wired interrupt then the RPMI transport must define a way to
-trigger the interrupt. If the doorbell interrupt is a MSI then a RPMI message
-defined in the `BASE` service group can be used by the application processor to
-configure the MSI at the platform microcontroller side.
-
-=== Fast-channels
-Fast-channels are shared memory based channel per application processor
-required for use cases that require lower latency and faster processing
-of commands. A Fast-channel layout and message format are specific to
-service groups and not all service group needs to support these. A service
-group that supports fast-channels may only enable some services to be used
-over fast-channels.
-
-NOTE: To avoid the caching side-effects, the platform can configure the shared
-memory as IO or non-cacheable memory for both the application processor and the
-platform microcontroller.
-
-If the support for fast-channels is defined by a service group, its implementation
-and attributes like physical memory address are discovered dynamically through
-service defined by that particular service group.
-
-Fast-channels may support doorbells but its optional. Attributes of doorbell
-if supported are discovered dynamically via a service defined by the service group.

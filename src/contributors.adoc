@@ -3,3 +3,11 @@
 This RISC-V specification has been contributed to directly or indirectly by:
 
 [%hardbreaks]
+
+Rahul Pathak <rpathak@ventanamicro.com>
+Subrahmanya Lingappa <slingappa@ventanamicro.com>
+Ley Foon Tan <leyfoon.tan@starfivetech.com>
+Joshua Yeong <joshua.yeong@starfivetech.com>
+Yong Li <yong.li@intel.com>
+Himanshu Chauhan <hchauhan@ventanamicro.com>
+Anup Patel <apatel@ventanamicro.com>

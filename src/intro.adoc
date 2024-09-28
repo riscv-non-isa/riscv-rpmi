@@ -11,69 +11,63 @@ endif::rootpath[]
 
 [[intro]]
 == Introduction
+Today's platform pose challenges in terms of manageability and controllability
+where the operating system (OS) need to support a variety of hardware with
+variety of connected devices. The extra complexity and demand to manage and
+control the platform along with executing sophisticated workloads is a challenge
+for the application processors (APs) running a general purpose OS. To address
+this challenge, platforms today contain one or more microcontrollers which can
+offload various platform management and control tasks.
+
 This document describes the RISC-V Platform Management Interface (RPMI), which
-provides an extensible interface to manage and control the system using a 
-dedicated microcontroller. 
+is an OS-agnostic, firmware-agnostic, scalable and extensible interface for
+platform management and control from dedicated microcontrollers (also referred
+to as platform microcontroller or PuC).
 
-Today's systems pose challenges in terms of manageability and controllability
-where the operating system may need to support a variety of hardware that can be
-of different designs and with variety of connected devices. The extra complexity
-and demand to manage and control the system along with executing compute
-workloads is a challenge for the application processors running the OS. To
-mitigate this, systems today contain one or more platform microcontrollers
-that abstract various platform specific system management and control related
-tasks. RPMI enables the communication between the application processors and the
-platform microcontrollers. It abstracts the system complexity and provides a
-message-based interface for system management and control.
+The RPMI defines a message based communication between multiple application
+processors (APs) and platform microcontrollers (PuCs) for system management
+and control. This message based communication can also be virtualized by the
+machine-mode firmware or hypervisors using the SBI MPXY extension cite:[SBI].
 
-RPMI is not limited to a single application processor and platform
-microcontroller. It can support multiple application processors and multiple
-platform microcontrollers.
+All RPMI capabilities and services provided by platform microcontroller are
+discoverable at runtime which allows adding new capabilities and services
+in the future.
 
-The platform microcontroller or in short PuC abstracts low-level platform
-control and management from the application processor.
+=== RPMI Abstractions
+*RPMI Transport*: An RPMI transport represents the mechanism by which the
+messages are exchanged between the application processor and the platform
+microcontroller. An RPMI transport instance is associated to a particular
+RISC-V privilege level of the application processors and it must be accessed
+only by that RISC-V privilege level.
 
-In addition, RPMI provides a OS-agnostic scalable and extensible interface that
-can support the addition of new capabilities and services over time. This
-feature simplifies the integration of new components and technologies into
-existing systems, making it easier for system designers to keep up with changing
-requirements and adapt to evolving industry standards.
+*RPMI Messaging Protocol*: The RPMI messaging protocol includes different
+types of RPMI messages and the format each RPMI message type.
 
-=== Abstractions provided by RPMI
-*Transport*: Describes the mechanism by which the messages are exchanged
-between the application processor and the platform microcontroller.
+*RPMI Service Groups*: The services provided by the platform microcontrollers
+to the application processors are grouped based functionality into RPMI service
+groups. Each RPMI service group specifies the RISC-V privilege levels of the
+application processor which can be access it. Platform vendors can implement
+their own custom RPMI service groups.
 
-*Messaging Protocol*: Provides the messaging interface between the application
-processors and the platform microcontrollers to communicate with each other via
-messages to make requests for various services supported by the hardware
-platform. This is accomplished by grouping each management interface into
-service groups. With each service group implementing several individual
-services within.
+*RPMI Client*: An RPMI client is a software or a driver running on the
+application processor which is capable of sending and receiving RPMI messages.
 
-In addition to the standard services, RPMI can also be extended to allow vendors
-to add their own services.
+*RPMI Context*: An RPMI context consists of an RPMI transport instance, RPMI
+message protocol layer, a mandatory RPMI BASE service group and other optional
+RPMI service groups. An RPMI context is associated with a RISC-V privilege level
+which matches the included RPMI transport instance. The RPMI services groups
+included in an RPMI context must be accessible from the RISC-V privilege level
+associated with the RPMI context.
 
-.High Level Architecture
-image::highlevel-arch.png[width=800,height=800, align="center"]
+The RPMI is designed to work with a single or multi-tenant topology as shown
+in the <<fig_intro_trans_topology>> below whereas the high-level architecture
+is shown in the <<fig_intro_high_level_arch>> below.
 
-RPMI is designed to work with a single or multi-tenant topology as shown
-below.
-
-[#img-transport-topologies]
+[#fig_intro_trans_topology]
 .Transport for M-Mode and S-Mode
 image::transport-topologies.png[width=800,height=800, align="center"]
 
-==== RPMI Client
-An RPMI client is a software or a driver which is capable of sending and
-receiving RPMI messages.
+[#fig_intro_high_level_arch]
+.High Level Architecture
+image::highlevel-arch.png[width=800,height=800, align="center"]
 
-==== RPMI Context
-An RPMI context consists of an RPMI transport instance with RPMI message protocol
-layer. Each RPMI context has a mandatory BASE service group enabled along with
-one or more optional service groups. 
-
-An RPMI context is specific to a RISC-V privilege level in an application
-processor. An RPMI context must only be accessible at a given privilege level.
-Each service group in RPMI defines the privilege level at which it can be accessed.
-An RPMI context must only enable service group which are allowed as per the
-service group privilege level requirement.
