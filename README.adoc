@@ -25,11 +25,9 @@ The PDF built in this project uses AsciiDoctor (Ruby). For more information
 on AsciiDoctor, specification guidelines, or building locally, see the 
 https://github.com/riscv/docs-dev-guide[RISC-V Documentation Developer Guide].
 
-
 = Discussion Forum
 Discussion on RPMI occurs on 
 https://lists.riscv.org/g/tech-rpmi[RPMI mailing list].
-
 
 = Dependencies
 The PDF built in this project uses AsciiDoctor (Ruby). For more information
@@ -62,6 +60,13 @@ git submodule init && git submodule update
 
 make
 ----
+
+= Editing Images
+The source of all the images used in this specification is present in the
+`images/source` folder. The source file is a single `drawio` format file
+containing multiple tabs with chapter names. The source file can be opened
+in the publicly available tool called *drawio-desktop* at this link:
+https://github.com/jgraph/drawio-desktop/releases
 
 == Meeting Slides
 - https://docs.google.com/presentation/d/111GpH_ducTPWfd1sYSAm9f-g6EBj_EKBMobHj_yhMsQ[Meeting - July 25, 2024]
