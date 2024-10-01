@@ -28,21 +28,21 @@ requirements:
 allowed in S-mode except BASE and CPPC service groups. The <<table_service_groups>>
 list the RPMI service groups allowed in S-mode.
 
-. The `message_id` parameter passed to the sbi_mpxy_send_message_with_response()
-and sbi_mpxy_send_message_without_response() must represent the `SERVICE_ID` of
+. The `message_id` parameter passed to the `sbi_mpxy_send_message_with_response()`
+and `sbi_mpxy_send_message_without_response()` must represent the `SERVICE_ID` of
 an RPMI service belonging to the RPMI service group bound to the SBI MPXY channel.
 
 . The format of the message data passed via the SBI MPXY shared memory to the
-sbi_mpxy_send_message_with_response() and sbi_mpxy_send_message_without_response()
+`sbi_mpxy_send_message_with_response()` and `sbi_mpxy_send_message_without_response()`
 must match the request data format of the RPMI service represented by the
 `message_id` parameter.
 
 . The format of the response message data returned in the SBI MPXY shared memory
-by the sbi_mpxy_send_message_with_response() must match the response data format
+by the `sbi_mpxy_send_message_with_response()` must match the response data format
 of the RPMI service represented by the `message_id` parameter.
 
 . The format of the protocol specific data returned in the SBI MPXY shared memory
-by the sbi_mpxy_get_notification_events() must match the RPMI notifications message
+by the `sbi_mpxy_get_notification_events()` must match the RPMI notifications message
 data format.
 
 . The SBI MPXY channel must support message protocol attributes listed in the
