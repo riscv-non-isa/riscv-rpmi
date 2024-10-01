@@ -418,17 +418,9 @@ doorbell.
 
 [#table_cppc_getfastchanregion_request_data]
 .Request Data
-[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
+[cols="1", width=100%, align="center", options="header"]
 |===
-| Word
-| Name
-| Type
-| Description
-
-| 0
-| HART_ID
-| uint32
-| Hart ID
+| NA
 |===
 
 [#table_cppc_getfastchanregion_response_data]
