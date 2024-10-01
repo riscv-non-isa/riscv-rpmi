@@ -110,7 +110,12 @@ defined by this specification.
 | RAS_AGENT
 | M-mode, S-mode
 
-| 0x000C - 0x7FFF
+| 0x000C
+|
+| REQUEST_FORWARD
+| M-mode, S-mode
+
+| 0x000D - 0x7FFF
 |
 | _Reserved for Future Use_
 |

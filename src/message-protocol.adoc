@@ -340,8 +340,12 @@ specification or the extension version mismatch.
 | -13
 | Input/Output error.
 
+| RPMI_ERR_NO_DATA
+| -14
+| Data not available.
+
 |
-| -14 to -127
+| -15 to -127
 | _Reserved_
 
 |
