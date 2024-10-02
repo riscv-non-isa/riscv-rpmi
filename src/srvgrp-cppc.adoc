@@ -13,7 +13,7 @@ endif::rootpath[]
 This service group defines the services to control application processor
 performance by managing a set of registers per application processor
 that are used for performance management and control. The ACPI CPPC
- (Collaborative Processor Performance Control) is an abstract and flexible
+(Collaborative Processor Performance Control) is an abstract and flexible
 mechanism that allows application processor to collaborate with the platform
 microcontroller to control the performance.
 
@@ -33,7 +33,7 @@ The platform may have multiple application processors that share the actual
 performance controls like clock, voltage regulator and others depending on the
 platform. In such cases a performance level change for one application processor
 will affect the entire the group sharing the controls. Its the responsibility of
-the power/performance management software running on the application processor
+the power and performance management software running on the application processor
 and the platform to coordinate and manage the group level performance changes.
 
 The following table lists the services in the CPPC service group:
@@ -77,21 +77,35 @@ The following table lists the services in the CPPC service group:
 
 ==== CPPC Fast-channel
 The CPPC service group defines the fast-channels to be used by the application
-processor for requesting performance level change. A fast-channel is a shared memory
-with a layout specific to the CPPC service group and the data written in a
-fast-channel do not follow the conventional RPMI message format. The simple data
-format supported by the fast-channel allows faster processing of the requests
-made through a fast-channel.
+processor to request performance changes and to obtain performance change feedback
+for an application processor from the platform microcontroller. 
 
-If the fast-channels are implemented, the application processor will either write
+A fast-channel shared memory layout is specific to the CPPC service
+group. The data written in a fast-channel do not follow the conventional RPMI
+message format. The simple data format supported by the fast-channel allows
+faster processing of the performance change requests made through a fast-channel
+and faster read of the performance feedback values supported over the
+fast-channel.
+
+The CPPC service group defines two types of fast-channel for each application
+processor.
+
+===== Performance Request Fast-channel
+In this fast-channel the application processor will either write
 the desired performance level in case of normal mode or the minimum
-and maximum level in case of Autonomous (CPPC2) mode in the fast-channel.
-Otherwise the application processor can call the service `CPPC_WRITE_REG` for the
-`DesiredPerformanceRegister` or `MinimumPerformanceRegister` and
-`MaximumPerformanceRegister`.
+and maximum performance level in case of Autonomous (CPPC2) mode in the
+fast-channel. Otherwise the application processor can call the service
+`CPPC_WRITE_REG` for the `DesiredPerformanceRegister` or
+`MinimumPerformanceRegister` and `MaximumPerformanceRegister`.
 
-[#table_cppc_fastchan]
-.CPPC Fast-channel Layout
+The supported values in this fast-channel which depends on the CPPC mode, either
+normal or autonomous mode is discoverable through `CPPC_GET_FAST_CHANNEL_REGION`
+service.
+
+The size of this fast-channel type is `8 bytes`.
+
+[#table_cppc_performance_change_fastchan]
+.CPPC Performance Request Fast-channel Layout
 [cols="2, 3a", width=100%, align="center", options="header"]
 |===
 | CPPC Mode
@@ -122,33 +136,58 @@ Otherwise the application processor can call the service `CPPC_WRITE_REG` for th
 ! 0x4
 ! Maximum performance level
 !===
-
 |===
-Each application processor must be assigned a fast-channel, which is managed by
-the CPPC service group for performance control.
+
+===== Performance Feedback Fast-channel
+In this fast-channel the application processor will read the 
+supported value for estimating the delivered performance as performance feedback
+for an application processor. The application processor current frequency (Hz)
+is used for performance feedback in this fast-channel. The platform
+microcontroller must write the frequency of an application processor in the
+fast-channel whenever it changes.
+
+The size of this fast-channel type is `8 bytes`.
+
+[#table_cppc_performance_feedback_fastchan]
+.CPPC Performance Feedback Fast-channel Layout
+[cols="2, 3a", width=100%, align="center", options="header"]
+|===
+| Offset
+| Value (32-bit)
+
+| 0x0
+| Current frequency low 32-bit (Hz)
+
+| 0x4
+| Current frequency high 32-bit (Hz)
+|===
+
+If fast-channels are supported then each application processor must be assigned
+both types fast-channel. In the shared memory region allocated by the
+platform for fast-channels, the Performance Request fast-channels must be grouped
+together for all the application processors. Similarly, the Performance Feedback
+fast-channels must be grouped together.
 
 The size of the shared memory region for fast-channels for all the managed
-application processors must be a `power-of-2` and a multiple of the size of each
-fast-channel. The `base-address` and `size` (bytes) of the fast-channels shared
-memory region can be discovered using the service `CPPC_GET_FAST_CHANNEL_REGION`.
-The layout of each fast-channel which depends on the CPPC mode, either normal or
-autonomous mode can also be discovered through the same service.
+application processors must be a `power-of-2`. The `base-address` and `size`
+(bytes) of the fast-channels shared memory region can be discovered using the
+service `CPPC_GET_FAST_CHANNEL_REGION`. The `base-address` of the shared memory
+region must be aligned to `8 bytes` which is maximum size of a fast-channel in
+both the types.
 
-A fast-channel size for a application processor is of `8-byte` with two fields
-of `4-byte` each. A fast-channel must be naturally aligned to the size of the
-fast-channel.
+The offsets of fast-channel of both types for an application processor are aligned
+to `8 bytes`. The offset of both fast-channel types in the shared memory region can
+be discovered through service `CPPC_GET_FAST_CHANNEL_OFFSET`. The offsets
+discovered can be added into the `base-address` of the shared memory region to
+form the address of Performance Request fast-channel and Performance Feedback
+fast-channel for an application processor.
 
-The offset of a fast-channel entry belonging to a application processor in that
-shared memory region can be discovered through service `CPPC_GET_FAST_CHANNEL_OFFSET`.
-The offset can be added into the `base-address` of the shared memory region to
-form the address of a application processor fast-channel.
-
-===== Fast-channel Doorbell
-A doorbell can also be supported with fast-channels which is shared between
-all the application processors. If a doorbell is available then it must be
-supported through a read-modify-write sequence to a memory-mapped register.
-The doorbell details and attributes can be discovered by the application processor
-through the defined service in this service group.
+===== Performance Request Fast-channel Doorbell
+A doorbell can also be supported for this fast-channel type which is shared
+between all the application processors. If a doorbell is available then it must
+be supported through a read-modify-write sequence to a memory-mapped register.
+The doorbell details and attributes can be discovered by the application
+processor through the `CPPC_GET_FAST_CHANNEL_REGION` service.
 
 [#cppc-notifications]
 ==== Notifications
@@ -444,9 +483,6 @@ doorbell.
 ! RPMI_SUCCESS
 ! Service completed successfully.
 
-! RPMI_ERR_INVALID_PARAM
-! `HART_ID` is invalid.
-
 ! RPMI_ERR_NOT_SUPPORTED
 ! Fast-channels not supported.
 !===
@@ -469,19 +505,20 @@ doorbell.
 	Desired performance level for performance change.
 
 	0b01: Autonomous mode.
-	Performance limit change. Platform can choose the level in the requested limit.
+	Performance limit change. Platform can choose the level in the requested
+	limit.
 
 	0b10 - 0b11: Reserved
 
 ! [2:1]
-! Doorbell register width
+! Performance Request fast-channel doorbell register width.
 
 	0b00: 8-bit
 	0b01: 16-bit
 	0b10: 32-bit
 	0b11: 64-bit
 ! [0]
-! Doorbell support.
+! Performance Request fast-channel doorbell support.
 
 	0b1: Supported
 	0b0: Not supported
@@ -539,8 +576,9 @@ doorbell.
 |===
 
 ==== Service: CPPC_GET_FAST_CHANNEL_OFFSET (SERVICE_ID: 0x06)
-This service is used to get the offset of a fast-channel of an application
-processor in the shared memory region containing all the fast-channels.
+This service is used to get the offsets of Performance Request fast-channel and
+Performance Feedback fast-channel for an application processor in the shared
+memory region containing all the fast-channels.
 
 [#table_cppc_getfastchanoffset_request_data]
 .Request Data
@@ -559,7 +597,7 @@ processor in the shared memory region containing all the fast-channels.
 
 [#table_cppc_getfastchanoffset_response_data]
 .Response Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 5, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -570,7 +608,7 @@ processor in the shared memory region containing all the fast-channels.
 | STATUS
 | int32
 | Return error code
-[cols="1,1a", options="header"]
+[cols="2,1a", options="header"]
 !===
 ! Error Code
 ! Description
@@ -587,14 +625,24 @@ processor in the shared memory region containing all the fast-channels.
 - Other errors <<table_error_codes>>
 
 | 1
-| OFFSET_LOW
+| PERF_REQUEST_OFFSET_LOW
 | uint32
-| Lower 32-bit of a fast-channel offset.
+| Lower 32-bit of a Performance Request fast-channel offset.
 
 | 2
-| OFFSET_HIGH
+| PERF_REQUEST_OFFSET_HIGH
 | uint32
-| Upper 32-bit of a fast-channel offset.
+| Upper 32-bit of a Performance Request fast-channel offset.
+
+| 3
+| PERF_FEEDBACK_OFFSET_LOW
+| uint32
+| Lower 32-bit of a Performance Feedback fast-channel offset.
+
+| 4
+| PERF_FEEDBACK_OFFSET_HIGH
+| uint32
+| Upper 32-bit of a Performance Feedback fast-channel offset.
 |===
 
 ==== Service: CPPC_GET_HART_LIST (SERVICE_ID: 0x07)
