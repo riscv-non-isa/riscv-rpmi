@@ -4,13 +4,17 @@
 |===
 | Term  | Meaning
 
-| AP    | Application Processor
 | A2P   | Application Processor to Platform Microcontroller
-| P2A   | Platform Microcontroller to Application Processor
 | ACPI  | Advanced Configuration and Power Interface Specification
+| AEPI  | ACPI Platform Error Interfaces
+| AP    | Application Processor
 | CPPC  | Collaborative Processor Performance Control
+| GHES  | Generic Hardware Error Source
 | MSI   | Message Signaled Interrupt
-| PuC   | Platform Microcontroller
+| P2A   | Platform Microcontroller to Application Processor
 | PMA   | Physical Memory Attributes
 | PMP   | Physical Memory Protection
+| PuC   | Platform Microcontroller
+| RAS   | Reliability, Availability, and Serviceability
+| SBI   | Supervisor Binary Interface
 |===

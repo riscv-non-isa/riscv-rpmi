@@ -11,8 +11,7 @@ endif::rootpath[]
 
 ===  Service Group - RAS_AGENT (SERVICEGROUP_ID: 0x000B)
 The RAS_AGENT service group provides services to enumerate various error
-sources in a system and to get their descriptors. These services are provided
-by RAS Agent.
+sources in a system and to get their descriptors.
 
 Each error source in a system has a unique 32-bit identification number called
 as `RAS_ERR_SRC_ID`.
@@ -68,7 +67,7 @@ error source descriptor being returned.
 RAS is not standardized for non-ACPI systems. Such systems may define custom
 format for an error source descriptor. The type of custom error source
 descriptor format can be read from `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]`. The
-values from 1 to 15 are reserved for custom format types.
+values from `1` to `15` are reserved for the custom format types.
 
 [#ras-notifications]
 ==== Notifications
@@ -160,7 +159,8 @@ This service is used to query number of error sources available in the system.
 ! Description
 
 ! RPMI_SUCCESS
-! Service completed successfully and number of error sources returned as NUM_ERR_SRCS.
+! Service completed successfully and number of error sources returned as
+`NUM_ERR_SRCS`.
 
 !===
 - Other errors <<table_error_codes>>
@@ -172,7 +172,7 @@ This service is used to query number of error sources available in the system.
 |===
 
 ==== Service: RAS_GET_ERR_SRCS_ID_LIST (SERVICE_ID: 0x03)
-This service returns a list of `RAS_ERR_SRC_ID` for all error soruces present
+This service returns a list of `RAS_ERR_SRC_ID` for all error sources present
 in the system. The `RAS_ERR_SRC_ID` can be used to get the associated
 descriptor of the error source.
 
@@ -238,7 +238,8 @@ calls will use the next index of the remaining items.
 | 4
 | RAS_ERR_SRC_ID[N]
 | uint32
-| An array of error source IDs where each entry in the array is a unique error source ID.
+| An array of error source IDs where each entry in the array is a unique error
+source ID.
 
 N is equal to `RETURNED` number of error source IDs in this request.
 |===
@@ -287,7 +288,8 @@ subsequent byte offset of the remaining bytes.
 ! Description
 
 ! RPMI_SUCCESS
-! Service completed successfully and partial/complete error source descriptor returned.
+! Service completed successfully and partial/complete error source descriptor
+returned.
 
 ! RPMI_ERR_INVALID_PARAM
 ! `RAS_ERR_SRC_ID` or `BYTE_OFFSET` is invalid.
@@ -310,7 +312,7 @@ subsequent byte offset of the remaining bytes.
 
 ! [3:0]
 ! Format of the error source descriptor. Value `0` indicates that the error
-source descriptor is in GHESv2 format. Rest of the values (1-15) are
+source descriptor is in GHESv2 format. Rest of the values from `1` to `15` are
 implementation specific.
 
 !===
