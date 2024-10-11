@@ -51,62 +51,62 @@ defined by this specification.
 [cols="2, 2, 4, 3", width=100%, align="center", options="header"]
 |===
 | Service Group ID
-| Version (Major:Minor)
+| RPMI Version (Major:Minor)
 | Service Group Name
 | Allowed RISC-V Privilege Levels on Application Processors
 
 | 0x0001
-|
+| 1.0
 | BASE
 | M-mode, S-mode
 
 | 0x0002
-|
+| 1.0
 | SYSTEM_RESET
 | M-mode
 
 | 0x0003
-|
+| 1.0
 | SYSTEM_SUSPEND
 | M-mode
 
 | 0x0004
-|
+| 1.0
 | HART_STATE_MANAGEMENT
 | M-mode
 
 | 0x0005
-|
+| 1.0
 | CPPC
 | M-mode, S-mode
 
 | 0x0006
-|
+| 1.0
 | VOLTAGE
 | M-mode, S-mode
 
 | 0x0007
-|
+| 1.0
 | CLOCK
 | M-mode, S-mode
 
 | 0x0008
-|
+| 1.0
 | DEVICE_POWER
 | M-mode, S-mode
 
 | 0x0009
-|
+| 1.0
 | PERFORMANCE
 | M-mode, S-mode
 
 | 0x000A
-|
+| 1.0
 | MANAGEMENT_MODE
 | M-mode, S-mode
 
 | 0x000B
-|
+| 1.0
 | RAS_AGENT
 | M-mode, S-mode
 
