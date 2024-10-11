@@ -184,21 +184,23 @@ which platform must configure for the resuming application processor.
 
 ==== Service: SYSSUSP_SUSPEND (SERVICE_ID: 0x03)
 This service is used to request the platform microcontroller to transition the
-system in a suspend state. This service returns successfully if the platform
+system in a suspend state. This service returns successfully when the platform
 microcontroller accepts the system suspend request. The application processor
-which called this service must enter into the WFI state by executing the `WFI`
-instruction. The platform microcontroller will transition the system to the
-requested `SUSPEND_STATE` upon the successful WFI state transition of the
-application processor.
+which called this service must then enter into a quiesced state such as WFI. The
+platform microcontroller will transition the system to the requested
+`SUSPEND_STATE` upon the successful transition of the application processor into
+the supported quiesced state. The mechanism for detecting the quiesced state of
+the application processor is platform specific.
 
 The application processor must only request supported suspend types, discovered
 using the `SYSSUSP_GET_ATTRIBUTES` service.
 
-If a suspend type does not support the custom resume address which the
-application processor can discover by the `SYSSUSP_GET_ATTRIBUTES` service
+If a suspend type does not support the custom resume address that the
+application processor can discover through the `SYSSUSP_GET_ATTRIBUTES` service
 then the `RESUME_ADDR_LOW` and `RESUME_ADDR_HIGH` will be ignored and the
-application processor in WFI state will resume from the `pc` (program counter)
-after the `WFI` instruction.
+application processor will resume from the `pc` (program counter) after the
+instruction that put the application processor in the quiesced state,
+such as the `WFI` instruction.
 
 [#table_syssuspend_syssuspend_request_data]
 .Request Data
