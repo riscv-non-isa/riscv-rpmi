@@ -88,7 +88,8 @@ and faster read of the performance feedback values supported over the
 fast-channel.
 
 The CPPC service group defines two types of fast-channel for each application
-processor.
+processor. If fast-channels are supported then each application processor must 
+be assigned both types fast-channel. 
 
 ===== Performance Request Fast-channel
 In this fast-channel the application processor will either write
@@ -162,11 +163,11 @@ The size of this fast-channel type is `8 bytes`.
 | Current frequency high 32-bit (Hz)
 |===
 
-If fast-channels are supported then each application processor must be assigned
-both types fast-channel. In the shared memory region allocated by the
-platform for fast-channels, the Performance Request fast-channels must be grouped
-together for all the application processors. Similarly, the Performance Feedback
-fast-channels must be grouped together.
+===== CPPC Fast-channel Shared Memory Region
+In the shared memory region allocated by the platform for fast-channels, the
+Performance Request fast-channels must be grouped together for all the
+application processors. Similarly, the Performance Feedback fast-channels must
+be grouped together.
 
 The size of the shared memory region for fast-channels for all the managed
 application processors must be a `power-of-2`. The `base-address` and `size`
@@ -175,12 +176,12 @@ service `CPPC_GET_FAST_CHANNEL_REGION`. The `base-address` of the shared memory
 region must be aligned to `8 bytes` which is maximum size of a fast-channel in
 both the types.
 
-The offsets of fast-channel of both types for an application processor are aligned
-to `8 bytes`. The offset of both fast-channel types in the shared memory region can
-be discovered through service `CPPC_GET_FAST_CHANNEL_OFFSET`. The offsets
-discovered can be added into the `base-address` of the shared memory region to
-form the address of Performance Request fast-channel and Performance Feedback
-fast-channel for an application processor.
+The offsets of fast-channel of both types for an application processor are
+aligned to `8 bytes`. The offset of both fast-channel types in the shared memory
+region can be discovered through service `CPPC_GET_FAST_CHANNEL_OFFSET`. The
+offsets discovered can be added into the `base-address` of the shared memory
+region to form the address of Performance Request fast-channel and Performance
+Feedback fast-channel for an application processor.
 
 ===== Performance Request Fast-channel Doorbell
 A doorbell can also be supported for this fast-channel type which is shared

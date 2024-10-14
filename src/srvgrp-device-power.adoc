@@ -12,7 +12,7 @@ endif::rootpath[]
 ===  Service Group - DEVICE_POWER (SERVICEGROUP_ID: 0x0008)
 This DEVICE_POWER service group provides messages to manage the power states of
 a device power domain. This service group is used only for device power
-management since System and CPU power management is handled by already defined
+management since system and CPU power management is handled by already defined
 service groups such as SYSTEM_RESET, SYSTEM_SUSPEND and HART_STATE_MANAGEMENT.
 
 A domain can consist of one device if its power states can be controlled
@@ -29,7 +29,7 @@ lost information corresponding to that state.
 
 The DEVICE_POWER services take a 32-bit integer identifier known as `DOMAIN_ID`
 to specify the device power domain. These `DOMAIN_ID` identifiers are sequential
-and start from 0.
+and start from `0`.
 
 The following table lists the services in the DEVICE_POWER service group:
 
@@ -267,7 +267,7 @@ This service is used to query the attributes of a device power domain.
 | _Reserved_ and must be `0`.
 
 | 2
-| TRANS_LATENCY
+| TRANSITION_LATENCY
 | uint32
 | Worst case transition latency of domain from one power state to another, in microseconds (us).
 
