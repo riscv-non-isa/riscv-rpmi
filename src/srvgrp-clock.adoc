@@ -11,12 +11,12 @@ endif::rootpath[]
 
 ===  Service Group - CLOCK (SERVICEGROUP_ID: 0x0007)
 This service group is for the management of system clocks. Services defined in
-this group are used to enable or disable clocks, and to set/get clock rates.
+this group are used to enable or disable clocks, and to set or get clock rates.
 
-Each clock in the system is identified by the clock ID, which is an integer
-identifier assigned to each clock. The mapping of CLOCK_ID and clock is known
-to both the application processor and the platform microcontroller. Clock ID
-identifiers are sequential and starting from `0`.
+Each clock in the system is identified by the clock ID, which is an 32-bit
+integer identifier assigned to each clock. The mapping of CLOCK_ID and clock is
+known to both the application processor and the platform microcontroller.
+Clock ID identifiers are sequential and starting from `0`.
 
 The device or the group of devices sharing the same clock source form a
 single clock domain, which is identified by the CLOCK_ID. Any change to the
@@ -76,11 +76,17 @@ Each clock rate is a array of two 32-bit values `(uint32, uint32)` represented
 as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 `clock_rate_low` is at the lower index than the `clock_rate_high`.
 
-* Discrete Clock Format
-
+===== Discrete Clock Format
 A set of discrete clock rate arranged in a sequence, starting from the
 lowest value at the lowest index and increasing sequentially to higher clock
 rate. The following table shows the structure of the Discrete clock format.
+
+```c
+[clock_rate1, clock_rate2, clock_rate3, ... , clock_rateN]
+
+where:
+clock_rate1 < clock_rate2 < clock_rate3, < ... < clock_rateN
+```
 
 .Discrete Clock Format Structure
 [cols="1,2,5" width=100%, align="center", options="header"]
@@ -98,10 +104,13 @@ rate. The following table shows the structure of the Discrete clock format.
 | Upper 32-bit clock rate in Hz.
 |===
 
-* Linear Clock Format
-
+===== Linear Clock Format
 A linear range of clock rate with a constant step size.
 The following table shows the structure of the Linear clock format.
+
+```c
+[clock_rate_minimum, clock_rate_maximum, clock_step]
+```
 
 .Linear Clock Format Structure
 [cols="1,3,5" width=100%, align="center", options="header"]
@@ -111,27 +120,27 @@ The following table shows the structure of the Linear clock format.
 | Description
 
 | 0
-| MIN_CLOCK_RATE_LOW
+| CLOCK_MIN_RATE_LOW
 | Lower 32-bit of the lowest clock rate in Hz.
 
 | 1
-| MIN_CLOCK_RATE_HIGH
+| CLOCK_MIN_RATE_HIGH
 | Upper 32-bit of the lowest clock rate in Hz.
 
 | 2
-| MAX_CLOCK_RATE_LOW
+| CLOCK_MAX_RATE_LOW
 | Lower 32-bit of the highest clock rate in Hz.
 
 | 3
-| MAX_CLOCK_RATE_HIGH
+| CLOCK_MAX_RATE_HIGH
 | Upper 32-bit of the highest clock rate in Hz.
 
 | 4
-| STEP_LOW
+| CLOCK_STEP_LOW
 | Lower 32-bit of the step between two successive rates in Hz.
 
 | 5
-| STEP_HIGH
+| CLOCK_STEP_HIGH
 | Upper 32-bit of the step between two successive rates in Hz.
 |===
 
