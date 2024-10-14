@@ -17,8 +17,7 @@ cite:[PI], Volume 4: Management Mode Core Interface. Management Mode provides an
 environment for implementing OS agnostic services (MM services) like secure variable
 storage, and firmware updates in system firmware. This service group describes the
 interfaces for invoking MM services synchronously, the `MM_COMMUNICATE` serves as the
-world-switch synchronous call from the non-secure to the secure world while the
-`MM_COMPLETE` facilitates synchronous call from the secure to the non-secure world.
+world-switch synchronous call from the non-secure to the secure world.
 
 The following table lists the services in the MANAGEMENT_MODE service group:
 
@@ -40,10 +39,6 @@ The following table lists the services in the MANAGEMENT_MODE service group:
 
 | 0x03
 | MM_COMMUNICATE
-| NORMAL_REQUEST
-
-| 0x04
-| MM_COMPLETE
 | NORMAL_REQUEST
 |===
 
@@ -107,7 +102,6 @@ in <<management-notifications>>.
 |===
 
 
-
 ==== Service: MM_VERSION (SERVICE_ID: 0x02)
 This service returns the version of a Management Mode.
 
@@ -164,13 +158,10 @@ This service returns the version of a Management Mode.
 |===
 
 
-
 ==== Service: MM_COMMUNICATE (SERVICE_ID: 0x03)
 This service invokes an MM service implemented in the secure execution
 environment. The `MM_COMM_DATA` contains data needed to identify and
-invoke the MM service. The readiness of this synchronous request from
-the non-secure world is signaled by the `MM_COMPLETE` call from the secure
-world.
+invoke the MM service.
 
 [#table_mm_communicate_request_data]
 .Request Data
@@ -229,71 +220,4 @@ world.
 
 !===
 - Other errors <<table_error_codes>>
-|===
-
-
-
-==== Service: MM_COMPLETE (SERVICE_ID: 0x04)
-This service is used as the world-switch synchronous call, typically at the end
-of a synchronous `MM_COMMUNICATE` call, to signal the readiness for handling
-the synchronous request. The `MM_COMM_DATA` contains the returned data from the
-invoked MM service.
-
-[#table_mm_complete_request_data]
-.Request Data
-[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
-|===
-| Word
-| Name
-| Type
-| Description
-
-| 0
-| STATUS
-| int32
-| Return error code
-
-[cols="4,5", options="header"]
-!===
-! Error Code
-! Description
-
-! RPMI_SUCCESS
-! Service completed successfully.
-
-! RPMI_ERR_DENIED
-! Denied due to no permission.
-
-!===
-- Other errors <<table_error_codes>>
-|===
-
-[#table_mm_complete_response_data]
-.Response Data
-[cols="1, 5, 1, 7a", width=100%, align="center", options="header"]
-|===
-| Word
-| Name
-| Type
-| Description
-
-| 0
-| MM_COMM_DATA_ADDR_LOW
-| uint32
-| Lower 32-bit of the MM data's physical address from non-secure to secure world.
-
-| 1
-| MM_COMM_DATA_ADDR_HIGH
-| uint32
-| Upper 32-bit of the MM data's physical address from non-secure to secure world.
-
-| 2
-| MM_COMM_DATA_SIZE_LOW
-| uint32
-| Lower 32-bit of the MM data's length from non-secure to secure world.
-
-| 3
-| MM_COMM_DATA_SIZE_HIGH
-| uint32
-| Upper 32-bit of the MM data's length from non-secure to secure world.
 |===
