@@ -19,9 +19,9 @@ scale represents a performance operating point. What this scale represents and
 the metric is entirely platform-dependent. Values on this scale are discrete,
 and the platform has complete control over mapping these performance operating
 points to performance states, which are eventually converted into hardware
-parameters such as voltages and frequencies. For example, the mapping between
+parameters such as voltage and frequency. For example, the mapping between
 levels and frequencies can be as straightforward as using a multiplication
-factor of 1000.
+factor of `1000`.
 
 The CPPC service group is designed for performance control, but it is only
 intended for application processors. This service group is primarily meant for
