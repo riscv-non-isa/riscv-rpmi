@@ -1,0 +1,252 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+===  Service Group - REQUEST_FORWARD (SERVICEGROUP_ID: 0x000C)
+The REQUEST_FORWARD service group allows application processors to retrieve and
+process RPMI request messages which are forwarded by platform microcontroller from
+some other RPMI client. This service group also allows an SBI implementation to
+forward RPMI request messages from one system-level partition (or domain) to another
+using the SBI MPXY extension cite:[SBI].
+
+The platform microcontroller (or SBI implementation) should maintain a first-in
+first-out queue of forwarded RPMI request messages. The first (or oldest) forwarded
+RPMI request message in the queue is referred to as the current forwarded RPMI request
+message. The RPMI services defined by the REQUEST_FORWARD service group allow application
+processors to retrieve and process one forwarded RPMI request message at a time.
+
+The <<table_reqfwd_services>> below lists the services defined by the REQUEST_FORWARD
+service group:
+
+[#table_reqfwd_services]
+.Request Forward Services
+[cols="1, 4, 2", width=100%, align="center", options="header"]
+|===
+| Service ID
+| Service Name
+| Request Type
+
+| 0x01
+| REQFWD_ENABLE_NOTIFICATION
+| NORMAL_REQUEST
+
+| 0x02
+| REQFWD_RETRIEVE_CURRENT_MESSAGE
+| NORMAL_REQUEST
+
+| 0x03
+| REQFWD_COMPLETE_CURRENT_MESSAGE
+| NORMAL_REQUEST
+|===
+
+[#reqfwd-notifications]
+==== Notifications
+The <<table_reqfwd_notification_events>> below list the notification events
+defined by the REQUEST_FORWARD service group.
+
+[#table_reqfwd_notification_events]
+.Request Forward Notification Events
+[cols="1, 2, 2, 2", width=100%, align="center", options="header"]
+|===
+| Event ID
+| Name
+| Event Data
+| Description
+
+| 0x01
+| REQFWD_NEW_MESSAGE
+| An array of `N` bytes representing the first `N` bytes of the current forwarded
+RPMI request message. The value `N` is specified by the `EVENT_DATALEN` field of
+the RPMI notification event as shown in <<table_notification_message_format>>.
+| This RPMI notification event represents the arrival of a new forwarded RPMI
+request message when there were no other pending forwarded RPMI request message
+in the queue.
+|===
+
+==== Service: REQFWD_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
+This service allows the application processor to subscribe to REQUEST_FORWARD
+service group notifications. The supported events are described in the
+<<table_reqfwd_notification_events>>.
+
+[#table_reqfwd_enable_notif_request_data]
+.Request Data
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| EVENT_ID
+| uint32
+| Event to be subscribed for notification.
+|===
+
+[#table_reqfwd_enable_notif_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="5,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Event is subscribed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `EVENT_ID` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! Notification is not supported.
+
+!===
+- Other errors <<table_error_codes>>
+|===
+
+==== Service: REQFWD_RETRIEVE_CURRENT_MESSAGE (SERVICE_ID: 0x02)
+This service allows application processors to retrieve the current forwarded RPMI
+request message. The current message may be the oldest forwarded RPMI request
+message in the platform microcontroller (or SBI implementation) queue.
+
+[#table_reqfwd_retireve_current_message_request_data]
+.Request Data
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| START_INDEX
+| uint32
+| Starting index of first byte of the current forwarded RPMI request message. Use
+`0` for the first call, subsequent calls will use the next index of the remaining
+bytes.
+|===
+
+[#table_reqfwd_retireve_current_message_response_data]
+.Response Data
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="7,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `START_INDEX` is invalid.
+
+! RPMI_ERR_NO_DATA
+! No forwarded RPMI request message available.
+
+!===
+- Other errors <<table_error_codes>>
+
+| 1
+| REMAINING
+| uint32
+| Remaining number of bytes in the current forwarded RPMI request message.
+
+| 2
+| RETURNED
+| uint32
+| Number of bytes `N` of the current forwarded RPMI request message returned in
+this request.
+
+| 3
+| REQUEST_MESSAGE[N]
+| uint8
+| An array of `N` bytes representing a part of the current forwarded RPMI request
+message at byte offset specified by `START_INDEX`.
+|===
+
+==== Service: REQFWD_COMPLETE_CURRENT_MESSAGE (SERVICE_ID: 0x03)
+This service allows the application processors to inform the platform microcontroller
+(or SBI implementation) that:
+
+* The processing of the current forwarded RPMI request message has completed and
+RPMI response message must be sent to the original source of RPMI request message.
+* The current forwarded RPMI request message must now point to the next forwarded
+RPMI request message if available.
+
+[#table_reqfwd_complete_current_message_request_data]
+.Request Data
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| RESPONSE_DATA[N]
+| uint8
+| An array of bytes representing the RPMI message data to be send as
+response data for the current forwarded RPMI request message. The `N`
+represents the total number of bytes in the response data which can be
+inferred by the platform microcontroller (or SBI implementation) from
+the overall size of the `REQFWD_COMPLETE_CURRENT_MESSAGE` service message.
+|===
+
+[#table_reqfwd_complete_current_message_response_data]
+.Response Data
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="7,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_NO_DATA
+! No forwarded RPMI request message available.
+
+!===
+- Other errors <<table_error_codes>>
+
+|===
