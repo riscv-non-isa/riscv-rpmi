@@ -102,7 +102,7 @@ defined by this specification.
 
 | 0x000A
 | 1.0
-| MANAGEMENT_MODE
+| SECURE_EXECUTION
 | M-mode, S-mode
 
 | 0x000B
