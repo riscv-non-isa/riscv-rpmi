@@ -111,7 +111,7 @@ defined by this specification.
 | M-mode, S-mode
 
 | 0x000C
-|
+| 1.0
 | REQUEST_FORWARD
 | M-mode, S-mode
 
