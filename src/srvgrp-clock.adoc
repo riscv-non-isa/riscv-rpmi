@@ -313,6 +313,7 @@ Refer to <<clock-rate-format-section>> for more details.
 ----
 0b00: Discrete format
 0b01: Linear format
+0b10 - 0b11: Reserved
 ----
 
 !===
@@ -583,6 +584,7 @@ This service is used to set the clock rate of a specific clock.
 0b00: Round down
 0b01: Round up
 0b10: Auto
+0b11: Reserved
 Platform autonomously choose rate closest to the requested rate.
 ----
 
