@@ -350,5 +350,5 @@ specification or the extension version mismatch.
 
 |
 | < -127
-| _Vendor specific_.
+| _Vendor or Implementation specific_.
 |===
