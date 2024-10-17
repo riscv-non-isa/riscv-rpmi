@@ -116,8 +116,8 @@ image::highlevel-arch-queues.png[align="center"]
 ==== Queue Types
 The RPMI shared memory transport consists of four unidirectional queues. The
 type of messages and the direction of message delivery is fixed for each RPMI
-shared memory trasport queue. The <<transport_shared_memory_queues>> below
-provides a more detailed description of all RPMI shared memory tranpsort queues.
+shared memory transport queue. The <<transport_shared_memory_queues>> below
+provides a more detailed description of all RPMI shared memory transport queues.
 
 [#transport_shared_memory_queues]
 .Shared Memory Transport Queues
@@ -162,7 +162,7 @@ image::highlevel-flow.png[400,400, align="center"]
 An RPMI shared memory queue is divided into `M` contiguous slots of equal size
 which are used to form a circular queue. The size of each slot (or slot size)
 must be a `power-of-2` and must be at least `64 bytes`. The slot size is same
-accross all RPMI shared memory queues and the physical address of each slot
+across all RPMI shared memory queues and the physical address of each slot
 must be aligned at slot size boundary.
 
 NOTE: The slot size should match with the maximum cache line size used in a
@@ -184,7 +184,7 @@ view of the RPMI shared memory queue internals is shown in the
 
 NOTE: The requirement of keeping `head` and `tail` in separate slots is
 to prevent both `head` and `tail` using the same cache line so that cache
-maintainence can be done separately for both `head` and `tail`.
+maintenance can be done separately for both `head` and `tail`.
 
 [#transport_shared_memory_qint]
 .Shared Memory Queue Internals

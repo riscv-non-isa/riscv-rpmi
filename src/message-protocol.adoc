@@ -192,7 +192,7 @@ the <<Possible Error Codes>>. An RPMI service where the response data exceeds
 the maximum message data size can use multipart RPMI acknowledgement messages.
 
 === Notifications
-The platform microcrontroller can use RPMI notification message to notify
+The platform microcontroller can use RPMI notification message to notify
 application processors about system events which are also referred to as
 *RPMI events*. An RPMI notification message has no associated response or
 acknowledgement from application processors. Multiple RPMI events can be

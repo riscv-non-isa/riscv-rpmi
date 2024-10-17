@@ -14,10 +14,10 @@ A platform with limited number of RPMI transport instances can share an M-mode
 RPMI transport instance with the supervisor software using the SBI MPXY extension
 cite:[SBI]. An M-mode firmware or hypervisor can also virtualize RPMI message
 communication for the supervisor software using the SBI MPXY extension. As shown
-in the <<mpyx_rpmi_integration>> below, the SBI implementation acts as a *RPMI proxy*
+in the <<mpxy_rpmi_integration>> below, the SBI implementation acts as a *RPMI proxy*
 for the supervisor software when sending RPMI messages through an SBI MPXY channel.
 
-[#mpyx_rpmi_integration]
+[#mpxy_rpmi_integration]
 .RPMI and SBI MPXY Integration
 image::mpxy-rpmi.png[350,350, align="center"]
 

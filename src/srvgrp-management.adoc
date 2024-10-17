@@ -179,7 +179,7 @@ The `MM_COMMUNICATE` service invokes an MM service implemented in the secure
 execution environment. The input data needed to identify and invoke the MM
 service is referred to as `MM_COMM_INPUT_DATA` whereas the output data returned
 by the MM service is referred to as `MM_COMM_OUTPUT_DATA`. The RPMI client in
-the non-secure execution enviroment provides the location of `MM_COMM_INPUT_DATA`
+the non-secure execution environment provides the location of `MM_COMM_INPUT_DATA`
 and `MM_COMM_OUTPUT_DATA` in the MM shared memory as parameters of `MM_COMMUNICATE`
 service.
 
