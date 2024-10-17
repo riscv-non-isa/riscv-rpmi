@@ -126,7 +126,7 @@ if a `SUSPEND_TYPE` supports resume address.
 | Suspend type. See <<section-suspend-types>> for more details.
 |===
 
-[#table_syssuspend_getsysuspendattrs_response_data]
+[#table_syssuspend_getsyssuspendattrs_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===

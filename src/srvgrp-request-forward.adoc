@@ -127,7 +127,7 @@ This service allows application processors to retrieve the current forwarded RPM
 request message. The current message may be the oldest forwarded RPMI request
 message in the platform microcontroller (or SBI implementation) queue.
 
-[#table_reqfwd_retireve_current_message_request_data]
+[#table_reqfwd_retrieve_current_message_request_data]
 .Request Data
 [cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
@@ -144,7 +144,7 @@ message in the platform microcontroller (or SBI implementation) queue.
 bytes.
 |===
 
-[#table_reqfwd_retireve_current_message_response_data]
+[#table_reqfwd_retrieve_current_message_response_data]
 .Response Data
 [cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
