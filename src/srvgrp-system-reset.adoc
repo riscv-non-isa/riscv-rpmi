@@ -58,15 +58,15 @@ in the RISC-V SBI Specification cite:[SBI] for the `RESET_TYPE`.
 
 [#system-reset-notifications]
 ==== Notifications
-This service group does not support any event for notifications.
+This service group does not support any events for notification.
 
 ==== Service: SYSRST_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
 This service allows the application processor to subscribe to `SYSTEM_RESET`
-service group defined events for notifications. The platform can optionally
-support notifications of events that may occur in the platform. The platform
-microcontroller can send these notification messages to the application
-processor if they are implemented and the application processor has subscribed
-to them. Supported events are described in <<system-reset-notifications>>.
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<system-reset-notifications>>.
 
 [#table_sysreset_ennotification_request_data]
 .Request Data
@@ -188,7 +188,7 @@ This service is used to initiate the system reset or system shutdown.
 The application processor must only request supported reset types, discovered
 using the `SYSRST_GET_ATTRIBUTES` service except for System Shutdown and System
 Cold Reset which are supported by default. Requesting an unsupported or
-invalid state may result in the system entering a non-functional state.
+invalid reset type may result in the system entering a non-functional state.
 
 [#table_sysreset_sysreset_request_data]
 .Request Data

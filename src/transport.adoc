@@ -44,18 +44,19 @@ image::transport-bidirectional.png[400,400, align="center"]
 
 === Doorbell Interrupt
 An RPMI transport may also provide optional doorbell interrupts for application
-processors and/or platform microcontroller to signal the arrival of new messages.
+processors and/or the platform microcontroller to signal the arrival of new messages.
 This doorbell interrupt can be either a message-signaled interrupt (MSI) or a
 wired interrupt. The RPMI implementations may ignore the doorbell mechanism of
-RPMI transport and always use polling mechanism to check arrival of new messages.
+RPMI transport and always use a polling mechanism to check the arrival of new
+messages.
 
 ==== A2P Doorbell
 The A2P doorbell is a signal for new messages from the application processors
 (APs) to the platform microcontroller (PuC).
 
 The platform should support A2P doorbell interrupt triggering from application
-processors through a write operation or a read-modify-write sequence on a
-memory-mapped register which can be easily discovered by the application
+processors through either a write operation or a read-modify-write sequence on a
+memory-mapped register, which can be easily discovered by the application
 processors using hardware description mechanisms such as device tree or ACPI.
 
 ==== P2A Doorbell
@@ -72,8 +73,8 @@ the MSI on the platform microcontroller side using RPMI messages defined by
 the `BASE` service group.
 
 === Fast-channels
-Fast-channels are special shared memory based channels for use cases that
-require lower latency and faster processing of requests from application
+Fast-channels are special shared memory-based channels used in scenarios
+requiring lower latency and faster processing of requests from application
 processors to the platform microcontroller.
 
 The layout and request format of fast-channels are service group specific
@@ -171,15 +172,15 @@ platform. The requirement of `power-of-2` slot size with minimum value of
 `power-of-2` value.
 
 The slots of the RPMI shared memory queue are assigned sequentially increasing
-indices starting with `0`. The slot at index `0` is referred to as `head slot`
-and the slot at index `1` is referred to as `tail slot`. The remaining `(M - 2)`
-slots of the RPMI shared memory queue are message slots. The first `4 bytes`
-of the head slot is used as the `head` of the circular queue which contains
-a `slot index - 2` value pointing to the message slot from where the next
-message can be dequeued. The first `4 bytes` of the tail slot is used as the
-`tail` of the circular queue which contains a `slot index - 2` value pointing
-to the message slot from where the next message can be enqueued. The pictorial
-view of the RPMI shared memory queue internals is shown in the
+indices starting with `0`. The slot at index `0` is referred to as the
+`head slot` and the slot at index `1` is referred to as the `tail slot`. The
+remaining `(M - 2)` slots of the RPMI shared memory queue are message slots.
+The first `4 bytes` of the head slot is used as the `head` of the circular
+queue which contains a `slot index - 2` value pointing to the message slot from
+where the next message can be dequeued. The first `4 bytes` of the tail slot is
+used as the `tail` of the circular queue which contains a `slot index - 2` value
+pointing to the message slot from where the next message can be enqueued. The
+pictorial view of the RPMI shared memory queue internals is shown in the
 <<transport_shared_memory_qint>> below.
 
 NOTE: The requirement of keeping `head` and `tail` in separate slots is
@@ -213,7 +214,7 @@ queues must be of the same size hence equal number of slots (or queue capacity).
 The size of each RPMI shared shared queue must be a multiple of the slot size.
 
 NOTE: A platform should provide sufficient shared memory for all RPMI shared
-memory queues such that the number of slots (queue capacity) does not become
+memory queues so that the number of slots (queue capacity) does not become
 a bottleneck in message communication. It is recommended that the number of
 slots in queues belonging to A2P channel should be proportional to the number
 of application processors accessing the A2P channel.

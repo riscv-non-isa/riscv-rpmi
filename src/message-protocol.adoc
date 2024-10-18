@@ -100,7 +100,7 @@ or message data.
 
 ==== Message Header
 The layout of the `8-byte` wide RPMI message header is shown in the
-<<table_message_header>> below. The RPMI message header provide an
+<<table_message_header>> below. The RPMI message header provide a
 unique identity to the corresponding RPMI message withing an RPMI
 context.
 
@@ -161,14 +161,14 @@ field must be a multiple of `4-byte` or `0` if no message data is present.
 |===
 
 For an RPMI normal request message, the `TOKEN`, `SERVICEGROUP_ID`, and
-`SERVICE_ID` fields of the RPMI acknowledgment message must have the same
+`SERVICE_ID` fields of the RPMI acknowledgement message must have the same
 values as corresponding fields in the RPMI request message. The `DATALEN`
-field of the RPMI acknowledgment message must be set according to the data
+field of the RPMI acknowledgement message must be set according to the data
 carried by this acknowledgement.
 
 For an RPMI notification message, the platform microcontroller will set
 appropriate values for the `TOKEN`, `SERVICEGROUP_ID`, and `DATALEN` fields
-whereas `SERVICE_ID` field must be always set to `0x0`.
+whereas the `SERVICE_ID` field must be always set to `0x0`.
 
 ==== Message Data
 The message data of an RPMI message is optional and variable sized. The
@@ -219,8 +219,8 @@ image::notification-format.png[500,600, align="center"]
 
 ==== Events
 An RPMI event consists of a header containing two fields: `EVENT_ID (8-bit)`
-and `EVENT_DATALEN (16-bit)`. An RPMI event may have associated data who's
-size is specified in the `EVENT_DATALEN` field of header and this data size
+and `EVENT_DATALEN (16-bit)`. An RPMI event may have associated data whose
+size is specified in the `EVENT_DATALEN` field of the header and this data size
 must be a multiple of `4-byte`.
 
 The number of RPMI events that can be stored in a single RPMI notification

@@ -11,10 +11,10 @@ endif::rootpath[]
 
 ===  Service Group - RAS_AGENT (SERVICEGROUP_ID: 0x000B)
 The RAS_AGENT service group provides services to enumerate various error
-sources in a system and to get their descriptors.
+sources in a system and to retrieve their descriptors.
 
-Each error source in a system has a unique 32-bit identification number called
-as `RAS_ERR_SRC_ID`.
+Each error source in a system is assigned a unique 32-bit identification number,
+referred to as `RAS_ERR_SRC_ID`.
 
 The following table lists the services in the RAS_AGENT service group:
 
@@ -71,12 +71,12 @@ values from `1` to `15` are reserved for the custom format types.
 
 [#ras-notifications]
 ==== Notifications
-This service group does not support any event for notification.
+This service group does not support any events for notification.
 
 ==== Service: RAS_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
-This service allows the application processor to subscribe to RAS_AGENT service
-group notifications. The platform can optionally support notifications of events
-that may occur in the platform. The platform microcontroller can send these
+This service allows the application processor to subscribe to `RAS_AGENT`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
 notification messages to the application processor if they are implemented and
 the application processor has subscribed to them. The supported events are
 described in <<ras-notifications>>.
@@ -129,7 +129,7 @@ described in <<ras-notifications>>.
 |===
 
 ==== Service: RAS_GET_NUM_ERR_SRCS (SERVICE_ID: 0x02)
-This service is used to query number of error sources available in the system.
+This service queries number of error sources available in the system.
 
 [#table_ras_agent_getnum_err_srcs_request_data]
 .Request Data
@@ -245,7 +245,7 @@ N is equal to `RETURNED` number of error source IDs in this request.
 |===
 
 ==== Service: RAS_GET_ERR_SRC_DESC (SERVICE_ID: 0x04)
-This service returns the error source descriptor of an error source specified
+This service retrieves the error source descriptor of an error source specified
 by `RAS_ERR_SRC_ID`.
 
 [#table_ras_agent_get_err_src_desc_request_data]
