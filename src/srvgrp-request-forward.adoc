@@ -48,7 +48,7 @@ service group:
 
 [#reqfwd-notifications]
 ==== Notifications
-The <<table_reqfwd_notification_events>> below list the notification events
+The <<table_reqfwd_notification_events>> below lists the notification events
 defined by the REQUEST_FORWARD service group.
 
 [#table_reqfwd_notification_events]
@@ -71,9 +71,12 @@ in the queue.
 |===
 
 ==== Service: REQFWD_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
-This service allows the application processor to subscribe to REQUEST_FORWARD
-service group notifications. The supported events are described in the
-<<table_reqfwd_notification_events>>.
+This service allows the application processor to subscribe to `REQUEST_FORWARD`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<reqfwd-notifications>>.
 
 [#table_reqfwd_enable_notif_request_data]
 .Request Data

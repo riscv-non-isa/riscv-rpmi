@@ -47,15 +47,15 @@ The following table lists the services in the MANAGEMENT_MODE service group:
 
 [#management-notifications]
 ==== Notifications
-This service group does not support any event for notification.
+This service group does not support any events for notification.
 
 ==== Service: MM_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
-This service allows the application processor to subscribe to MANAGEMENT_MODE
-service group notifications. Platform can optionally support notifications of
-events which might occur in the platform. Platform microcontroller can send
-these notification messages to application processor if they are implemented
-and application processor has subscribed to these. Events supported are described
-in <<management-notifications>>.
+This service allows the application processor to subscribe to `MANAGEMENT_MODE`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<management-notifications>>.
 
 [#table_mm_ennotification_request_data]
 .Request Data
@@ -106,8 +106,8 @@ in <<management-notifications>>.
 
 
 ==== Service: MM_GET_ATTRIBUTES (SERVICE_ID: 0x02)
-This RPMI service gets the attributes about Management Mode such as MM version,
-MM shared memory location, etc.
+This RPMI service gets the attributes about Management Mode, including MM
+version, MM shared memory location, etc.
 
 [#table_mm_get_attributes_request_data]
 .Request Data

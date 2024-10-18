@@ -95,17 +95,17 @@ listed in the below table.
 | 0x01
 | REQUEST_HANDLE_ERROR
 | NA
-| This event indicates that the the platform microcontroller is unable to
+| This event indicates that the platform microcontroller is unable to
 serve the message requests.
 |===
 
 ==== Service: BASE_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
-This service allows the application processor to subscribe to BASE service
-group notifications. The platform can optionally support notifications of
-events that might occur in the platform. The platform microcontroller can send
-the supported events through notification message if the application processor
-has subscribed to them. The supported events are described
-in <<table_base_srvgroup_events>>.
+This service allows the application processor to subscribe to `BASE`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<base-notifications>>.
 
 [#table_base_ennotification_request_data]
 .Request Data
@@ -156,7 +156,7 @@ in <<table_base_srvgroup_events>>.
 ==== Service: BASE_GET_IMPLEMENTATION_VERSION (SERVICE_ID: 0x02)
 This service is used to get the RPMI implementation version of the platform
 microcontroller. The version returned is a 32-bit composite number containing
-the `MAJOR` and `MINOR` numbers.
+the `MAJOR` and `MINOR` version numbers.
 
 [#table_base_getimplversion_request_data]
 .Request Data
@@ -209,7 +209,7 @@ the `MAJOR` and `MINOR` numbers.
 
 ==== Service: BASE_GET_IMPLEMENTATION_ID (SERVICE_ID: 0x03)
 This service is used to get a 32-bit RPMI implementation ID assigned to the
-software which implements the RPMI specification. Every implementation ID is
+software that implements the RPMI specification. Every implementation ID is
 unique and listed in the <<table_base_rpmi_impl_id>>.
 
 [#table_base_getimplid_request_data]
@@ -253,7 +253,7 @@ unique and listed in the <<table_base_rpmi_impl_id>>.
 ==== Service: BASE_GET_SPEC_VERSION (SERVICE_ID: 0x04)
 This service is used to get the implemented RPMI specification version. The
 version returned is a 32-bit composite number containing the `MAJOR` and
-`MINOR` numbers.
+`MINOR` version numbers.
 
 [#table_base_getspecversion_request_data]
 .Request Data
@@ -305,7 +305,7 @@ version returned is a 32-bit composite number containing the `MAJOR` and
 |===
 
 ==== Service: BASE_GET_PLATFORM_INFO (SERVICE_ID: 0x05)
-This service is used to get addition platform information if available.
+This service is used to get additional platform information if available.
 
 [#table_base_getplatinfo_request_data]
 .Request Data

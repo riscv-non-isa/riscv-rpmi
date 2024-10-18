@@ -206,12 +206,12 @@ inform clients in the system about changes in the performance domain.
 |===
 
 ==== Service: PERF_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
-This service is to enable or disable the performance changed notification event.
-The notification is sent from the platform microcontroller when the performance
-level, performance limit or performance power of a performance domain has changed.
-This allows the system to adjust its behavior in response to performance changes
-and ensure that it is operating within its desired performance level. The
-supported events are described in <<performance-notifications>>.
+This service allows the application processor to subscribe to `PERFORMANCE`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<performance-notifications>>.
 
 [#table_perf_ennotification_request_data]
 .Request Data

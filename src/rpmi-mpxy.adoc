@@ -10,7 +10,7 @@ ifndef::rootpath[]
 endif::rootpath[]
 
 == Integration with SBI MPXY Extension
-A platform with limited number of RPMI transport instances can share an M-mode
+A platform with a limited number of RPMI transport instances can share an M-mode
 RPMI transport instance with the supervisor software using the SBI MPXY extension
 cite:[SBI]. An M-mode firmware or hypervisor can also virtualize RPMI message
 communication for the supervisor software using the SBI MPXY extension. As shown
@@ -21,7 +21,7 @@ for the supervisor software when sending RPMI messages through an SBI MPXY chann
 .RPMI and SBI MPXY Integration
 image::mpxy-rpmi.png[350,350, align="center"]
 
-The RPMI communication using the SBI MPXY extension must satisfy the following
+The RPMI communication via the SBI MPXY extension must satisfy the following
 requirements:
 
 . The SBI MPXY channel must correspond to a single RPMI service group which is
@@ -41,7 +41,7 @@ must match the request data format of the RPMI service represented by the
 by the `sbi_mpxy_send_message_with_response()` must match the response data format
 of the RPMI service represented by the `message_id` parameter.
 
-. The format of the protocol specific data returned in the SBI MPXY shared memory
+. The format of the protocol-specific data returned in the SBI MPXY shared memory
 by the `sbi_mpxy_get_notification_events()` must match the RPMI notifications message
 data format.
 
