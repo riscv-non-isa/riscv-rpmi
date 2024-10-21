@@ -44,10 +44,10 @@ only by that RISC-V privilege level.
 types of RPMI messages and the format for each RPMI message type.
 
 *RPMI Service Groups*: The services provided by the platform microcontrollers
-to the application processors are grouped based functionality into RPMI service
-groups. Each RPMI service group specifies the RISC-V privilege levels from which
-the application processor can be access it. Platform vendors can implement
-custom RPMI service groups.
+to the application processors are grouped into RPMI service groups based on
+functionality. Each RPMI service group specifies the RISC-V privilege levels
+from which the application processor can access it. Platform vendors can
+implement custom RPMI service groups.
 
 *RPMI Client*: An RPMI client is a software or a driver running on the
 application processor which is capable of sending and receiving RPMI messages.
