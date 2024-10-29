@@ -585,7 +585,8 @@ This service is used to set the clock rate of a specific clock.
 0b01: Round up
 0b10: Auto
 0b11: Reserved
-Platform autonomously choose rate closest to the requested rate.
+
+In Auto mode the platform can autonomously chooses a supported rate closest to the requested rate.
 ----
 
 ! [29:0]	! _Reserved_ and must be `0`.
@@ -625,7 +626,7 @@ Platform autonomously choose rate closest to the requested rate.
 ! Service completed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `CLOCK_ID` or clock rate is invalid.
+! `CLOCK_ID` or clock rate is invalid or the flags passed are invalid or reserved.
 
 !===
 - Other errors <<table_error_codes>>
