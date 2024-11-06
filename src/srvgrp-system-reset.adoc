@@ -156,9 +156,6 @@ default. System Warm Reset support can be discovered with this service.
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
 
-! RPMI_ERR_INVALID_PARAM
-! `RESET_TYPE` is invalid.
-
 !===
 - Other errors <<table_error_codes>>
 
