@@ -693,8 +693,8 @@ may need to call this service again with the appropriate `START_INDEX` until the
 ! RPMI_SUCCESS
 ! Service completed successfully.
 
-! RPMI_ERR_BAD_RANGE
-! `START_INDEX` is not in valid range.
+! RPMI_ERR_INVALID_PARAM
+! `START_INDEX` is invalid.
 !===
 - Other errors <<table_error_codes>>
 
