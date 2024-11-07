@@ -392,9 +392,10 @@ This service is used to get the attributes of a suspend type.
 ! _Reserved_, must be initialized to `0`.
 
 ! [0]
-!	
-	0b0: Counter does not stop if this bit is cleared.
-	0b1: Local timer stops when the hart is suspended if this bit is set.
+! Local timer running status
+
+	0b1: Local timer stops when the hart is suspended.
+	0b0: Local timer does not stop when hart is suspended.
 !===
 | 2	
 | ENTRY_LATENCY
