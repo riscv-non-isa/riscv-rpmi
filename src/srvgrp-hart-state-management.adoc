@@ -241,8 +241,8 @@ may need to call this service again with the appropriate `START_INDEX` until the
 ! RPMI_SUCCESS	
 ! Service completed successfully.
 
-! RPMI_ERR_BAD_RANGE
-! `START_INDEX` is not in valid range.
+! RPMI_ERR_INVALID_PARAM
+! `START_INDEX` is invalid.
 !===
 - Other errors <<table_error_codes>>
 
@@ -314,8 +314,8 @@ items.
 ! RPMI_SUCCESS	
 ! Service completed successfully.
 
-! RPMI_ERR_BAD_RANGE
-! `START_INDEX` is not in valid range.
+! RPMI_ERR_INVALID_PARAM
+! `START_INDEX` is invalid.
 !===
 - Other errors <<table_error_codes>>
 
@@ -392,9 +392,10 @@ This service is used to get the attributes of a suspend type.
 ! _Reserved_, must be initialized to `0`.
 
 ! [0]
-!	
-	0b0: Counter does not stop if this bit is cleared.
-	0b1: Local timer stops when the hart is suspended if this bit is set.
+! Local timer running status
+
+	0b1: Local timer stops when the hart is suspended.
+	0b0: Local timer does not stop when hart is suspended.
 !===
 | 2	
 | ENTRY_LATENCY

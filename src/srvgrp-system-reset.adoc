@@ -156,9 +156,6 @@ default. System Warm Reset support can be discovered with this service.
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
 
-! RPMI_ERR_INVALID_PARAM
-! `RESET_TYPE` is invalid.
-
 !===
 - Other errors <<table_error_codes>>
 
@@ -187,8 +184,8 @@ default. System Warm Reset support can be discovered with this service.
 This service is used to initiate the system reset or system shutdown.
 The application processor must only request supported reset types, discovered
 using the `SYSRST_GET_ATTRIBUTES` service except for System Shutdown and System
-Cold Reset which are supported by default. Requesting an unsupported or
-invalid reset type may result in the system entering a non-functional state.
+Cold Reset which are supported by default. This service does not return response
+message in case of successful reset.
 
 [#table_sysreset_sysreset_request_data]
 .Request Data
@@ -208,7 +205,25 @@ invalid reset type may result in the system entering a non-functional state.
 
 [#table_sysreset_sysreset_response_data]
 .Response Data
-[cols="1", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
-| NA
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_ERR_INVALID_PARAM
+! `RESET_TYPE` is not supported or invalid.
+!===
+- Other errors <<table_error_codes>>
 |===

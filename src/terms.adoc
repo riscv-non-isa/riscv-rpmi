@@ -6,7 +6,7 @@
 
 | A2P   | Application Processor to Platform Microcontroller
 | ACPI  | Advanced Configuration and Power Interface Specification
-| AEPI  | ACPI Platform Error Interfaces
+| APEI  | ACPI Platform Error Interfaces
 | AP    | Application Processor
 | CPPC  | Collaborative Processor Performance Control
 | GHES  | Generic Hardware Error Source

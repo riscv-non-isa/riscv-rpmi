@@ -330,7 +330,7 @@ specification or the extension version mismatch.
 
 | RPMI_ERR_BAD_RANGE
 | -11
-| Index out of range.
+| Bad or invalid range.
 
 | RPMI_ERR_TIMEOUT
 | -12

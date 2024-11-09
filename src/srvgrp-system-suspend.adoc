@@ -148,9 +148,6 @@ a resume address.
 
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
-
-! RPMI_ERR_INVALID_PARAM
-! `SUSPEND_TYPE` is invalid.
 !===
 - Other errors <<table_error_codes>>
 
@@ -256,7 +253,10 @@ such as the `WFI` instruction.
 ! Service completed successfully. Suspend request has been accepted.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SUSPEND_TYPE` is invalid.
+! `HART_ID` or `SUSPEND_TYPE` is invalid.
+
+! RPMI_ERR_INVALID_ADDR
+! Resume address is invalid.
 !===
 - Other errors <<table_error_codes>>
 |===

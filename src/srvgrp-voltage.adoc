@@ -417,8 +417,8 @@ calls may be necessary to retrieve all the voltage levels.
 ! RPMI_ERR_INVALID_PARAM
 ! Voltage `DOMAIN_ID` is invalid.
 
-! RPMI_ERR_BAD_RANGE
-! `VOLTAGE_LEVEL_INDEX` is not in valid range.
+! RPMI_ERR_INVALID_PARAM
+! `VOLTAGE_LEVEL_INDEX` is invalid.
 
 !===
 - Other errors <<table_error_codes>>
