@@ -78,9 +78,9 @@ notification messages to the application processor if they are implemented and
 the application processor has subscribed to them. The supported events are
 described in <<reqfwd-notifications>>.
 
-[#table_reqfwd_enable_notif_request_data]
+[#table_reqfwd_ennotification_request_data]
 .Request Data
-[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -90,10 +90,23 @@ described in <<reqfwd-notifications>>.
 | 0
 | EVENT_ID
 | uint32
-| Event to be subscribed for notification.
+| The event to be subscribed for notification.
+
+| 1
+| REQ_STATE
+| uint32
+| Requested event notification state +
+Change or query the current state of `EVENT_ID` notification.
+----
+0: Disable
+1: Enable
+2: Return current state.
+----
+Any other values of `REQ_STATE` field other than the defined ones are reserved
+for future use.
 |===
 
-[#table_reqfwd_enable_notif_response_data]
+[#table_reqfwd_ennotification_response_data]
 .Response Data
 [cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
@@ -107,7 +120,7 @@ described in <<reqfwd-notifications>>.
 | int32
 | Return error code
 
-[cols="5,5", options="header"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code
 ! Description
@@ -116,14 +129,26 @@ described in <<reqfwd-notifications>>.
 ! Event is subscribed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `EVENT_ID` is invalid.
+! `EVENT_ID` or `REQ_STATE` is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
-
 !===
 - Other errors <<table_error_codes>>
+
+| 1
+| CURRENT_STATE
+| uint32
+| Current `EVENT_ID` notification state
+----
+0: Notification is disabled
+1: Notification is enabled.
+----
+In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
+state. +
+In case of an error, the value of `CURRENT_STATE` is unspecified.
 |===
+
 
 ==== Service: REQFWD_RETRIEVE_CURRENT_MESSAGE (SERVICE_ID: 0x02)
 This service allows application processors to retrieve the current forwarded RPMI

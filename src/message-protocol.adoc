@@ -205,10 +205,10 @@ below.
 
 The RPMI events are defined separately for each RPMI service group. An
 RPMI service group must have a `ENABLE_NOTIFICATION` service with a fixed
-`SERVICE_ID=0x01` which can be used by the application processors to enable
-notification messages for a particular RPMI event defined by the RPMI service
-groups. By default, notifications are disabled for all RPMI events of an RPMI
-service group. The platform microcontroller only sends RPMI notification
+`SERVICE_ID=0x01` which can be used by the application processors to enable or
+disable notification messages for a particular RPMI event defined by the RPMI
+service groups. By default, notifications are disabled for all RPMI events of
+an RPMI service group. The platform microcontroller only sends RPMI notification
 messages for RPMI events which are enabled by the application processors.
 If multiple RPMI events are supported by an RPMI service group then the
 application processors must enable to each RPMI event individually.
