@@ -65,6 +65,13 @@ The following table lists the services in the BASE service group:
 |===
 
 ==== RPMI Implementation IDs
+The RPMI specification defines space for standard implementation IDs and for
+experimental implementation IDs. The experimental implementation IDs can be used
+by the implementations until a standard implementation ID is assigned to it.
+
+The RPMI implementations that have been assigned a standard implementation ID
+are listed in the table below.
+
 [#table_base_rpmi_impl_id]
 .RPMI Implementation IDs
 [cols="2, 3a", width=100%, align="center", options="header"]
@@ -72,8 +79,14 @@ The following table lists the services in the BASE service group:
 | Implementation ID
 | Name
 
-| 0x0
+| 0x00000000
 | libRPMI cite:[libRPMI]
+
+| 0x00000001 - 0x7FFFFFFF
+| _Reserved for Future Use_
+
+| 0x80000000 - 0xFFFFFFFF
+| _Experimental Implementation IDs_
 |===
 
 [#base-notifications]
@@ -525,6 +538,7 @@ service group.
 | _Reserved_, must be initialized to `0`.
 |===
 
+[#srvgrp_base_set_msi]
 ==== Service: BASE_SET_MSI (SERVICE_ID: 0x08)
 This service is used to configure the MSI address and data which the platform
 microcontroller can use as a doorbell to the application processor. The
@@ -537,10 +551,7 @@ appropriate `STATUS` returned.
 The platform microcontroller will enable MSI only if support is present and
 this service configures MSI address and data successfully.
 
-NOTE: If the platform supports PLIC, the platform need to provide a MMIO
-register to inject an edge-triggered interrupt.
-
-NOTE: The platform microcontroller can use MSI for both sending the MSI
+NOTE: The platform microcontroller can use MSI for sending the MSI
 directly or injecting wired interrupt in the application processor. If the MSI
 target address is IMSIC, then the application processor will take MSI whereas
 if the MSI target address is `setipnum` of the APLIC then the application
