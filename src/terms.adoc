@@ -17,4 +17,5 @@
 | PuC   | Platform Microcontroller
 | RAS   | Reliability, Availability, and Serviceability
 | SBI   | Supervisor Binary Interface
+| SPMP  | S-mode Physical Memory Protection
 |===
