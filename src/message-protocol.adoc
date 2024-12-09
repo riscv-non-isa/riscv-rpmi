@@ -24,7 +24,7 @@ Multiple related RPMI services are grouped logically into an *RPMI service
 group* such as Clock, Voltage, Performance, etc. Depending on the RPMI service,
 a RPMI request message may carry data required to perform the control and
 management task. An RPMI request message may have an associated response which
-is send back as an *RPMI acknowledgement message* on the same RPMI transport
+is sent back as an *RPMI acknowledgement message* on the same RPMI transport
 channel. The RPMI acknowledgement message carries the status and optional
 response data from an RPMI request after it has been processed.
 
@@ -165,6 +165,34 @@ For an RPMI normal request message, the `TOKEN`, `SERVICEGROUP_ID`, and
 values as corresponding fields in the RPMI request message. The `DATALEN`
 field of the RPMI acknowledgement message must be set according to the data
 carried by this acknowledgement.
+
+NOTE: The message token will help the application processors to keep track of
+the origin of the request when it receives a response. This is useful when the
+multiple application processors are sharing the same queues. For example, two
+different application processors may send the same type of request message with
+the same SERVICEGROUP_ID and SERVICE_ID. When the response messages for both
+requests are received from the platform microcontroller, the token helps
+distinguish which response belongs to which request.
+
+NOTE: The RPMI specification recommends monotonically increasing token numbers
+and the token number can be initialized from any value without any constraints.
+
+When the doorbell interrupts are supported and enabled, the application processor
+can set the `flags[3]` bit to `1` in the request message header to inform the
+platform microcontroller to ring the doorbell after sending the response back.
+If the `flags[3]` bit is `0` in the request message
+header, it means that the application processor is going poll for the
+response message in the queue and the platform microcontroller should not
+ring the doorbell.
+
+NOTE: The flags[3] bit can be used for a particular message or for the entire
+lifecycle of RPMI message communication. For example if the application
+processor and the platform microcontroller are capable for MSIs and the application
+processor has configured MSI details via defined service in <<srvgrp_base_set_msi>>,
+then flags[3] bit can always be enabled so that the platform microcontroller will
+always send the MSI for each response. Also, the application processor can
+selectively disable it so that the platform microcontroller in that case does
+not trigger a doorbell.
 
 For an RPMI notification message, the platform microcontroller will set
 appropriate values for the `TOKEN`, `SERVICEGROUP_ID`, and `DATALEN` fields

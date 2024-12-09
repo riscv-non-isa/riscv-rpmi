@@ -29,8 +29,8 @@ All implemented RPMI service groups must satisfy the following requirements:
 level associated with the RPMI context which includes it.
 . All RPMI services of the RPMI service groups must be supported except
 the dedicated notification service (`SERVICE_ID = 0x00`) which is reserved
-for RPMI notification messages. A RPMI service group may be partially
-implement its RPMI services only if defines mechanism to discover supported
+for RPMI notification messages. A RPMI service group may implement its RPMI
+services partially only if it also defines a mechanism to discover supported
 RPMI services.
 . The RPMI service group must implement a dedicated RPMI service with
 `SERVICE_ID = 0x01` to subscribe for event notifications.
@@ -42,9 +42,11 @@ should be invoked.
 
 This specification defines standard RPMI service groups and RPMI services
 with the provision to add more service groups as required in the future.
-The platform vendors can provide implementation specific RPMI service groups.
-The <<table_service_groups>> below list all standard RPMI service groups
-defined by this specification.
+The RPMI specification also provides experimental service group IDs space
+for development of service group until a standard service group ID is
+allocated. The platform vendors can provide implementation specific RPMI
+service groups. The <<table_service_groups>> table below lists all standard
+RPMI service groups defined by this specification.
 
 [#table_service_groups]
 .RPMI Service Groups
@@ -115,9 +117,14 @@ defined by this specification.
 | REQUEST_FORWARD
 | M-mode, S-mode
 
-| 0x000D - 0x7FFF
+| 0x000D - 0x7BFF
 |
 | _Reserved for Future Use_
+|
+
+| 0x7C00 - 0x7FFF
+|
+| _Experimental Service Groups_
 |
 
 | 0x8000 - 0xFFFF

@@ -38,6 +38,11 @@ the platform microcontroller can avoid implementing the P2A channel.
 The current RPMI specification only defines a shared memory based transport but
 other transport types can be added in the future.
 
+NOTE: The shared memory for RPMI transport and fast-channels allocated
+in DRAM or in on-chip RAM will require memory attributes configuration. These
+memory attributes also called PMA (Physical Memory Attributes) are defined in
+RISC-V Privileged Specification cite:[priv_v1_12].
+
 [#transport_bidir_comm]
 .Bi-directional Communication
 image::transport-bidirectional.png[400,400, align="center"]
@@ -69,26 +74,11 @@ processors must discover it using standard hardware description mechanisms
 such as device tree or ACPI.
 
 If the P2A doorbell is a MSI then the application processors must configure
-the MSI on the platform microcontroller side using RPMI messages defined by
+the MSI on the platform microcontroller side using the RPMI service defined by
 the `BASE` service group.
 
-=== Fast-channels
-Fast-channels are special shared memory-based channels used in scenarios
-requiring lower latency and faster processing of requests from application
-processors to the platform microcontroller.
-
-The layout and request format of fast-channels are service group specific
-and only a few service groups may support fast-channels. A service group
-that supports fast-channels:
-
-* May only enable some services to be used over fast-channels
-* Must provide physical address and other attributes (such as optional
-  fast-channel doorbell) of the fast-channels via a services defined by
-  the service group
-
-NOTE: To avoid the caching side-effects, the platform can configure the
-fast-channel shared memory as non-cacheable or IO memory for both the
-application processors and the platform microcontroller.
+NOTE: If the platform supports PLIC, the platform need to provide a MMIO
+register to inject an edge-triggered interrupt.
 
 === Shared Memory Transport
 The RPMI shared memory transport defines a mechanism to exchange messages via
@@ -97,9 +87,17 @@ device memory. The RPMI shared memory transport does not specify where the
 shared memory resides in a platform, but it must be accessible from both the
 application processors and the platform microcontroller.
 
-NOTE: To avoid the caching side-effects, the platform can configure the shared
+The platform must setup the PMA for the shared memory used for RPMI transport.
+
+NOTE: Its possible that the application processor and the platform
+microcontroller are not cache-coherent and using the shared memory may lead to
+caching side effects such as data inconsistency between the platform
+microcontroller and the application processor, write propagation delays and
+others issues which may lead to race conditions. To avoid the caching
+side-effects, the platform can configure the memory attribute of the shared
 memory as non-cacheable or IO memory for both the application processor and the
-platform microcontroller.
+platform microcontroller. In addition, the implementation can perform manual
+cache maintenance using cache flush and invalidate operations.
 
 All data sent or received through the RPMI shared memory transport must follow
 little-endian byte-order.
@@ -166,26 +164,37 @@ must be a `power-of-2` and must be at least `64 bytes`. The slot size is same
 across all RPMI shared memory queues and the physical address of each slot
 must be aligned at slot size boundary.
 
-NOTE: The slot size should match with the maximum cache line size used in a
+NOTE: The slot size should match with the maximum cache block size used in a
 platform. The requirement of `power-of-2` slot size with minimum value of
-`64 bytes` is because usual CPU cache line size is `64 bytes` or some
+`64 bytes` is because usual CPU cache block size is `64 bytes` or some
 `power-of-2` value.
 
 The slots of the RPMI shared memory queue are assigned sequentially increasing
 indices starting with `0`. The slot at index `0` is referred to as the
 `head slot` and the slot at index `1` is referred to as the `tail slot`. The
 remaining `(M - 2)` slots of the RPMI shared memory queue are message slots.
-The first `4 bytes` of the head slot is used as the `head` of the circular
-queue which contains a `slot index - 2` value pointing to the message slot from
+The first `4 bytes` of the Head slot is used as the `head` of the circular
+queue which contains a `(slot index - 2)` value pointing to the message slot from
 where the next message can be dequeued. The first `4 bytes` of the tail slot is
-used as the `tail` of the circular queue which contains a `slot index - 2` value
+used as the `tail` of the circular queue which contains a `(slot index - 2)` value
 pointing to the message slot from where the next message can be enqueued. The
 pictorial view of the RPMI shared memory queue internals is shown in the
 <<transport_shared_memory_qint>> below.
 
+NOTE: In the total `M` slots only the `(M - 2)` slots are used as an queue
+having RPMI messages stored as data. The `(slot index - 2)` index value
+represents that from all slots perspective in a queue shared memory which also
+includes the `head` and `tail` slots, the `head` and `tail` stores the indices
+of the message slots which effectively starts from `slot index - 2`.
+
 NOTE: The requirement of keeping `head` and `tail` in separate slots is
-to prevent both `head` and `tail` using the same cache line so that cache
-maintenance can be done separately for both `head` and `tail`.
+to prevent both `head` and `tail` using the same cache block so that cache
+maintenance such as using cache flush and invalidate operations can be done
+separately for both `head` and `tail`.
+
+NOTE: There are no explicit indicators present to highlight the queue
+wrapping condition. The implementations can use `head` == `tail` as queue
+empty condition and `\((tail + 1) % (M - 2)) == head` as full condition.  
 
 [#transport_shared_memory_qint]
 .Shared Memory Queue Internals
@@ -211,7 +220,7 @@ into two parts where one part belongs to the A2P channel and other belongs
 to the P2A channel. The shared memory region sizes of the A2P and P2A channel
 can be different. For each channel (A2P or P2A), the corresponding REQ and ACK
 queues must be of the same size hence equal number of slots (or queue capacity).
-The size of each RPMI shared shared queue must be a multiple of the slot size.
+The size of each RPMI shared queue must be a multiple of the slot size.
 
 NOTE: A platform should provide sufficient shared memory for all RPMI shared
 memory queues so that the number of slots (queue capacity) does not become
@@ -255,3 +264,41 @@ M = (X / slot-size) : Total slot count in a queue
 (M-2) : Message slot count (2 slots less for `HEAD` and `TAIL`)
 ```
 ====
+
+=== Shared Memory based Fast-channels
+A fast-channel is a unidirectional shared memory channel with a dedicated RPMI
+service type. The data transmitted over a fast-channel is without any message
+header and its layout is defined by the service which is dedicated to that
+fast-channel. Unlike normal RPMI transport, which can be shared by multiple
+service groups and services, a fast-channel is exclusive to a service in a
+service group which allows faster exchange of the data. A fast-channel can be
+used in scenarios that require lower latency and faster processing of requests
+between the application processors and the platform microcontroller.
+
+NOTE: Because of fixed data format and type associated with a fast-channel, the
+requests made over a fast-channel can be processed quickly, but the time required
+by the platform microcontroller to complete the requests may not be less than
+the time required for completion of requests made over the normal RPMI transport
+The request completion time depends on the platform implementation.
+
+A service group that supports fast-channels for services:
+
+* May only enable some services to be used over fast-channels.
+* Must provide physical address and other attributes (such as optional
+  fast-channel doorbell) of the fast-channels via a services defined by
+  the service group.
+
+The layout and data format of a fast-channel are RPMI service specific in a
+service group and defined in the respective service group sections. 
+
+The platform must setup the PMA for the shared memory used for the fast-channels.
+
+NOTE: It is possible that the application processor and the platform
+microcontroller are not cache-coherent and using the shared memory may lead to
+caching side effects such as data inconsistency between the platform
+microcontroller and the application processor, write propagation delays and
+others issues which may lead to race conditions. To avoid the caching
+side-effects, the platform can configure the memory attribute of the shared
+memory as non-cacheable or IO memory for both the application processor and the
+platform microcontroller. In addition, the implementation can perform manual
+cache maintenance using cache flush and invalidate operations.
