@@ -275,7 +275,11 @@ enqueue the message.
 In an implementation, a queue is empty if the `head` == `tail` and a queue is full
 if `\((tail + 1) % (M - 2)) == head`.
 
-NOTE: 
+NOTE: The queues and queue states are shared between application processors, and
+due to mechanisms such as kexec and others that can spawn another OS/firmware
+from the currently running OS/firmware, notifications or response messages may
+be delivered that are not intended for the newly spawned OS/firmware, and such
+messages may be ignored.
 
 === Shared Memory based Fast-channels
 A fast-channel is a unidirectional shared memory channel with a dedicated RPMI
