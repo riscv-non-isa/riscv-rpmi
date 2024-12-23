@@ -122,17 +122,23 @@ context.
 
 	FLAGS[7:4]: Reserved and must be 0.
 
-	FLAGS[3]: DOORBELL
-	0b0: Doorbell interrupt is enabled.
-	0b1: Doorbell interrupt is disabled.
+----
+FLAGS[3]: Doorbell interrupt request.
+This flag represents if the doorbell interrupt is requested to notify
+about the response of a request message.
 
-	FLAGS[2:0]: MESSAGE_TYPE
-	0b000: NORMAL_REQUEST
-	0b001: POSTED_REQUEST
-	0b010: ACKNOWLEDGEMENT
-	0b011: NOTIFICATION
-	0b100 - 0b111: Reserved for future use.
+0b0: Doorbell interrupt is not requested.
+0b1: Doorbell interrupt is requested.
+----
+----
+FLAGS[2:0]: MESSAGE_TYPE
 
+0b000: NORMAL_REQUEST
+0b001: POSTED_REQUEST
+0b010: ACKNOWLEDGEMENT
+0b011: NOTIFICATION
+0b100 - 0b111: Reserved for future use.
+----
 ! [23:16]
 ! SERVICE_ID +
 8-bit wide identifier representing a RPMI service. This identifier
@@ -177,22 +183,25 @@ distinguish which response belongs to which request.
 NOTE: The RPMI specification recommends monotonically increasing token numbers
 and the token number can be initialized from any value without any constraints.
 
-When the doorbell interrupts are supported and enabled, the application processor
-can set the `flags[3]` bit to `1` in the request message header to inform the
-platform microcontroller to ring the doorbell after sending the response back.
-If the `flags[3]` bit is `0` in the request message
-header, it means that the application processor is going poll for the
-response message in the queue and the platform microcontroller should not
-ring the doorbell.
+If the doorbell interrupts are supported and enabled, the sender of the RPMI
+normal request message can set the `flags[3]: Doorbell interrupt request` bit to
+`1` in the message header to inform the service provider to ring the doorbell
+after sending the response message back. If the `flags[3]` bit is `0` in the RPMI
+normal request message header, it means that the sender is going to poll for the
+response message in the queue and the service provider does not need to ring the
+doorbell.
 
-NOTE: The flags[3] bit can be used for a particular message or for the entire
-lifecycle of RPMI message communication. For example if the application
-processor and the platform microcontroller are capable for MSIs and the application
-processor has configured MSI details via defined service in <<srvgrp_base_set_msi>>,
-then flags[3] bit can always be enabled so that the platform microcontroller will
-always send the MSI for each response. Also, the application processor can
-selectively disable it so that the platform microcontroller in that case does
-not trigger a doorbell.
+If the sender of an RPMI normal request message sets the `flags[3]` bit to `1`
+without supporting or enabling the doorbell interrupt, the behaviour is undefined.
+
+NOTE: The `flags[3]` bit can be used for a particular RPMI normal request message
+or for the entire lifecycle of RPMI message communication. For example, if the
+application processor and the platform microcontroller are capable for MSIs and
+the application processor has configured MSI details via defined service in
+<<srvgrp_base_set_msi>>, then `flags[3]` bit can always be enabled so that the
+platform microcontroller will always send the MSI for each response. Also, the
+application processor can selectively disable it so that the platform
+microcontroller in that case does not trigger the doorbell.
 
 For an RPMI notification message, the platform microcontroller will set
 appropriate values for the `TOKEN`, `SERVICEGROUP_ID`, and `DATALEN` fields
