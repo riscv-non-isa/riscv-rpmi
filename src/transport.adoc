@@ -169,15 +169,15 @@ platform. The requirement of `power-of-2` slot size with minimum value of
 `64 bytes` is because usual CPU cache block size is `64 bytes` or some
 `power-of-2` value.
 
-The slots of the RPMI shared memory queue are assigned sequentially increasing
-indices starting with `0`. The slot at index `0` is referred to as the
-`head slot` and the slot at index `1` is referred to as the `tail slot`. The
+The slots of the RPMI shared memory queue are assigned with sequentially increasing
+indices starting from `0`. The slot at index `0` is referred to as the
+`head` slot and the slot at index `1` is referred to as the `tail` slot. The
 remaining `(M - 2)` slots of the RPMI shared memory queue are message slots.
-The first `4 bytes` of the Head slot is used as the `head` of the circular
+The first `4 bytes` of the `head` slot is used as the head of the circular
 queue which contains a `(slot index - 2)` value pointing to the message slot from
-where the next message can be dequeued. The first `4 bytes` of the tail slot is
-used as the `tail` of the circular queue which contains a `(slot index - 2)` value
-pointing to the message slot from where the next message can be enqueued. The
+where the next message is dequeued. The first `4 bytes` of the `tail` slot is
+used as the tail of the circular queue which contains a `(slot index - 2)` value
+pointing to the message slot from where the next message is enqueued. The
 pictorial view of the RPMI shared memory queue internals is shown in the
 <<transport_shared_memory_qint>> below.
 
@@ -191,10 +191,6 @@ NOTE: The requirement of keeping `head` and `tail` in separate slots is
 to prevent both `head` and `tail` using the same cache block so that cache
 maintenance such as using cache flush and invalidate operations can be done
 separately for both `head` and `tail`.
-
-NOTE: There are no explicit indicators present to highlight the queue
-wrapping condition. The implementations can use `head` == `tail` as queue
-empty condition and `\((tail + 1) % (M - 2)) == head` as full condition.  
 
 [#transport_shared_memory_qint]
 .Shared Memory Queue Internals
@@ -243,16 +239,22 @@ four queues and memory attributes can be covered with single PMA entry.
 .Recommended Placement of Queues in Shared Memory
 image::shmem-layout.png[600,600, align="center"]
 
-==== Queue Discovery
+==== Queue Implementation in Software
+===== Queue Discovery
+The shared memory for the queues including the `head` and `tail` slots is
+initialized by the platform microcontroller and the details of the shared memory
+queues are provided to the application processors.
+
+The physical base address and size of each RPMI shared memory queue may be fixed
+for the platform microcontroller but the application processors must discover it
+through hardware description mechanisms such as device tree or ACPI.
+
 The slot size of the RPMI shared memory queues may be fixed for the platform
-microcontroller but the application processors must discover it through hardware
-description mechanisms such as device tree or ACPI. Similarly, the physical base
-address and size of each RPMI shared memory queue may be fixed for the platform
 microcontroller but the application processors must discover it through hardware
 description mechanisms such as device tree or ACPI.
 
-The total number of slots in each RPMI shared memory queue can easily be calculated
-by dividing the queue size with slot size.
+The total number of slots in each RPMI shared memory queue can be easily calculated
+by dividing the queue size by the slot size.
 
 [NOTE]
 ====
@@ -261,9 +263,19 @@ Example calculation
 
 X bytes : Queue shared memory size.
 M = (X / slot-size) : Total slot count in a queue
-(M-2) : Message slot count (2 slots less for `HEAD` and `TAIL`)
+(M-2) : Message slot count (2 slots less for `head` and `tail`)
 ```
 ====
+
+
+===== Queue Operation
+In a queue, the `head` is used to dequeue the message and the `tail` is used to 
+enqueue the message.
+
+In an implementation, a queue is empty if the `head` == `tail` and a queue is full
+if `\((tail + 1) % (M - 2)) == head`.
+
+NOTE: 
 
 === Shared Memory based Fast-channels
 A fast-channel is a unidirectional shared memory channel with a dedicated RPMI
