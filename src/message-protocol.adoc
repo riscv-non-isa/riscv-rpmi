@@ -157,7 +157,7 @@ is unique within a given RPMI service group.
 
 ! [31:16]
 ! TOKEN +
-16-bit sequence number for a RPMI message.
+16-bit number for a RPMI message.
 
 ! [15:0]
 ! DATALEN +
@@ -178,7 +178,9 @@ multiple application processors are sharing the same queues. For example, two
 different application processors may send the same type of request message with
 the same SERVICEGROUP_ID and SERVICE_ID. When the response messages for both
 requests are received from the platform microcontroller, the token helps
-distinguish which response belongs to which request.
+distinguish which response belongs to which request. For other message types
+such as RPMI posted request and RPMI notification messages, the implementations
+may use the token for debugging or logging purposes.
 
 NOTE: The RPMI specification recommends monotonically increasing token numbers
 and the token number can be initialized from any value without any constraints.
