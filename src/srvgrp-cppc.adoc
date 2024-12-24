@@ -164,22 +164,17 @@ The size of this fast-channel type is `8 bytes`.
 |===
 
 ===== CPPC Fast-channel Shared Memory Region
-In the shared memory region allocated by the platform for fast-channels, the
-Performance Request fast-channels must be grouped together for all the
-application processors. Similarly, the Performance Feedback fast-channels must
-be grouped together.
-
-The size of the shared memory region for fast-channels for all the managed
-application processors must be a `power-of-2`. The `base-address` and `size`
-(bytes) of the fast-channels shared memory region can be discovered using the
+The size of the shared memory region containing all the fast-channels for all the
+managed application processors must be a `power-of-2`. The `base-address` and `size`
+(bytes) of this shared memory region can be discovered using the
 service `CPPC_GET_FAST_CHANNEL_REGION`. The `base-address` of the shared memory
 region must be aligned to `8 bytes` which is maximum size of a fast-channel in
 both the types.
 
-The offsets of fast-channel of both types for an application processor are
+The offsets of fast-channels of both types for an application processor are
 aligned to `8 bytes`. The offset of both fast-channel types in the shared memory
 region can be discovered through service `CPPC_GET_FAST_CHANNEL_OFFSET`. The
-offsets discovered can be added into the `base-address` of the shared memory
+offsets discovered can be added to the `base-address` of the shared memory
 region to form the address of Performance Request fast-channel and Performance
 Feedback fast-channel for an application processor.
 
