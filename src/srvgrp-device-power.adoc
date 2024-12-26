@@ -95,7 +95,7 @@ encoding for the power state.
 ! Description
 
 ! 0x0000
-! ON with POWER_STATE[16] = 0
+! ON
 
 ! 0x0001
 ! _Reserved_ and must be `0`.
@@ -104,7 +104,7 @@ encoding for the power state.
 ! _Reserved_ and must be `0`.
 
 ! 0x0003
-! OFF with POWER_STATE[16] = 1
+! OFF
 
 ! 0x0004 - 0x0FFF
 ! _Reserved_ and must be `0`.
