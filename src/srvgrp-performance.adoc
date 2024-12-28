@@ -14,12 +14,12 @@ This PERFORMANCE service group is used to manage the performance of a
 group of devices or application processors that operate in the same performance
 domain. Unlike traditional performance control mechanisms, where the OS is
 responsible for directly controlling voltages and clocks, this mechanism instead
-operates on an metric less integer performance scale. Each integer value on this
-scale represents a performance operating point. What this scale represents and
-the metric is entirely platform-dependent. Values on this scale are discrete,
-and the platform has complete control over mapping these performance operating
-points to performance states, which are eventually converted into hardware
-parameters such as voltage and frequency. For example, the mapping between
+operates on an metric-less integer performance scale. Any value on this scale is
+called a `Performance Level` which also can also be referred to as the
+performance operating point. What this scale represents and the metric is
+entirely platform dependent. The values on this scale are discrete, and the
+platform has full control over mapping these performance points to hardware
+parameters, such as voltage and frequency. For example, the mapping between
 levels and frequencies can be as straightforward as using a multiplication
 factor of `1000`.
 
@@ -85,13 +85,13 @@ The following table lists the services in the PERFORMANCE service group:
 
 |===
 
-[#section-perf-level]
-==== Performance Level
+[#section-perf-level-attribute]
+==== Performance Level Attribute
 
-The following table shows the structure of a single performance level.
+The following table shows the structure of a single performance level attribute.
 
-[#table_performance_level]
-.Performance Level Structure
+[#table_performance_level_attribute]
+.Performance Level Attributes Structure
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
 | Word
@@ -510,6 +510,7 @@ loop:
 	entry_num = 0;
 
 	for (i = 0; i < list.returned; i++, num++) {
+		opp[num].level = list.entry[entry_num++];
 		opp[num].freq = list.entry[entry_num++];
 		opp[num].power = list.entry[entry_num++];
 		opp[num].rate_limit = list.entry[entry_num++];
@@ -554,7 +555,7 @@ levels.
 | 1
 | PERF_LEVEL_INDEX
 | uint32
-| Start array index to read. The first index starts at zero.
+| Index of performance data array. The first index starts at zero.
 |===
 
 [#table_perf_getdomainlevels_response_data]
@@ -602,9 +603,28 @@ levels.
 
 | 4
 | LEVEL[N]
-| uint32[3]
-| List of performance levels. Refer to <<section-perf-level>> for the
-structure of performance level.
+| uint32[4]
+| Performance levels and attributes
+
+[cols="1,2,7", options="header"]
+!===
+! Word
+! Name
+! Description
+
+! 0
+! LEVEL
+! Performance level.
+
+! 1-3
+! ATTRIBUTE
+! Performance attribute.
+
+Refer to <<section-perf-level-attribute>> for the structure of performance
+level attribute.
+
+!===
+
 |===
 
 
