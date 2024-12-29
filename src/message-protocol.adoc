@@ -186,24 +186,25 @@ NOTE: The RPMI specification recommends monotonically increasing token numbers
 and the token number can be initialized from any value without any constraints.
 
 If the doorbell interrupts are supported and enabled, the sender of the RPMI
-normal request message can set the `flags[3]: Doorbell interrupt request` bit to
+normal request message can set the `FLAGS[3]: Doorbell interrupt request` bit to
 `1` in the message header to inform the service provider to ring the doorbell
-after sending the response message back. If the `flags[3]` bit is `0` in the RPMI
+after sending the response message back. If the `FLAGS[3]` bit is `0` in the RPMI
 normal request message header, it means that the sender is going to poll for the
 response message in the queue and the service provider does not need to ring the
 doorbell.
 
-If the sender of an RPMI normal request message sets the `flags[3]` bit to `1`
-without supporting or enabling the doorbell interrupt, the behaviour is undefined.
+If the sender of an RPMI normal request message sets the `FLAGS[3]` bit to `1`
+without supporting or enabling the doorbell interrupt, the behavior is undefined.
 
-NOTE: The `flags[3]` bit can be used for a particular RPMI normal request message
-or for the entire lifecycle of RPMI message communication. For example, if the
-application processor and the platform microcontroller are capable for MSIs and
-the application processor has configured MSI details via defined service in
-<<srvgrp_base_set_msi>>, then `flags[3]` bit can always be enabled so that the
-platform microcontroller will always send the MSI for each response. Also, the
-application processor can selectively disable it so that the platform
-microcontroller in that case does not trigger the doorbell.
+NOTE: The `FLAGS[3]` bit can be used for a particular RPMI normal request message
+or for the entire life-cycle of RPMI message communication. For example, if the
+application processor and the platform microcontroller supports MSI and
+the application processor has configured MSI target details via a defined service
+<<srvgrp_base_set_msi_target>>, then `FLAGS[3]` bit can always be set to `1` so
+that the platform microcontroller will always send the MSI for every response. The
+application processor can also selectively disable it for a request message so
+that the platform microcontroller does not trigger the doorbell for the response
+message.
 
 For an RPMI notification message, the platform microcontroller will set
 appropriate values for the `TOKEN`, `SERVICEGROUP_ID`, and `DATALEN` fields
