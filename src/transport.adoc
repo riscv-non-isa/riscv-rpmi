@@ -59,9 +59,9 @@ messages.
 The A2P doorbell is a signal for new messages from the application processors
 (APs) to the platform microcontroller (PuC).
 
-The platform should support A2P doorbell interrupt triggering from application
+The platform must support A2P doorbell interrupt triggering from application
 processors through either a write operation or a read-modify-write sequence on a
-memory-mapped register, which can be easily discovered by the application
+32-bit memory-mapped register, which can be discovered by the application
 processors using hardware description mechanisms such as device tree or ACPI.
 
 ==== P2A Doorbell
