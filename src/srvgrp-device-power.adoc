@@ -327,7 +327,7 @@ This service is used to change the power state of a device power domain.
 | This field indicates the power state to which the power domain should
 transition. The specific power states and their meanings may vary depending on
 the implementation, but generally, they include values such as "ON", "OFF"
-and vendor specific power state. See <<section-power-state>>
+and vendor specific power state. Refer <<section-power-state>>
 for more details.
 |===
 
@@ -416,6 +416,6 @@ This service is used to get the current power state of a device power domain.
 | uint32
 | This field indicates the current power state of the specified domain. The
 power state can be one of several predefined values, such as ON, OFF, or vendor
-specific implementation. See <<section-power-state>>
+specific implementation. Refer <<section-power-state>>
 for more details.
 |===

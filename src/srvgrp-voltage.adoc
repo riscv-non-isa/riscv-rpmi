@@ -338,8 +338,7 @@ formats. Additional voltage formats can be accommodated in the future if require
 ! _Reserved_ and must be `0`.
 
 ! [3:1]
-! VOLTAGE_FORMAT
-
+! Voltage format +
 Refer to <<voltage-level-format-section>> for more details.
 ----
 0b000: Fixed voltage
@@ -350,7 +349,7 @@ Refer to <<voltage-level-format-section>> for more details.
 ----
 
 ! [0]
-! ALWAYS_ON
+! Voltage domain control support
 
 ----
 0b0: Voltage domain can be enabled/disabled.
@@ -360,8 +359,7 @@ Refer to <<voltage-level-format-section>> for more details.
 | 2
 | NUM_LEVELS
 | uint32
-| Number of voltage levels (number of arrays)
-supported by the domain. Get the voltage levels with `VOLT_GET_SUPPORTED_LEVELS`.
+| Number of voltage levels (number of arrays) supported by the domain.
 
 [cols="2,5a", options="header"]
 !===
@@ -466,8 +464,7 @@ calls may be necessary to retrieve all the voltage levels.
 | 4
 | VOLTAGE_LEVEL[N]
 | uint32[]
-| Voltage levels.
-
+| Voltage levels. +
 Refer to <<voltage-level-format-section>> for more details.
 
 |===

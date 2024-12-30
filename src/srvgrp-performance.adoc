@@ -395,7 +395,7 @@ level.
 ! [31:11]	! _Reserved_ and must be `0`.
 
 ! [10]
-! PERF_LIMIT_SETTING
+! Performance limit change support
 
 This attribute indicates whether the platform allows software to set the
 performance limit for a specific performance domain.
@@ -404,7 +404,7 @@ performance limit for a specific performance domain.
 	0b1: Performance limit change is allowed.
 
 ! [9]
-! PERF_LEVEL_SETTING
+! Performance level change support
 
 This attribute indicates whether the platform allows software to set the
 performance level for a specific performance domain.
@@ -413,7 +413,7 @@ performance level for a specific performance domain.
 	0b1: Performance level change is allowed.
 
 ! [8]
-! FAST_CHANNEL_SUPPORT
+! Fast-channel support
 
 This attribute indicates whether the platform supports fast-channel
 for a specific performance domain.
@@ -422,13 +422,13 @@ for a specific performance domain.
 	0b1: Fast-channel is supported.
 
 ! [7:0]
-! NUM_PERF_LEVELS
+! Number of performance levels
 
 The total number of supported performance levels.
 
 !===
 | 2
-| RATE_LIMIT_US
+| TRANSITION_LATENCY
 | uint32
 | Minimum amount of time that needs to pass between two consecutive requests,
 in microseconds (us).
@@ -553,8 +553,8 @@ levels.
 | 4
 | LEVEL[N]
 | uint32[3]
-| List of performance levels. Refer to <<section-perf-level>> for the
-structure of performance level.
+| List of performance levels. +
+Refer to <<section-perf-level>> for the structure of performance level.
 |===
 
 

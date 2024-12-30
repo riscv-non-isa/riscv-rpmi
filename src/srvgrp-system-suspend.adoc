@@ -149,7 +149,8 @@ a resume address.
 | 0
 | SUSPEND_TYPE
 | uint32
-| Suspend type. See <<section-suspend-types>> for more details.
+| Suspend type. +
+Refer <<section-suspend-types>> for more details.
 |===
 
 [#table_syssuspend_getsyssuspendattrs_response_data]
@@ -179,7 +180,7 @@ a resume address.
 | 1
 | FLAGS
 | uint32
-| Attributes of the `SUSPEND_TYPE`
+| Suspend type attributes
 
 [cols="2,5a", options="header"]
 !===
@@ -189,15 +190,15 @@ a resume address.
 ! [31:2]
 ! _Reserved_ and must be `0`.
 
-! [1]		
+! [1]
 ! Resume Address Support +
 If a `SUSPEND_TYPE` supports custom resume address
 which platform must configure for the resuming application processor.
 
 	0b1: Supported.
 	0b0: Not supported.
-! [0]		
-! `SUSPEND_TYPE` Support
+! [0]
+! Suspend type Support
 
 	0b1: Supported
 	0b0: Not supported
@@ -211,7 +212,7 @@ system in a suspend state. This service returns successfully when the platform
 microcontroller accepts the system suspend request. The application processor
 which called this service must then enter into a quiesced state such as WFI. The
 platform microcontroller will transition the system to the requested
-`SUSPEND_STATE` upon the successful transition of the application processor into
+`SUSPEND_TYPE` upon the successful transition of the application processor into
 the supported quiesced state. The mechanism for detecting the quiesced state of
 the application processor is platform specific.
 
@@ -242,7 +243,8 @@ such as the `WFI` instruction.
 | 1
 | SUSPEND_TYPE
 | uint32
-| Suspend type. See <<section-suspend-types>> for more details.
+| Suspend type. +
+Refer <<section-suspend-types>> for more details.
 
 | 2
 | RESUME_ADDR_LOW

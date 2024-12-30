@@ -519,7 +519,7 @@ service group.
 	0b0: S-mode
 
 ! [1]
-! EVENT_NOTIFICATION +
+! Event notification support in platform +
 
 	0b1: Supported
 	0b0: Not supported

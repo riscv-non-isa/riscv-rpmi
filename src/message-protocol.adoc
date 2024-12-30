@@ -112,13 +112,15 @@ context.
 | Description
 
 | 0
-| [cols="1,8a", options="header"]
+| [cols="1,3,8a", options="header"]
 !===
 ! Bits
+! Name
 ! Description
 
 ! [31:24]
 ! FLAGS
+! Message flags
 
 	FLAGS[7:4]: Reserved and must be 0.
 
@@ -131,7 +133,7 @@ about the response of a request message.
 0b1: Doorbell interrupt is requested.
 ----
 ----
-FLAGS[2:0]: MESSAGE_TYPE
+FLAGS[2:0]: Message Type
 
 0b000: NORMAL_REQUEST
 0b001: POSTED_REQUEST
@@ -140,27 +142,32 @@ FLAGS[2:0]: MESSAGE_TYPE
 0b100 - 0b111: Reserved for future use.
 ----
 ! [23:16]
-! SERVICE_ID +
+! SERVICE_ID
+! Service ID +
 8-bit wide identifier representing a RPMI service. This identifier
 is unique within a given RPMI service group.
 
 ! [15:0]
-! SERVICEGROUP_ID +
+! SERVICEGROUP_ID
+! Service group ID +
 16-bit wide unique identifier representing a RPMI service group.
 !===
 
 | 1
-| [cols="1,8a", options="header"]
+| [cols="1,3,8a", options="header"]
 !===
 ! Bits
+! Name
 ! Description
 
 ! [31:16]
-! TOKEN +
+! TOKEN
+! Message token +
 16-bit number for a RPMI message.
 
 ! [15:0]
-! DATALEN +
+! DATALEN
+! Message data length +
 Stores the size of the message data in bytes. The value stored in this
 field must be a multiple of `4-byte` or `0` if no message data is present.
 !===
@@ -286,18 +293,23 @@ events within the RPMI notification message is implementation defined.
 | 0
 | EVENT_HDR
 | 32-bit field represents a single event.
-[cols="1,7a", options="header"]
+[cols="2,3,7a", options="header"]
 !===
 ! Bits
+! Name
 ! Description
 
-! [31:24] ! _Reserved_ and must be `0`.
-! [23:16] ! EVENT_ID +
-Unique identifier for an event in a service group.
+! [31:24]
+! _RESERVED_
+! _Reserved_ and must be `0`.
+
+! [23:16]
+! EVENT_ID
+! Unique identifier for an event in a service group.
 
 ! [15:0]
-! EVENT_DATALEN +
-16-bit field to store event data size in bytes.
+! EVENT_DATALEN
+! 16-bit field to store event data size in bytes.
 !===
 
 | 1

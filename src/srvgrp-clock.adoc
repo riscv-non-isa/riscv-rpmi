@@ -331,9 +331,11 @@ supported by the clock.
 ! Bits
 ! Description
 
-! [31:2]	! _Reserved_ and must be `0`.
+! [31:2]
+! _Reserved_ and must be `0`.
 
-! [1:0]	! CLOCK_FORMAT
+! [1:0]
+! Clock format
 
 Refer to <<clock-rate-format-section>> for more details.
 ----
@@ -373,7 +375,7 @@ clock rates which can be accommodated in one message and set the `REMAINING` fie
 accordingly. The application processor, when `REMAINING` field is not `0` must
 call this service again with appropriate `CLOCK_RATE_INDEX` set to get the
 remaining clock rates. It's possible that multiple service calls may be required
-to get all the clock rates. In case the `CLOCK_FORMAT` is a linear range the
+to get all the clock rates. In case the clock format is a linear range the
 `RETURNED` field will be set to `3`.
 
 [#table_clock_getsupprates_request_data]
