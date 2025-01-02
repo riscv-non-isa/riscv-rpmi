@@ -74,11 +74,11 @@ described in <<management-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -97,7 +97,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -113,14 +113,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -153,7 +153,7 @@ version, MM shared memory location, etc.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="4,5", options="header"]
 !===
 ! Error Code
@@ -162,7 +162,7 @@ version, MM shared memory location, etc.
 ! RPMI_SUCCESS
 ! Service completed successfully.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | MM_VERSION
@@ -175,10 +175,10 @@ version, MM shared memory location, etc.
 ! Description
 
 ! [31:16]
-! Major version
+! Major version.
 
 ! [15:0]
-! Minor version
+! Minor version.
 !===
 
 | 2
@@ -252,7 +252,7 @@ the MM shared memory.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,4", options="header"]
 !===
@@ -268,7 +268,7 @@ the MM shared memory.
 ! RPMI_ERR_DENIED
 ! Denied due to no permission.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | MM_COMM_RETURN_DATA_SIZE

@@ -112,49 +112,62 @@ context.
 | Description
 
 | 0
-| [cols="1,8a", options="header"]
+| [cols="1,3,8a", options="header"]
 !===
 ! Bits
+! Name
 ! Description
 
 ! [31:24]
 ! FLAGS
+! Message flags.
 
 	FLAGS[7:4]: Reserved and must be 0.
 
-	FLAGS[3]: DOORBELL
-	0b0: Doorbell interrupt is enabled.
-	0b1: Doorbell interrupt is disabled.
+----
+FLAGS[3]: Doorbell interrupt request.
+This flag represents if the doorbell interrupt is requested to notify
+about the response of a request message.
 
-	FLAGS[2:0]: MESSAGE_TYPE
-	0b000: NORMAL_REQUEST
-	0b001: POSTED_REQUEST
-	0b010: ACKNOWLEDGEMENT
-	0b011: NOTIFICATION
-	0b100 - 0b111: Reserved for future use.
+0b0: Doorbell interrupt is not requested.
+0b1: Doorbell interrupt is requested.
+----
+----
+FLAGS[2:0]: Message Type.
 
+0b000: NORMAL_REQUEST.
+0b001: POSTED_REQUEST.
+0b010: ACKNOWLEDGEMENT.
+0b011: NOTIFICATION.
+0b100 - 0b111: Reserved for future use.
+----
 ! [23:16]
-! SERVICE_ID +
+! SERVICE_ID
+! Service ID. +
 8-bit wide identifier representing a RPMI service. This identifier
 is unique within a given RPMI service group.
 
 ! [15:0]
-! SERVICEGROUP_ID +
+! SERVICEGROUP_ID
+! Service group ID. +
 16-bit wide unique identifier representing a RPMI service group.
 !===
 
 | 1
-| [cols="1,8a", options="header"]
+| [cols="1,3,8a", options="header"]
 !===
 ! Bits
+! Name
 ! Description
 
 ! [31:16]
-! TOKEN +
-16-bit sequence number for a RPMI message.
+! TOKEN
+! Message token. +
+16-bit number for a RPMI message.
 
 ! [15:0]
-! DATALEN +
+! DATALEN
+! Message data length. +
 Stores the size of the message data in bytes. The value stored in this
 field must be a multiple of `4-byte` or `0` if no message data is present.
 !===
@@ -172,27 +185,33 @@ multiple application processors are sharing the same queues. For example, two
 different application processors may send the same type of request message with
 the same SERVICEGROUP_ID and SERVICE_ID. When the response messages for both
 requests are received from the platform microcontroller, the token helps
-distinguish which response belongs to which request.
+distinguish which response belongs to which request. For other message types
+such as RPMI posted request and RPMI notification messages, the implementations
+may use the token for debugging or logging purposes.
 
 NOTE: The RPMI specification recommends monotonically increasing token numbers
 and the token number can be initialized from any value without any constraints.
 
-When the doorbell interrupts are supported and enabled, the application processor
-can set the `flags[3]` bit to `1` in the request message header to inform the
-platform microcontroller to ring the doorbell after sending the response back.
-If the `flags[3]` bit is `0` in the request message
-header, it means that the application processor is going poll for the
-response message in the queue and the platform microcontroller should not
-ring the doorbell.
+If the doorbell interrupts are supported and enabled, the sender of the RPMI
+normal request message can set the `FLAGS[3]: Doorbell interrupt request` bit to
+`1` in the message header to inform the service provider to ring the doorbell
+after sending the response message back. If the `FLAGS[3]` bit is `0` in the RPMI
+normal request message header, it means that the sender is going to poll for the
+response message in the queue and the service provider does not need to ring the
+doorbell.
 
-NOTE: The flags[3] bit can be used for a particular message or for the entire
-lifecycle of RPMI message communication. For example if the application
-processor and the platform microcontroller are capable for MSIs and the application
-processor has configured MSI details via defined service in <<srvgrp_base_set_msi>>,
-then flags[3] bit can always be enabled so that the platform microcontroller will
-always send the MSI for each response. Also, the application processor can
-selectively disable it so that the platform microcontroller in that case does
-not trigger a doorbell.
+If the sender of an RPMI normal request message sets the `FLAGS[3]` bit to `1`
+without supporting or enabling the doorbell interrupt, the behavior is undefined.
+
+NOTE: The `FLAGS[3]` bit can be used for a particular RPMI normal request message
+or for the entire life-cycle of RPMI message communication. For example, if the
+application processor and the platform microcontroller supports MSI and
+the application processor has configured MSI target details via a defined service
+<<srvgrp_base_set_msi_target>>, then `FLAGS[3]` bit can always be set to `1` so
+that the platform microcontroller will always send the MSI for every response. The
+application processor can also selectively disable it for a request message so
+that the platform microcontroller does not trigger the doorbell for the response
+message.
 
 For an RPMI notification message, the platform microcontroller will set
 appropriate values for the `TOKEN`, `SERVICEGROUP_ID`, and `DATALEN` fields
@@ -206,9 +225,9 @@ RPMI transport implementation.
 The message data carries different information based on the RPMI message type:
 
 * An RPMI request message carries data required to perform the control and
-management task
-* An RPMI acknowledgement message carries the status and optional response data
-* An RPMI notification message carries an array of RPMI events
+management task.
+* An RPMI acknowledgement message carries the status and optional response data.
+* An RPMI notification message carries an array of RPMI events.
 
 The message data format for RPMI request message and RPMI acknowledgement
 message is defined separately for each RPMI service. The message data format
@@ -274,23 +293,28 @@ events within the RPMI notification message is implementation defined.
 | 0
 | EVENT_HDR
 | 32-bit field represents a single event.
-[cols="1,7a", options="header"]
+[cols="2,3,7a", options="header"]
 !===
 ! Bits
+! Name
 ! Description
 
-! [31:24] ! _Reserved_ and must be `0`.
-! [23:16] ! EVENT_ID +
-Unique identifier for an event in a service group.
+! [31:24]
+! _Reserved_
+! _Reserved_ and must be `0`.
+
+! [23:16]
+! EVENT_ID
+! Unique identifier for an event in a service group.
 
 ! [15:0]
-! EVENT_DATALEN +
-16-bit field to store event data size in bytes.
+! EVENT_DATALEN
+! 16-bit field to store event data size in bytes.
 !===
 
 | 1
 | EVENT_DATA
-| Event data whose size is specified by `EVENT_DATALEN`
+| Event data whose size is specified by `EVENT_DATALEN`.
 |===
 
 [#messaging_event_format]
@@ -374,7 +398,7 @@ specification or the extension version mismatch.
 
 |
 | -15 to -127
-| _Reserved_
+| _Reserved_.
 
 |
 | < -127

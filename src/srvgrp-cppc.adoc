@@ -78,7 +78,7 @@ The following table lists the services in the CPPC service group:
 ==== CPPC Fast-channel
 The CPPC service group defines the fast-channels to be used by the application
 processor to request performance changes and to obtain performance change feedback
-for an application processor from the platform microcontroller. 
+for an application processor from the platform microcontroller.
 
 A fast-channel shared memory layout is specific to the CPPC service
 group. The data written in a fast-channel do not follow the conventional RPMI
@@ -88,8 +88,8 @@ and faster read of the performance feedback values supported over the
 fast-channel.
 
 The CPPC service group defines two types of fast-channel for each application
-processor. If fast-channels are supported then each application processor must 
-be assigned both types fast-channel. 
+processor. If fast-channels are supported then each application processor must
+be assigned both types fast-channel.
 
 ===== Performance Request Fast-channel
 In this fast-channel the application processor will either write
@@ -120,7 +120,7 @@ The size of this fast-channel type is `8 bytes`.
 ! Value (32-bit)
 
 ! 0x0
-! Desired performance level
+! Desired performance level.
 ! 0x4
 ! _Reserved_ and must be `0`.
 !===
@@ -133,14 +133,14 @@ The size of this fast-channel type is `8 bytes`.
 ! Value (32-bit)
 
 ! 0x0
-! Minimum performance level
+! Minimum performance level.
 ! 0x4
-! Maximum performance level
+! Maximum performance level.
 !===
 |===
 
 ===== Performance Feedback Fast-channel
-In this fast-channel the application processor will read the 
+In this fast-channel the application processor will read the
 supported value for estimating the delivered performance as performance feedback
 for an application processor. The application processor current frequency (Hz)
 is used for performance feedback in this fast-channel. The platform
@@ -157,29 +157,24 @@ The size of this fast-channel type is `8 bytes`.
 | Value (32-bit)
 
 | 0x0
-| Current frequency low 32-bit (Hz)
+| Current frequency low 32-bit (Hz).
 
 | 0x4
-| Current frequency high 32-bit (Hz)
+| Current frequency high 32-bit (Hz).
 |===
 
 ===== CPPC Fast-channel Shared Memory Region
-In the shared memory region allocated by the platform for fast-channels, the
-Performance Request fast-channels must be grouped together for all the
-application processors. Similarly, the Performance Feedback fast-channels must
-be grouped together.
-
-The size of the shared memory region for fast-channels for all the managed
-application processors must be a `power-of-2`. The `base-address` and `size`
-(bytes) of the fast-channels shared memory region can be discovered using the
+The size of the shared memory region containing all the fast-channels for all the
+managed application processors must be a `power-of-2`. The `base-address` and `size`
+(bytes) of this shared memory region can be discovered using the
 service `CPPC_GET_FAST_CHANNEL_REGION`. The `base-address` of the shared memory
 region must be aligned to `8 bytes` which is maximum size of a fast-channel in
 both the types.
 
-The offsets of fast-channel of both types for an application processor are
+The offsets of fast-channels of both types for an application processor are
 aligned to `8 bytes`. The offset of both fast-channel types in the shared memory
 region can be discovered through service `CPPC_GET_FAST_CHANNEL_OFFSET`. The
-offsets discovered can be added into the `base-address` of the shared memory
+offsets discovered can be added to the `base-address` of the shared memory
 region to form the address of Performance Request fast-channel and Performance
 Feedback fast-channel for an application processor.
 
@@ -187,8 +182,16 @@ Feedback fast-channel for an application processor.
 A doorbell can also be supported for this fast-channel type which is shared
 between all the application processors. If a doorbell is available then it must
 be supported through a read-modify-write sequence to a memory-mapped register.
-The doorbell details and attributes can be discovered by the application
+The doorbell details and attributes such as doorbell register address, doorbell
+set mask and doorbell preserve mask can be discovered by the application
 processor through the `CPPC_GET_FAST_CHANNEL_REGION` service.
+
+The doorbell register address is the physical address of the register which needs
+to be written to trigger the doorbell interrupt. The doorbell set mask is the mask
+of bits which must be set when writing in the doorbell register. The doorbell preserve
+mask is the mask of bits which must be preserved when writing in the doorbell register.
+The width of the doorbell set mask and doorbell preserve mask must be equal to the
+doorbell register width.
 
 [#cppc-notifications]
 ==== Notifications
@@ -219,11 +222,11 @@ described in <<cppc-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -242,7 +245,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -258,14 +261,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -292,12 +295,12 @@ supported or invalid then the `REG_LENGTH` will be `0`.
 | 0
 | REG_ID
 | uint32
-| CPPC register ID
+| CPPC register ID.
 
 | 1
 | HART_ID
 | uint32
-| Hart ID
+| Hart ID.
 |===
 
 [#table_cppc_probereg_response_data]
@@ -312,7 +315,7 @@ supported or invalid then the `REG_LENGTH` will be `0`.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="5,5a", options="header"]
 !===
 ! Error Code
@@ -327,12 +330,12 @@ supported or invalid then the `REG_LENGTH` will be `0`.
 ! RPMI_ERR_NOT_SUPPORTED
 ! `REG_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | REG_LENGTH
 | uint32
-| Register length (bits)
+| Register length (bits).
 |===
 
 ==== Service: CPPC_READ_REG (SERVICE_ID: 0x03)
@@ -355,12 +358,12 @@ fast-channel of a application processor.
 | 0
 | REG_ID
 | uint32
-| CPPC register ID
+| CPPC register ID.
 
 | 1
 | HART_ID
 | uint32
-| Hart ID
+| Hart ID.
 |===
 
 [#table_cppc_readreg_response_data]
@@ -375,7 +378,7 @@ fast-channel of a application processor.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="6,5", options="header"]
 !===
 ! Error Code
@@ -390,7 +393,7 @@ fast-channel of a application processor.
 ! RPMI_ERR_NOT_SUPPORTED
 ! `REG_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | DATA_LOW
@@ -427,12 +430,12 @@ writes to these registers may be ignored.
 | 0
 | REG_ID
 | uint32
-| CPPC register ID
+| CPPC register ID.
 
 | 1
 | HART_ID
 | uint32
-| Hart ID
+| Hart ID.
 
 | 2
 | DATA_LOW
@@ -457,7 +460,7 @@ writes to these registers may be ignored.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="6,5", options="header"]
 !===
 ! Error Code
@@ -475,13 +478,17 @@ writes to these registers may be ignored.
 ! RPMI_ERR_DENIED
 ! `REG_ID` is read only.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 ==== Service: CPPC_GET_FAST_CHANNEL_REGION (SERVICE_ID: 0x05)
 This service is used to get the details of the shared memory region containing
 all the fast-channels, attributes of the fast-channel and the details of the
-doorbell.
+doorbell if supported.
+
+The doorbell details are unspecified and considered invalid if the Performance
+Request fast-channel doorbell (`FLAGS[0] = 0`) is not supported and must not be
+used.
 
 [#table_cppc_getfastchanregion_request_data]
 .Request Data
@@ -502,7 +509,7 @@ doorbell.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="2,1", options="header"]
 !===
 ! Error Code
@@ -514,7 +521,7 @@ doorbell.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Fast-channels not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 | 1
 | FLAGS
 | uint32
@@ -527,7 +534,7 @@ doorbell.
 ! _Reserved_ and must be `0`.
 
 ! [4:3]
-! CPPC mode
+! CPPC mode.
 
 	0b00: Normal mode.
 	Desired performance level for performance change.
@@ -536,20 +543,20 @@ doorbell.
 	Performance limit change. Platform can choose the level in the requested
 	limit.
 
-	0b10 - 0b11: Reserved
+	0b10 - 0b11: Reserved.
 
 ! [2:1]
 ! Performance Request fast-channel doorbell register width.
 
-	0b00: 8-bit
-	0b01: 16-bit
-	0b10: 32-bit
-	0b11: 64-bit
+	0b00: 8-bit.
+	0b01: 16-bit.
+	0b10: 32-bit.
+	0b11: 64-bit.
 ! [0]
 ! Performance Request fast-channel doorbell support.
 
-	0b1: Supported
-	0b0: Not supported
+	0b1: Supported.
+	0b0: Not supported.
 !===
 
 | 2
@@ -575,32 +582,44 @@ doorbell.
 | 6
 | DB_ADDR_LOW
 | uint32
-| Lower 32-bit of doorbell address.
+| Lower 32-bit of doorbell register address for Performance Request fast-channel.
 
 | 7
 | DB_ADDR_HIGH
 | uint32
-| Upper 32-bit of doorbell address.
+| Upper 32-bit of doorbell register address for Performance Request fast-channel.
 
 | 8
 | DB_SETMASK_LOW
 | uint32
-| Lower 32-bit of doorbell set mask.
+| Lower 32-bit of doorbell set mask for Performance Request fast-channel. +
+This represents the mask of bits which must be set in the doorbell register. +
+If the doorbell register width is less than 32-bit, the lower bits in this field
+equal to the doorbell register width must be used as set mask.
 
 | 9
 | DB_SETMASK_HIGH
 | uint32
-| Upper 32-bit of doorbell set mask.
+| Upper 32-bit of doorbell set mask for Performance Request fast-channel. +
+This represents the mask of bits which must be set in the doorbell register. +
+The value of this field is unspecified and invalid if the doorbell register width
+is equal to or less than 32-bit.
 
 | 10
 | DB_PRESERVEMASK_LOW
 | uint32
-| Lower 32-bit doorbell preserve mask.
+| Lower 32-bit doorbell preserve mask for Performance Request fast-channel. +
+This represents the mask of bits which must be preserved in the doorbell register. +
+If the doorbell register width is less than 32-bit, the lower bits in this field
+equal to the doorbell register width must be used as preserve mask.
 
 | 11
 | DB_PRESERVEMASK_HIGH
 | uint32
-| Upper 32-bit doorbell preserve mask.
+| Upper 32-bit doorbell preserve mask for Performance Request fast-channel. +
+This represents the mask of bits which must be preserved in the doorbell register. +
+The value of this field is unspecified and invalid if the doorbell register width
+is equal to or less than 32-bit.
 |===
 
 ==== Service: CPPC_GET_FAST_CHANNEL_OFFSET (SERVICE_ID: 0x06)
@@ -620,7 +639,7 @@ memory region containing all the fast-channels.
 | 0
 | HART_ID
 | uint32
-| Hart ID
+| Hart ID.
 |===
 
 [#table_cppc_getfastchanoffset_response_data]
@@ -635,7 +654,7 @@ memory region containing all the fast-channels.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="2,1a", options="header"]
 !===
 ! Error Code
@@ -650,7 +669,7 @@ memory region containing all the fast-channels.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Fast-channels not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | PERF_REQUEST_OFFSET_LOW
@@ -711,7 +730,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="6,5", options="header"]
 !===
 ! Error Code
@@ -723,7 +742,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 ! RPMI_ERR_INVALID_PARAM
 ! `START_INDEX` is invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | REMAINING
@@ -738,5 +757,5 @@ may need to call this service again with the appropriate `START_INDEX` until the
 | 3
 | HART_ID[N]
 | uint32
-| Hart IDs
+| Hart IDs.
 |===

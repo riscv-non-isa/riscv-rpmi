@@ -173,11 +173,11 @@ described in <<clock-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -196,7 +196,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -217,9 +217,9 @@ for future use.
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -252,7 +252,7 @@ called `CLOCK_ID`.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="2,5", options="header"]
 !===
@@ -263,7 +263,7 @@ called `CLOCK_ID`.
 ! Service completed successfully.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | NUM_CLOCKS
@@ -291,7 +291,7 @@ supported by the clock.
 | 0
 | CLOCK_ID
 | uint32
-| Clock ID
+| Clock ID.
 |===
 
 [#table_clock_getattrs_response_data]
@@ -306,7 +306,7 @@ supported by the clock.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="7,5", options="header"]
 !===
@@ -320,7 +320,7 @@ supported by the clock.
 ! `CLOCK_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
@@ -331,15 +331,17 @@ supported by the clock.
 ! Bits
 ! Description
 
-! [31:2]	! _Reserved_ and must be `0`.
+! [31:2]
+! _Reserved_ and must be `0`.
 
-! [1:0]	! CLOCK_FORMAT
+! [1:0]
+! Clock format.
 
 Refer to <<clock-rate-format-section>> for more details.
 ----
-0b00: Discrete format
-0b01: Linear format
-0b10 - 0b11: Reserved
+0b00: Discrete format.
+0b01: Linear format.
+0b10 - 0b11: Reserved.
 ----
 
 !===
@@ -352,7 +354,7 @@ Refer to <<clock-rate-format-section>> for more details.
 | 3
 | TRANSITION_LATENCY
 | uint32
-| Transition latency, in microseconds (us)
+| Transition latency, in microseconds (us).
 
 | 4:7
 | CLOCK_NAME
@@ -373,7 +375,7 @@ clock rates which can be accommodated in one message and set the `REMAINING` fie
 accordingly. The application processor, when `REMAINING` field is not `0` must
 call this service again with appropriate `CLOCK_RATE_INDEX` set to get the
 remaining clock rates. It's possible that multiple service calls may be required
-to get all the clock rates. In case the `CLOCK_FORMAT` is a linear range the
+to get all the clock rates. In case the clock format is a linear range the
 `RETURNED` field will be set to `3`.
 
 [#table_clock_getsupprates_request_data]
@@ -388,12 +390,12 @@ to get all the clock rates. In case the `CLOCK_FORMAT` is a linear range the
 | 0
 | CLOCK_ID
 | uint32
-| Clock ID
+| Clock ID.
 
 | 1
 | CLOCK_RATE_INDEX
 | uint32
-| Clock rate index
+| Clock rate index.
 |===
 
 [#table_clock_getsupprates_response_data]
@@ -408,7 +410,7 @@ to get all the clock rates. In case the `CLOCK_FORMAT` is a linear range the
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
@@ -422,7 +424,7 @@ to get all the clock rates. In case the `CLOCK_FORMAT` is a linear range the
 ! `CLOCK_ID` or `CLOCK_RATE_INDEX` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
@@ -462,23 +464,26 @@ This service is used to configure a clock domain.
 | 0
 | CLOCK_ID
 | uint32
-| Clock ID
+| Clock ID.
 
 | 1
 | CONFIG
 | uint32
-| Clock config
+| Clock config.
 
 [cols="2,5a", options="header"]
 !===
 ! Bits
 ! Description
 
-! [31:1]	! _Reserved_ and must be `0`.
-! [0]		! Disable/enable clock.
+! [31:1]
+! _Reserved_ and must be `0`.
 
-	0b0: Disable clock
-	0b1: Enable clock
+! [0]
+! Clock control.
+
+	0b0: Disable clock.
+	0b1: Enable clock.
 !===
 |===
 
@@ -494,7 +499,7 @@ This service is used to configure a clock domain.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -508,7 +513,7 @@ This service is used to configure a clock domain.
 ! `CLOCK_ID` or `CONFIG` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 
@@ -527,7 +532,7 @@ This service is used to get the configuration of a clock domain.
 | 0
 | CLOCK_ID
 | uint32
-| Clock ID
+| Clock ID.
 |===
 
 [#table_clock_getconfig_response_data]
@@ -542,7 +547,7 @@ This service is used to get the configuration of a clock domain.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -561,15 +566,18 @@ This service is used to get the configuration of a clock domain.
 | 1
 | CONFIG
 | uint32
-| Clock config
+| Clock config.
 
 [cols="2,5a", options="header"]
 !===
 ! Bits
 ! Description
 
-! [31:1]	! _Reserved_
-! [0]		! Disable/enable
+! [31:1]
+! _Reserved_ and must be `0`.
+
+! [0]
+! Clock state.
 
 	0b0: Clock is disabled.
 	0b1: Clock is enabled.
@@ -591,7 +599,7 @@ This service is used to set the clock rate of a specific clock.
 | 0
 | CLOCK_ID
 | uint32
-| Clock ID
+| Clock ID.
 
 | 1
 | FLAGS
@@ -606,12 +614,12 @@ This service is used to set the clock rate of a specific clock.
 ! _Reserved_ and must be `0`.
 
 ! [1:0]
-! Clock rate rounding mode
+! Clock rate rounding mode.
 ----
-0b00: Round down
-0b01: Round up
-0b10: Auto
-0b11: Reserved
+0b00: Round down.
+0b01: Round up.
+0b10: Auto.
+0b11: Reserved.
 
 In Auto mode the platform can autonomously chooses a supported rate closest to the requested rate.
 ----
@@ -640,7 +648,7 @@ In Auto mode the platform can autonomously chooses a supported rate closest to t
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
@@ -654,7 +662,7 @@ In Auto mode the platform can autonomously chooses a supported rate closest to t
 ! `CLOCK_ID` or clock rate is invalid or the flags passed are invalid or reserved.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 ==== Service: CLK_GET_RATE (SERVICE_ID: 0x08)
@@ -672,7 +680,7 @@ This service is used to get the current clock rate.
 | 0
 | CLOCK_ID
 | uint32
-| Clock ID
+| Clock ID.
 |===
 
 [#table_clock_getrate_response_data]
@@ -687,7 +695,7 @@ This service is used to get the current clock rate.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -701,7 +709,7 @@ This service is used to get the current clock rate.
 ! `CLOCK_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CLOCK_RATE_LOW

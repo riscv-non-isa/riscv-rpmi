@@ -66,15 +66,15 @@ The following table shows the structure of a single performance level.
 
 | 0
 | CLOCK_FREQ
-| Clock frequency (kHz)
+| Clock frequency (kHz).
 
 | 1
 | POWER_COST
-| Power cost (uW)
+| Power cost (uW).
 
 | 2
 | TRANSITION_LATENCY
-| Transition latency (us)
+| Transition latency (us).
 |===
 
 ==== Performance Fast-channel
@@ -230,11 +230,11 @@ described in <<performance-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -253,7 +253,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -269,14 +269,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -314,7 +314,7 @@ important for optimizing system performance and power consumption.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="2,5", options="header"]
 !===
@@ -325,7 +325,7 @@ important for optimizing system performance and power consumption.
 ! Service completed successfully.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | NUM_DOMAINS
@@ -352,7 +352,7 @@ level.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance domain ID
+| Performance domain ID.
 |===
 
 [#table_perf_getattrs_response_data]
@@ -367,7 +367,7 @@ level.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -381,7 +381,7 @@ level.
 ! `DOMAIN_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
@@ -392,10 +392,11 @@ level.
 ! Bits
 ! Description
 
-! [31:11]	! _Reserved_ and must be `0`.
+! [31:11]
+! _Reserved_ and must be `0`.
 
 ! [10]
-! PERF_LIMIT_SETTING
+! Performance limit change support.
 
 This attribute indicates whether the platform allows software to set the
 performance limit for a specific performance domain.
@@ -404,7 +405,7 @@ performance limit for a specific performance domain.
 	0b1: Performance limit change is allowed.
 
 ! [9]
-! PERF_LEVEL_SETTING
+! Performance level change support.
 
 This attribute indicates whether the platform allows software to set the
 performance level for a specific performance domain.
@@ -413,7 +414,7 @@ performance level for a specific performance domain.
 	0b1: Performance level change is allowed.
 
 ! [8]
-! FAST_CHANNEL_SUPPORT
+! Fast-channel support.
 
 This attribute indicates whether the platform supports fast-channel
 for a specific performance domain.
@@ -422,13 +423,13 @@ for a specific performance domain.
 	0b1: Fast-channel is supported.
 
 ! [7:0]
-! NUM_PERF_LEVELS
+! Number of performance levels.
 
 The total number of supported performance levels.
 
 !===
 | 2
-| RATE_LIMIT_US
+| TRANSITION_LATENCY
 | uint32
 | Minimum amount of time that needs to pass between two consecutive requests,
 in microseconds (us).
@@ -499,7 +500,7 @@ levels.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance domain ID
+| Performance domain ID.
 
 | 1
 | PERF_LEVEL_INDEX
@@ -519,7 +520,7 @@ levels.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
@@ -533,7 +534,7 @@ levels.
 ! `DOMAIN_ID` or `PERF_LEVEL_INDEX` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
@@ -553,8 +554,8 @@ levels.
 | 4
 | LEVEL[N]
 | uint32[3]
-| List of performance levels. Refer to <<section-perf-level>> for the
-structure of performance level.
+| List of performance levels. +
+Refer to <<section-perf-level>> for the structure of performance level.
 |===
 
 
@@ -574,7 +575,7 @@ performance domain in the system.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance domain ID
+| Performance domain ID.
 |===
 
 [#table_perf_getlevel_response_data]
@@ -589,7 +590,7 @@ performance domain in the system.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
@@ -603,7 +604,7 @@ performance domain in the system.
 ! `DOMAIN_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | LEVEL
@@ -628,12 +629,12 @@ performance domain in the system.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance domain ID
+| Performance domain ID.
 
 | 1
 | LEVEL
 | uint32
-| Performance level
+| Performance level.
 |===
 
 [#table_perf_setlevel_response_data]
@@ -648,7 +649,7 @@ performance domain in the system.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
@@ -668,7 +669,7 @@ performance domain in the system.
 ! Operation failed due to hardware error.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 
@@ -688,7 +689,7 @@ performance domain in the system.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance domain ID
+| Performance domain ID.
 |===
 
 [#table_perf_getlimit_response_data]
@@ -703,7 +704,7 @@ performance domain in the system.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
@@ -717,7 +718,7 @@ performance domain in the system.
 ! `DOMAIN_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | MAX_PERF_LEVEL
@@ -747,7 +748,7 @@ performance domain in the system.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance domain ID
+| Performance domain ID.
 
 | 1
 | MAX_PERF_LEVEL
@@ -772,7 +773,7 @@ performance domain in the system.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
@@ -795,7 +796,7 @@ performance domain in the system.
 ! Operation failed due to hardware error.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 
@@ -815,12 +816,12 @@ specific performance domain and performance service.
 | 0
 | DOMAIN_ID
 | uint32
-| Performance domain ID
+| Performance domain ID.
 
 | 1
 | SERVICE_ID
 | uint32
-| Performance Service ID, see service ID in <<table_perf_services>>
+| Performance Service ID. Refer service ID in <<table_perf_services>>.
 |===
 
 [#table_perf_getfastchanaddr_response_data]
@@ -835,7 +836,7 @@ specific performance domain and performance service.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
@@ -852,7 +853,7 @@ specific performance domain and performance service.
 ! Fast-channel is not implemented.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
@@ -869,12 +870,12 @@ specific performance domain and performance service.
 ! [2:1]
 ! Doorbell register width. This field is unused if doorbell is not supported.
 
-	0b00: 8-bit
-	0b01: 16-bit
-	0b10: 32-bit
-	0b11: 64-bit
+	0b00: 8-bit.
+	0b01: 16-bit.
+	0b10: 32-bit.
+	0b11: 64-bit.
 
-! [0]	! Doorbell support
+! [0]	! Doorbell support.
 
 	0b0: Doorbell is not supported.
 	0b1: Doorbell is supported.

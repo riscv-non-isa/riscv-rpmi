@@ -95,11 +95,11 @@ described in <<reqfwd-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -118,7 +118,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -134,14 +134,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -184,7 +184,7 @@ bytes.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="7,5", options="header"]
 !===
@@ -201,7 +201,7 @@ bytes.
 ! No forwarded RPMI request message available.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | REMAINING
@@ -261,7 +261,7 @@ the overall size of the `REQFWD_COMPLETE_CURRENT_MESSAGE` service message.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="7,5", options="header"]
 !===
@@ -275,6 +275,6 @@ the overall size of the `REQFWD_COMPLETE_CURRENT_MESSAGE` service message.
 ! No forwarded RPMI request message available.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 |===

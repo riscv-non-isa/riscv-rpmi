@@ -77,11 +77,11 @@ described in <<system-suspend-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -100,7 +100,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -116,14 +116,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -149,7 +149,8 @@ a resume address.
 | 0
 | SUSPEND_TYPE
 | uint32
-| Suspend type. See <<section-suspend-types>> for more details.
+| Suspend type. +
+Refer <<section-suspend-types>> for more details.
 |===
 
 [#table_syssuspend_getsyssuspendattrs_response_data]
@@ -164,7 +165,7 @@ a resume address.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5a", options="header"]
 !===
@@ -174,12 +175,12 @@ a resume address.
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
 | uint32
-| Attributes of the `SUSPEND_TYPE`
+| Suspend type attributes.
 
 [cols="2,5a", options="header"]
 !===
@@ -189,18 +190,18 @@ a resume address.
 ! [31:2]
 ! _Reserved_ and must be `0`.
 
-! [1]		
-! Resume Address Support +
+! [1]
+! Resume Address Support. +
 If a `SUSPEND_TYPE` supports custom resume address
 which platform must configure for the resuming application processor.
 
 	0b1: Supported.
 	0b0: Not supported.
-! [0]		
-! `SUSPEND_TYPE` Support
+! [0]
+! Suspend type Support.
 
-	0b1: Supported
-	0b0: Not supported
+	0b1: Supported.
+	0b0: Not supported.
 
 !===
 |===
@@ -211,7 +212,7 @@ system in a suspend state. This service returns successfully when the platform
 microcontroller accepts the system suspend request. The application processor
 which called this service must then enter into a quiesced state such as WFI. The
 platform microcontroller will transition the system to the requested
-`SUSPEND_STATE` upon the successful transition of the application processor into
+`SUSPEND_TYPE` upon the successful transition of the application processor into
 the supported quiesced state. The mechanism for detecting the quiesced state of
 the application processor is platform specific.
 
@@ -242,7 +243,8 @@ such as the `WFI` instruction.
 | 1
 | SUSPEND_TYPE
 | uint32
-| Suspend type. See <<section-suspend-types>> for more details.
+| Suspend type. +
+Refer <<section-suspend-types>> for more details.
 
 | 2
 | RESUME_ADDR_LOW
@@ -267,7 +269,7 @@ such as the `WFI` instruction.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5a", options="header"]
 !===
@@ -283,5 +285,5 @@ such as the `WFI` instruction.
 ! RPMI_ERR_INVALID_ADDR
 ! Resume address is invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===

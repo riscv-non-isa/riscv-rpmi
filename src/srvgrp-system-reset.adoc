@@ -85,11 +85,11 @@ described in <<system-reset-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -108,7 +108,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -124,14 +124,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -157,7 +157,8 @@ default. System Warm Reset support can be discovered with this service.
 | 0
 | RESET_TYPE
 | uint32
-| Reset type. See <<section-reset-types>> for more details.
+| Reset type. +
+Refer <<section-reset-types>> for more details.
 |===
 
 [#table_sysreset_getsysresetattrs_response_data]
@@ -172,7 +173,7 @@ default. System Warm Reset support can be discovered with this service.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5a", options="header"]
 !===
@@ -183,12 +184,12 @@ default. System Warm Reset support can be discovered with this service.
 ! Attributes returned successfully.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
 | uint32
-| `RESET_TYPE` Attributes
+| Reset type attributes.
 
 [cols="2,5a", options="header"]
 !===
@@ -199,7 +200,7 @@ default. System Warm Reset support can be discovered with this service.
 ! _Reserved_ and must be `0`.
 
 ! [0]
-! `RESET_TYPE` support.
+! Reset type support.
 
 	0b1: Supported.
 	0b0: Not supported.
@@ -225,7 +226,8 @@ message in case of successful reset.
 | 0
 | RESET_TYPE
 | uint32
-| Reset type. See <<section-reset-types>> for more details.
+| Reset type. +
+Refer <<section-reset-types>> for more details.
 
 |===
 
@@ -241,7 +243,7 @@ message in case of successful reset.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5a", options="header"]
 !===
@@ -249,7 +251,7 @@ message in case of successful reset.
 ! Description
 
 ! RPMI_ERR_INVALID_PARAM
-! `RESET_TYPE` is not supported or invalid.
+! Reset type is not supported or invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
