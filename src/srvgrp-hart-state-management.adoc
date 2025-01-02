@@ -113,11 +113,11 @@ described in <<hsm-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -136,7 +136,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -152,14 +152,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -184,7 +184,7 @@ in the `STATUS` field.
 | 0
 | HART_ID
 | uint32
-| Hart ID
+| Hart ID.
 |===
 
 [#table_hsm_gethartstatus_response_data]
@@ -199,7 +199,7 @@ in the `STATUS` field.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="6,5a", options="header"]
 !===
 ! Error Code
@@ -214,7 +214,7 @@ in the `STATUS` field.
 ! RPMI_ERR_INVALID_STATE
 ! Hart is in invalid state.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | HART_STATE
@@ -260,7 +260,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="6,5a", options="header"]
 !===
 ! Error Code
@@ -272,7 +272,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 ! RPMI_ERR_INVALID_PARAM
 ! `START_INDEX` is invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | REMAINING
@@ -287,7 +287,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 | 3
 | HART_ID[N]
 | uint32
-| Hart IDs
+| Hart IDs list.
 |===
 
 ==== Service: HSM_GET_SUSPEND_TYPES (SERVICE_ID: 0x04)
@@ -333,7 +333,7 @@ items.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="7,5a", options="header"]
 !===
 ! Error Code
@@ -345,7 +345,7 @@ items.
 ! RPMI_ERR_INVALID_PARAM
 ! `START_INDEX` is invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | REMAINING
@@ -395,7 +395,7 @@ Refer <<section-hart-suspend-types>> for more details.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="7,5a", options="header"]
 !===
 ! Error Code
@@ -407,7 +407,7 @@ Refer <<section-hart-suspend-types>> for more details.
 ! RPMI_ERR_INVALID_PARAM
 ! `SUSPEND_TYPE` is invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
@@ -422,7 +422,7 @@ Refer <<section-hart-suspend-types>> for more details.
 ! _Reserved_ and must be `0`.
 
 ! [0]
-! Local timer running status
+! Local timer running status.
 
 	0b1: Local timer stops when the hart is suspended.
 	0b0: Local timer does not stop when hart is suspended.
@@ -491,7 +491,7 @@ that the hart has started execution from the specified start address.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="7,5a", options="header"]
 !===
 ! Error Code
@@ -513,7 +513,7 @@ that the hart has started execution from the specified start address.
 ! Failed due to hardware fault.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 ==== Service: HSM_HART_STOP (SERVICE_ID: 0x07)
@@ -558,7 +558,7 @@ Once the hart is stopped, it can only be restarted by explicitly invoking the
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="6,5a", options="header"]
 !===
 ! Error Code
@@ -576,7 +576,7 @@ Once the hart is stopped, it can only be restarted by explicitly invoking the
 ! RPMI_ERR_HW_FAULT
 ! Failed due to hardware failure.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 ==== Service: HSM_HART_SUSPEND (SERVICE_ID: 0x08)
@@ -639,7 +639,7 @@ Only used for non-retentive suspend types.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="6,5a", options="header"]
 !===
 ! Error Code
@@ -651,5 +651,5 @@ Only used for non-retentive suspend types.
 ! RPMI_ERR_INVALID_PARAM
 ! `HART_ID` or `SUSPEND_TYPE` is invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===

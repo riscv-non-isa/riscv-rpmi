@@ -60,10 +60,10 @@ data format.
 | SERVICEGROUP_ID
 | 0x80000000
 | RO
-| RPMI service group ID
+| RPMI service group ID.
 
 | SERVICEGROUP_VERSION
 | 0x80000001
 | RO
-| RPMI service group version
+| RPMI service group version.
 |===

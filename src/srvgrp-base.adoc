@@ -146,11 +146,11 @@ described in <<base-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -169,7 +169,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -185,14 +185,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -224,7 +224,7 @@ the `MAJOR` and `MINOR` version numbers.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="2,5a", options="header"]
 !===
@@ -234,12 +234,12 @@ the `MAJOR` and `MINOR` version numbers.
 ! RPMI_SUCCESS
 ! RPMI implementation version returned successfully.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | IMPL_VERSION
 | uint32
-| Implementation version
+| Implementation version.
 
 [cols="2,5a", options="header"]
 !===
@@ -247,10 +247,10 @@ the `MAJOR` and `MINOR` version numbers.
 ! Description
 
 ! [31:16]
-! `MAJOR` number
+! `MAJOR` number.
 
 ! [15:0]
-! `MINOR` number
+! `MINOR` number.
 !===
 |===
 
@@ -279,7 +279,7 @@ unique and listed in the <<table_base_rpmi_impl_id>>.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="2,5a", options="header"]
 !===
@@ -289,12 +289,12 @@ unique and listed in the <<table_base_rpmi_impl_id>>.
 ! RPMI_SUCCESS
 ! RPMI implementation ID returned successfully.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | IMPL_ID
 | uint32
-| Implementation ID
+| Implementation ID.
 |===
 
 ==== Service: BASE_GET_SPEC_VERSION (SERVICE_ID: 0x04)
@@ -321,7 +321,7 @@ version returned is a 32-bit composite number containing the `MAJOR` and
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="2,5a", options="header"]
 !===
@@ -336,7 +336,7 @@ version returned is a 32-bit composite number containing the `MAJOR` and
 | 1
 | SPEC_VERSION
 | uint32
-| RPMI specification version
+| RPMI specification version.
 
 [cols="2,5a", options="header"]
 !===
@@ -344,10 +344,10 @@ version returned is a 32-bit composite number containing the `MAJOR` and
 ! Description
 
 ! [31:16]
-! `MAJOR` number
+! `MAJOR` number.
 
 ! [15:0]
-! `MINOR` number
+! `MINOR` number.
 !===
 |===
 
@@ -373,7 +373,7 @@ This service is used to get additional platform information if available.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5a", options="header"]
 !===
@@ -383,7 +383,7 @@ This service is used to get additional platform information if available.
 ! RPMI_SUCCESS
 ! Platform information returned successfully.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | PLATFORM_ID_LEN
@@ -393,7 +393,7 @@ This service is used to get additional platform information if available.
 | 2
 | PLATFORM_ID
 | uint8[`PLATFORM_ID_LEN`]
-| Platform Identifier +
+| Platform Identifier. +
 Up to `PLATFORM_ID_LEN` bytes NULL terminated ASCII string.
 The use and interpretation of this field is implementation-defined. It can be
 used to convey details such as the vendor ID, vendor name, specific product
@@ -421,7 +421,7 @@ version is returned in the `SERVICE_GROUP_VERSION` field. Otherwise it returns
 | 0
 | SERVICEGROUP_ID
 | uint32
-| Service group ID
+| Service group ID.
 |===
 
 [#table_base_probesrvgrp_response_data]
@@ -436,7 +436,7 @@ version is returned in the `SERVICE_GROUP_VERSION` field. Otherwise it returns
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="3,4a", options="header"]
 !===
@@ -458,10 +458,10 @@ version is returned in the `SERVICE_GROUP_VERSION` field. Otherwise it returns
 ! Description
 
 ! [31:16]
-! `MAJOR` number
+! `MAJOR` number.
 
 ! [15:0]
-! `MINOR` number
+! `MINOR` number.
 !===
 |===
 
@@ -488,7 +488,7 @@ service group.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="2,5a", options="header"]
 !===
@@ -498,7 +498,7 @@ service group.
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS0
@@ -515,20 +515,20 @@ service group.
 ! [2]
 ! RPMI context privilege level.
 
-	0b1: M-mode
-	0b0: S-mode
+	0b1: M-mode.
+	0b0: S-mode.
 
 ! [1]
-! Event notification support in platform +
+! Event notification support in platform. +
 
-	0b1: Supported
-	0b0: Not supported
+	0b1: Supported.
+	0b0: Not supported.
 
 ! [0]
-! MSI support in platform +
+! MSI support in platform. +
 
-	0b1: Supported
-	0b0: Not supported
+	0b1: Supported.
+	0b0: Not supported.
 !===
 
 | 2
@@ -572,7 +572,7 @@ by another defined service `BASE_SET_MSI_TARGET`.
 | 0
 | STATE
 | uint32
-| MSI state
+| MSI state.
 [cols="2,9a", options="header"]
 !===
 ! Bits
@@ -602,7 +602,7 @@ by another defined service `BASE_SET_MSI_TARGET`.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="7,5a", options="header"]
 !===
@@ -619,7 +619,7 @@ by another defined service `BASE_SET_MSI_TARGET`.
 ! `STATE` value is reserved or invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 [#srvgrp_base_get_msi_state]
@@ -659,7 +659,7 @@ which are read-only and cannot be controlled by the application processor.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="7,5a", options="header"]
 !===
@@ -672,12 +672,12 @@ which are read-only and cannot be controlled by the application processor.
 ! RPMI_ERR_NOT_SUPPORTED
 ! MSI is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | STATE
 | uint32
-| MSI state
+| MSI state.
 [cols="2,9a", options="header"]
 !===
 ! Bits
@@ -695,9 +695,8 @@ which are read-only and cannot be controlled by the application processor.
 ! [0]
 ! MSI enable state.
 
-	0b1: MSI enabled
-	0b0: MSI disabled
-
+	0b1: MSI enabled.
+	0b0: MSI disabled.
 !===
 |===
 
@@ -745,7 +744,7 @@ processor will take the wired interrupt.
 | 2
 | MSI_DATA
 | uint32
-| 32-bit MSI data
+| 32-bit MSI data.
 |===
 
 [#table_base_setmsitarget_response_data]
@@ -760,7 +759,7 @@ processor will take the wired interrupt.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="7,5a", options="header"]
 !===
@@ -776,5 +775,5 @@ processor will take the wired interrupt.
 ! RPMI_ERR_INVALID_ADDR
 ! MSI target address is invalid or it is not `4-byte` aligned.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===

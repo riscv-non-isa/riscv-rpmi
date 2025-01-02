@@ -83,8 +83,8 @@ encoding for the power state.
 | [16]
 | CONTEXT
 |
-	0b0: Context is preserved
-	0b1: Context is lost
+	0b1: Context is lost.
+	0b0: Context is preserved.
 
 | [15:0]
 | VALUE
@@ -95,7 +95,7 @@ encoding for the power state.
 ! Description
 
 ! 0x0000
-! ON
+! On.
 
 ! 0x0001
 ! _Reserved_ and must be `0`.
@@ -104,13 +104,13 @@ encoding for the power state.
 ! _Reserved_ and must be `0`.
 
 ! 0x0003
-! OFF
+! Off.
 
 ! 0x0004 - 0x0FFF
 ! _Reserved_ and must be `0`.
 
 ! 0x1000 - 0xFFFF
-! Vendor specific states
+! Vendor specific states.
 !===
 |===
 
@@ -143,11 +143,11 @@ described in <<device-power-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -166,7 +166,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -182,14 +182,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -222,7 +222,7 @@ the actual number of domains present on the platform.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="2,5", options="header"]
 !===
@@ -233,7 +233,7 @@ the actual number of domains present on the platform.
 ! Service completed successfully.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | NUM_DOMAINS
@@ -257,7 +257,7 @@ This service is used to query the attributes of a device power domain.
 | 0
 | DOMAIN_ID
 | uint32
-| Device power domain ID
+| Device power domain ID.
 |===
 
 [#table_devpower_getattrs_response_data]
@@ -272,7 +272,7 @@ This service is used to query the attributes of a device power domain.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="8,5", options="header"]
 !===
@@ -285,7 +285,7 @@ This service is used to query the attributes of a device power domain.
 ! RPMI_ERR_INVALID_PARAM
 ! `DOMAIN_ID` is invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
@@ -319,7 +319,7 @@ This service is used to change the power state of a device power domain.
 | 0
 | DOMAIN_ID
 | uint32
-| Device power domain ID
+| Device power domain ID.
 
 | 1
 | POWER_STATE
@@ -343,7 +343,7 @@ for more details.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -362,7 +362,7 @@ for more details.
 ! RPMI_ERR_HW_FAULT
 ! Failed due to hardware error.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 ==== Service: DPWR_GET_STATE (SERVICE_ID: 0x05)
@@ -380,7 +380,7 @@ This service is used to get the current power state of a device power domain.
 | 0
 | DOMAIN_ID
 | uint32
-| Device power domain ID
+| Device power domain ID.
 |===
 
 [#table_devpower_getstate_response_data]
@@ -395,7 +395,7 @@ This service is used to get the current power state of a device power domain.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -409,7 +409,7 @@ This service is used to get the current power state of a device power domain.
 ! `DOMAIN_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | POWER_STATE

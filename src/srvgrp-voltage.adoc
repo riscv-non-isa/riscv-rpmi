@@ -65,8 +65,7 @@ The following table lists the services in the VOLTAGE service group:
 There are 4 types of voltage level formats supported in the VOLTAGE service
 group. The voltage levels are represented as a group.
 
-* Fixed Voltage Format
-
+===== Fixed Voltage Format
 A constant voltage level. The following table shows the structure of the fixed
 voltage format.
 
@@ -82,8 +81,7 @@ voltage format.
 | Fixed voltage in microvolts (uV).
 |===
 
-* Simple-Linear Format
-
+===== Simple-Linear Format
 A linear range of voltage levels with a constant step size. The following table
 shows the structure of the simple-linear voltage format.
 
@@ -106,16 +104,15 @@ shows the structure of the simple-linear voltage format.
 | Step size in microvolts (uV).
 |===
 
-* Multi-Linear Format
-
+===== Multi-Linear Format
 Multiple linear ranges of voltage levels, each with its own step size. The
 following table shows the structure of the multi-linear voltage format.
 
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
-| *Word*
-| *Name*
-| *Description*
+| Word
+| Name
+| Description
 
 | 0
 | VOLTAGE_MIN
@@ -134,8 +131,7 @@ following table shows the structure of the multi-linear voltage format.
 | Step size in microvolts (uV).
 |===
 
-* Discrete Format
-
+===== Discrete Format
 A set of discrete voltage levels arranged in a sequence, starting from the
 lowest value at the lowest index and increasing sequentially to higher levels.
 The following table shows the structure of the discrete format.
@@ -180,11 +176,11 @@ described in <<voltage-notifications>>.
 | 1
 | REQ_STATE
 | uint32
-| Requested event notification state +
+| Requested event notification state. +
 Change or query the current state of `EVENT_ID` notification.
 ----
-0: Disable
-1: Enable
+0: Disable.
+1: Enable.
 2: Return current state.
 ----
 Any other values of `REQ_STATE` field other than the defined ones are reserved
@@ -203,7 +199,7 @@ for future use.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5a", options="header"]
 !===
@@ -219,14 +215,14 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | CURRENT_STATE
 | uint32
-| Current `EVENT_ID` notification state
+| Current `EVENT_ID` notification state.
 ----
-0: Notification is disabled
+0: Notification is disabled.
 1: Notification is enabled.
 ----
 In case of `REQ_STATE = 0` or `1`, the `CURRENT_STATE` will return the requested
@@ -258,7 +254,7 @@ system.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="2,5", options="header"]
 !===
@@ -268,12 +264,12 @@ system.
 ! RPMI_SUCCESS
 ! Service completed successfully.
 !===
+- Other errors <<table_error_codes>>.
 
-- Other errors <<table_error_codes>>
 | 1
 | NUM_DOMAINS
 | uint32
-| Number of voltage domains
+| Number of voltage domains.
 |===
 
 ==== Service: VOLT_GET_ATTRIBUTES (SERVICE_ID: 0x03)
@@ -297,7 +293,7 @@ formats. Additional voltage formats can be accommodated in the future if require
 | 0
 | DOMAIN_ID
 | uint32
-| Voltage domain ID
+| Voltage domain ID.
 |===
 
 [#table_voltage_getdomainattrs_response_data]
@@ -312,7 +308,7 @@ formats. Additional voltage formats can be accommodated in the future if require
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="5,5", options="header"]
 !===
 ! Error Code
@@ -324,7 +320,7 @@ formats. Additional voltage formats can be accommodated in the future if require
 ! RPMI_ERR_INVALID_PARAM
 ! `DOMAIN_ID` is invalid.
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | FLAGS
@@ -338,18 +334,18 @@ formats. Additional voltage formats can be accommodated in the future if require
 ! _Reserved_ and must be `0`.
 
 ! [3:1]
-! Voltage format +
+! Voltage format. +
 Refer to <<voltage-level-format-section>> for more details.
 ----
-0b000: Fixed voltage
-0b001: Simple-linear
-0b010: Multi-linear
-0b011: Discrete range
-0b100 - 0b111: Reserved
+0b000: Fixed voltage.
+0b001: Simple-linear.
+0b010: Multi-linear.
+0b011: Discrete range.
+0b100 - 0b111: Reserved.
 ----
 
 ! [0]
-! Voltage domain control support
+! Voltage domain control support.
 
 ----
 0b0: Voltage domain can be enabled/disabled.
@@ -409,12 +405,12 @@ calls may be necessary to retrieve all the voltage levels.
 | 0
 | DOMAIN_ID
 | uint32
-| Voltage domain ID
+| Voltage domain ID.
 
 | 1
 | VOLTAGE_LEVEL_INDEX
 | uint32
-| Voltage level index
+| Voltage level index.
 |===
 
 [#table_voltage_getdomainlevels_response_data]
@@ -429,7 +425,7 @@ calls may be necessary to retrieve all the voltage levels.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 [cols="7,5", options="header"]
 !===
 ! Error Code
@@ -445,7 +441,7 @@ calls may be necessary to retrieve all the voltage levels.
 ! `VOLTAGE_LEVEL_INDEX` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 | 1
 | FLAGS
 | uint32
@@ -484,12 +480,12 @@ This service is used to configure a voltage domain.
 | 0
 | DOMAIN_ID
 | uint32
-| Voltage domain ID
+| Voltage domain ID.
 
 | 1
 | CONFIG
 | uint32
-| Voltage domain config
+| Voltage domain config.
 
 [cols="2,5a", options="header"]
 !===
@@ -501,10 +497,10 @@ This service is used to configure a voltage domain.
 
 ! [0]
 !
-Disable/enable
+Voltage supply control.
 ----
-0b0: Disable voltage supply
-0b1: Enable voltage supply
+0b1: Enable voltage supply.
+0b0: Disable voltage supply.
 ----
 !===
 
@@ -522,7 +518,7 @@ Disable/enable
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -536,8 +532,7 @@ Disable/enable
 ! Voltage `DOMAIN_ID` or `CONFIG` is invalid.
 
 !===
-
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 ==== Service: VOLT_GET_CONFIG (SERVICE_ID: 0x06)
@@ -554,7 +549,7 @@ This service is used to get the configuration of a voltage domain.
 | 0
 | DOMAIN_ID
 | uint32
-| Voltage domain ID
+| Voltage domain ID.
 
 |===
 
@@ -570,7 +565,7 @@ This service is used to get the configuration of a voltage domain.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -584,23 +579,23 @@ This service is used to get the configuration of a voltage domain.
 ! Voltage `DOMAIN_ID` not found.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 | 1
 | CONFIG
 | uint32
-| Voltage domain config
+| Voltage domain config.
 [cols="2,5a", options="header"]
 !===
 ! Bits
 ! Description
 
 ! [31:1]
-! _Reserved_
+! _Reserved_ and must be `0`.
 ! [0]
-! Disable/enable
+! Voltage supply state.
 ----
-0b0: Voltage supply is disabled.
 0b1: Voltage supply is enabled.
+0b0: Voltage supply is disabled.
 ----
 !===
 
@@ -622,7 +617,7 @@ This service is used to set the voltage level in microvolts of a voltage domain.
 | 0
 | DOMAIN_ID
 | uint32
-| Voltage domain ID
+| Voltage domain ID.
 
 | 1
 | VOLTAGE_LEVEL
@@ -643,12 +638,12 @@ This service is used to set the voltage level in microvolts of a voltage domain.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="6,5", options="header"]
 !===
 ! Error Code
-!  Description
+! Description
 
 ! RPMI_SUCCESS
 ! Service completed successfully.
@@ -658,7 +653,7 @@ This service is used to set the voltage level in microvolts of a voltage domain.
 
 !===
 
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 |===
 
 
@@ -678,7 +673,7 @@ voltage domain.
 | 0
 | DOMAIN_ID
 | uint32
-| Voltage domain ID
+| Voltage domain ID.
 
 |===
 
@@ -694,7 +689,7 @@ voltage domain.
 | 0
 | STATUS
 | int32
-| Return error code
+| Return error code.
 
 [cols="5,5", options="header"]
 !===
@@ -708,7 +703,7 @@ voltage domain.
 ! Voltage `DOMAIN_ID` not found.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors <<table_error_codes>>.
 
 | 1
 | VOLTAGE_LEVEL
