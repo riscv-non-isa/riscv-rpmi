@@ -463,7 +463,7 @@ loop:
 	for (i = 0; i < list.returned; i++, num++) {
 		opp[num].freq = list.entry[entry_num++];
 		opp[num].power = list.entry[entry_num++];
-		opp[num].rate_limit = list.entry[entry_num++];
+		opp[num].transition_latency = list.entry[entry_num++];
 	}
 
 	/* Check if there are remaining OPP to be read */
@@ -734,7 +734,31 @@ performance domain in the system.
 
 ==== Service: PERF_SET_LIMIT (SERVICE_ID: 0x08)
 This service is used to set the performance limit of a specific
-performance domain in the system.
+performance domain in the system. The platform must ensure that any subsequent
+calls to `PERF_SET_LEVEL` to adjust the performance level remain within the
+currently defined limits.
+
+If the current performance level falls outside the newly defined minimum or
+maximum ranges, the platform will automatically adjust it to comply with the
+updated limits.
+
+[NOTE]
+====
+Examples:
+
+* If the current performance level is below the new minimum limit, the platform
+  will set it to the new minimum limit.
+
+* If the current performance level exceeds the new maximum limit, the platform
+  will set it to the new maximum limit.
+
+* No adjustment is required if the current performance level is within the new
+  limits.
+====
+
+If notifications are enabled, the platform will send an appropriate
+notification (e.g., `PERF_LEVEL_CHANGE`, `PERF_POWER_CHANGE`, etc.) to the
+application processor.
 
 [#table_perf_setlimit_request_data]
 .Request Data
