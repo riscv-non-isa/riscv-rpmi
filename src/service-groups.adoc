@@ -117,7 +117,12 @@ RPMI service groups defined by this specification.
 | REQUEST_FORWARD
 | M-mode, S-mode
 
-| 0x000D - 0x7BFF
+| 0x000D
+| 1.0
+| SYSTEM_MSI
+| M-mode, S-mode
+
+| 0x000E - 0x7BFF
 |
 | _Reserved for Future Use_
 |

@@ -205,12 +205,11 @@ without supporting or enabling the doorbell interrupt, the behavior is undefined
 
 NOTE: The `FLAGS[3]` bit can be used for a particular RPMI normal request message
 or for the entire life-cycle of RPMI message communication. For example, if the
-application processor and the platform microcontroller supports MSI and
-the application processor has configured MSI target details via a defined service
-<<srvgrp_base_set_msi_target>>, then `FLAGS[3]` bit can always be set to `1` so
-that the platform microcontroller will always send the MSI for every response. The
-application processor can also selectively disable it for a request message so
-that the platform microcontroller does not trigger the doorbell for the response
+P2A doorbell is MSI and the application processor has configured MSI target details
+via `SYSTEM_MSI` service group, then `FLAGS[3]` bit can always be set to `1` so
+that the platform microcontroller will always send the MSI for every response.
+The application processor can also selectively disable it for a request message
+so that the platform microcontroller does not trigger the doorbell for the response
 message.
 
 For an RPMI notification message, the platform microcontroller will set
