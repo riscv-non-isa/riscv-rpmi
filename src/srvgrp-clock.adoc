@@ -85,7 +85,7 @@ rate. The following table shows the structure of the Discrete clock format.
 [clock_rate1, clock_rate2, clock_rate3, ... , clock_rateN]
 
 where:
-clock_rate1 < clock_rate2 < clock_rate3, < ... < clock_rateN
+clock_rate1 < clock_rate2 < clock_rate3 < ... < clock_rateN
 ```
 
 .Discrete Clock Format Structure
