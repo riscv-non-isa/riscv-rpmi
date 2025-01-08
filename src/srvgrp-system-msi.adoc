@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - SYSTEM_MSI (SERVICEGROUP_ID: 0x000D)
+===  Service Group - SYSTEM_MSI (SERVICEGROUP_ID: 0x0002)
 The SYSTEM_MSI service group defines services to allow application processors
 to receive MSIs upon system events such as P2A doorbell, graceful shutdown/reboot
 request, CPU hotplug event, memory hotplug event, etc.

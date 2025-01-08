@@ -74,6 +74,8 @@ include::src/service-groups.adoc[]
 
 include::src/srvgrp-base.adoc[]
 
+include::src/srvgrp-system-msi.adoc[]
+
 include::src/srvgrp-system-reset.adoc[]
 
 include::src/srvgrp-system-suspend.adoc[]
@@ -95,8 +97,6 @@ include::src/srvgrp-management.adoc[]
 include::src/srvgrp-ras-agent.adoc[]
 
 include::src/srvgrp-request-forward.adoc[]
-
-include::src/srvgrp-system-msi.adoc[]
 
 include::src/rpmi-mpxy.adoc[]
 
