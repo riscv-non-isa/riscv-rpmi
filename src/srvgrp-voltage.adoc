@@ -88,9 +88,9 @@ voltage1 < voltage2 < voltage3 < ... < voltageN
 | Discrete voltage level in microvolts (uV).
 |===
 
-===== Simple-Linear Format
+===== Linear Format
 A linear range of voltage levels with a constant step size. The following table
-shows the structure of the simple-linear voltage format.
+shows the structure of the linear voltage format.
 
 ```c
 [voltage_minimum, voltage_maximum, voltage_step]
@@ -246,9 +246,9 @@ for operation. The number of levels indicates the total count of voltage levels
 supported within a voltage domain. Transition latency denotes the maximum time
 required for the voltage to stabilize upon a change in the regulator. Depending
 on the hardware, voltage levels can be of various formats, and the current
-service supports discrete and simple-linear formats. Each domain can
-support only one voltage level format. Additional voltage formats can be
-accommodated in the future if required.
+service supports discrete and linear formats. Each domain can support only one
+voltage level format. Additional voltage formats can be accommodated in the
+future if required.
 
 [#table_voltage_getdomainattrs_request_data]
 .Request Data
@@ -307,7 +307,7 @@ accommodated in the future if required.
 Refer to <<voltage-level-format-section>> for more details.
 ----
 0b000: Discrete voltage.
-0b001: Simple-linear.
+0b001: Linear.
 0b010 - 0b111: Reserved.
 ----
 
@@ -324,7 +324,7 @@ supported voltage range.
 | NUM_LEVELS
 | uint32
 | Number of voltage levels (number of arrays) supported by the domain. Each
-simple-linear format voltage level represents 1 voltage level.
+linear format voltage level represents 1 voltage level.
 
 | 3
 | TRANS_LATENCY
