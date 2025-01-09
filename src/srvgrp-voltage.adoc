@@ -62,14 +62,21 @@ The following table lists the services in the VOLTAGE service group:
 
 [#voltage-level-format-section]
 ==== Voltage Level Format
-There are 4 types of voltage level formats supported in the VOLTAGE service
+There are 2 types of voltage level formats supported in the VOLTAGE service
 group. The voltage levels are represented as a group.
 
-===== Fixed Voltage Format
-A constant voltage level. The following table shows the structure of the fixed
-voltage format.
+===== Discrete Format
+A set of discrete voltage levels arranged in a sequence, starting from the
+lowest value at the lowest index and increasing sequentially to higher levels.
+The following table shows the structure of the discrete format.
 
-.Fixed Voltage Structure
+```c
+[voltage1, voltage2, voltage3, ... , voltageN]
+
+where:
+voltage1 < voltage2 < voltage3 < ... < voltageN
+```
+
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
 | Word
@@ -78,12 +85,16 @@ voltage format.
 
 | 0
 | VOLTAGE
-| Fixed voltage in microvolts (uV).
+| Discrete voltage level in microvolts (uV).
 |===
 
-===== Simple-Linear Format
+===== Linear Format
 A linear range of voltage levels with a constant step size. The following table
-shows the structure of the simple-linear voltage format.
+shows the structure of the linear voltage format.
+
+```c
+[voltage_minimum, voltage_maximum, voltage_step]
+```
 
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
@@ -102,49 +113,6 @@ shows the structure of the simple-linear voltage format.
 | 2
 | STEP
 | Step size in microvolts (uV).
-|===
-
-===== Multi-Linear Format
-Multiple linear ranges of voltage levels, each with its own step size. The
-following table shows the structure of the multi-linear voltage format.
-
-[cols="1,2,5" width=100%, align="center", options="header"]
-|===
-| Word
-| Name
-| Description
-
-| 0
-| VOLTAGE_MIN
-| Lower boundary of voltage level in microvolts (uV).
-
-| 1
-| VOLTAGE_MIN_SEL
-| Lowest selector for range.
-
-| 2
-| VOLTAGE_MAX_SEL
-| Highest selector for range.
-
-| 3
-| STEP
-| Step size in microvolts (uV).
-|===
-
-===== Discrete Format
-A set of discrete voltage levels arranged in a sequence, starting from the
-lowest value at the lowest index and increasing sequentially to higher levels.
-The following table shows the structure of the discrete format.
-
-[cols="1,2,5" width=100%, align="center", options="header"]
-|===
-| Word
-| Name
-| Description
-
-| 0
-| VOLTAGE
-| Discrete voltage level in microvolts (uV).
 |===
 
 [#voltage-notifications]
@@ -278,8 +246,9 @@ for operation. The number of levels indicates the total count of voltage levels
 supported within a voltage domain. Transition latency denotes the maximum time
 required for the voltage to stabilize upon a change in the regulator. Depending
 on the hardware, voltage levels can be of various formats, and the current
-service supports Fixed voltage, Simple-linear, Multi-linear, and Discrete range
-formats. Additional voltage formats can be accommodated in the future if required.
+service supports discrete and linear formats. Each domain can support only one
+voltage level format. Additional voltage formats can be accommodated in the
+future if required.
 
 [#table_voltage_getdomainattrs_request_data]
 .Request Data
@@ -337,11 +306,9 @@ formats. Additional voltage formats can be accommodated in the future if require
 ! Voltage format. +
 Refer to <<voltage-level-format-section>> for more details.
 ----
-0b000: Fixed voltage.
-0b001: Simple-linear.
-0b010: Multi-linear.
-0b011: Discrete range.
-0b100 - 0b111: Reserved.
+0b000: Discrete voltage.
+0b001: Linear.
+0b010 - 0b111: Reserved.
 ----
 
 ! [0]
@@ -349,24 +316,15 @@ Refer to <<voltage-level-format-section>> for more details.
 
 ----
 0b0: Voltage domain can be enabled/disabled.
-0b1: Voltage domain is always-on, voltage value can be changed in the supported voltage range.
+0b1: Voltage domain is always-on, voltage value can be changed in the
+supported voltage range.
 ----
 !===
 | 2
 | NUM_LEVELS
 | uint32
-| Number of voltage levels (number of arrays) supported by the domain.
-
-[cols="2,5a", options="header"]
-!===
-! Value
-! Description
-
-! 1
-! Fixed voltage format only.
-! N
-! Simple-linear, Multi-linear and Discrete.
-!===
+| Number of voltage levels (number of arrays) supported by the domain. Each
+linear format voltage level represents 1 voltage level.
 
 | 3
 | TRANS_LATENCY
