@@ -69,6 +69,8 @@ in the publicly available tool called *drawio-desktop* at this link:
 https://github.com/jgraph/drawio-desktop/releases
 
 == Meeting Slides
+- https://docs.google.com/presentation/d/1mB1cGopnu-lL4urzMSR5_yFRDRxhncxHVLRFDON7-N0[Meeting - January 09, 2025]
+- https://docs.google.com/presentation/d/16f0InlT0S5DlReureNu5gl2S07vq-Mp5TFnpAujcfoY[Meeting - November 14, 2024]
 - https://docs.google.com/presentation/d/1Q_gJIXZYEs_TUIW4zwFWqIsRwwsNx3F5m4VSqOooLvY[Meeting - October 09, 2024]
 - https://docs.google.com/presentation/d/1XrhD3oJOEstBb_ScuwXq-Hun-Mr9gWKTldvcKoAp9xE[Meeting - October 03, 2024]
 - https://docs.google.com/presentation/d/1Jk_LnHPepwU0ey15ZEzyvGge6NpKFr6yMgzzLOM5sUc[Meeting - August 08, 2024]
