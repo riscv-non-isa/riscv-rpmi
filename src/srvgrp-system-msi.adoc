@@ -34,7 +34,7 @@ address is not valid.
 
 [#table_sysmsi_state]
 .System MSI State
-[cols="2,2,7a", width=60%, align="center", options="header"]
+[cols="2,3,7a", width=60%, align="center", options="header"]
 |===
 | Bits
 | Permission
