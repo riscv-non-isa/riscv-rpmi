@@ -66,8 +66,7 @@ error source descriptor being returned.
 ===== Non-ACPI Systems
 RAS is not standardized for non-ACPI systems. Such systems may define custom
 format for an error source descriptor. The type of custom error source
-descriptor format can be read from `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]`. The
-values from `1` to `15` are reserved for the custom format types.
+descriptor format can be read from `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]`.
 
 [#ras-notifications]
 ==== Notifications
@@ -336,10 +335,12 @@ returned.
 ! _Reserved_ and must be `0`.
 
 ! [3:0]
-! Format of the error source descriptor. Value `0` indicates that the error
-source descriptor is in GHESv2 format. Rest of the values from `1` to `15` are
-implementation specific.
-
+! Format of the error source descriptor.
+----
+0b0000: GHESv2 format.
+0b0001 - 0b1110: Reserved.
+0b1111: Implementation specific.
+----
 !===
 
 | 2
