@@ -423,7 +423,7 @@ level.
 
 [#table_perf_getattrs_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -907,7 +907,7 @@ block of memory to ease the configuration of memory region protection.
 
 [#table_perf_getfastchanregion_response_data]
 .Response Data
-[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 4, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
