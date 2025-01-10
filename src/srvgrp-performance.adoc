@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - PERFORMANCE (SERVICEGROUP_ID: 0x0009)
+===  Service Group - PERFORMANCE (SERVICEGROUP_ID: 0x000A)
 This PERFORMANCE service group is used to manage the performance of a
 group of devices or application processors that operate in the same performance
 domain. Unlike traditional performance control mechanisms, where the OS is

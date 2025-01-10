@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - SYSTEM_RESET (SERVICEGROUP_ID: 0x0002)
+===  Service Group - SYSTEM_RESET (SERVICEGROUP_ID: 0x0003)
 This service group defines services for system-level reset or shutdown.
 
 The architectural reset types that are supported by default are System Cold

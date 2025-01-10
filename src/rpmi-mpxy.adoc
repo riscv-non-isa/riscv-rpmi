@@ -28,6 +28,9 @@ requirements:
 allowed in S-mode except BASE and CPPC service groups. The <<table_service_groups>>
 list the RPMI service groups allowed in S-mode.
 
+. The SBI MPXY channel corresponding to the RPMI SYSTEM_MSI service group must not
+support the P2A doorbell system MSI.
+
 . The `message_id` parameter passed to the `sbi_mpxy_send_message_with_response()`
 and `sbi_mpxy_send_message_without_response()` must represent the `SERVICE_ID` of
 an RPMI service belonging to the RPMI service group bound to the SBI MPXY channel.

@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - REQUEST_FORWARD (SERVICEGROUP_ID: 0x000C)
+===  Service Group - REQUEST_FORWARD (SERVICEGROUP_ID: 0x000D)
 The REQUEST_FORWARD service group allows application processors to retrieve and
 process RPMI request messages which are forwarded by platform microcontroller from
 some other RPMI client. This service group also allows an SBI implementation to

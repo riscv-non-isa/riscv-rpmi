@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - VOLTAGE (SERVICEGROUP_ID: 0x0006)
+===  Service Group - VOLTAGE (SERVICEGROUP_ID: 0x0007)
 The system can be classified into multiple domains for voltage control. Each
 domain is the logical grouping of one or more devices powered by a single
 voltage source. Actions associated with messages within each domain control the

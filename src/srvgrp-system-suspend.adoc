@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - SYSTEM_SUSPEND (SERVICEGROUP_ID: 0x0003)
+===  Service Group - SYSTEM_SUSPEND (SERVICEGROUP_ID: 0x0004)
 This service group defines services used to request platform microcontroller
 to transition the system into a suspend state, also called a sleep state.
 The suspend state `SUSPEND_TO_RAM` is supported by default by the platform and

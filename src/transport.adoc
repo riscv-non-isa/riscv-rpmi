@@ -74,8 +74,8 @@ processors must discover it using standard hardware description mechanisms
 such as device tree or ACPI.
 
 If the P2A doorbell is a MSI then the application processors must configure
-the MSI on the platform microcontroller side using the RPMI service defined by
-the `BASE` service group.
+the P2A doorbell MSI on the platform microcontroller side using RPMI services
+defined by the `SYSTEM_MSI` service group.
 
 NOTE: If the platform supports PLIC, the platform need to provide a MMIO
 register to inject an edge-triggered interrupt.

@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - MANAGEMENT_MODE (SERVICEGROUP_ID: 0x000A)
+===  Service Group - MANAGEMENT_MODE (SERVICEGROUP_ID: 0x000B)
 This MANAGEMENT_MODE service group provides RPMI client a mechanism to invoke the
 Management Mode (MM) in a secure execution environment. For general background on
 Management Mode, refer to the Platform Initialization (PI) specifications cite:[PI],

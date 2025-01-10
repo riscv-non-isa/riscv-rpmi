@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-=== Service Group - HART_STATE_MANAGEMENT (SERVICEGROUP_ID: 0x0004)
+=== Service Group - HART_STATE_MANAGEMENT (SERVICEGROUP_ID: 0x0005)
 This service group defines services to control and manage the application
 processor (hart) power states. Hart power states include power on, power off,
 suspend modes, etc. A hart is identified by a 32-bit identifier called `HART_ID`.

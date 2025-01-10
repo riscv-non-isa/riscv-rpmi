@@ -74,6 +74,8 @@ include::src/service-groups.adoc[]
 
 include::src/srvgrp-base.adoc[]
 
+include::src/srvgrp-system-msi.adoc[]
+
 include::src/srvgrp-system-reset.adoc[]
 
 include::src/srvgrp-system-suspend.adoc[]

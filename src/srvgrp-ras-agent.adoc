@@ -9,7 +9,7 @@ ifndef::rootpath[]
 :rootpath: ./../
 endif::rootpath[]
 
-===  Service Group - RAS_AGENT (SERVICEGROUP_ID: 0x000B)
+===  Service Group - RAS_AGENT (SERVICEGROUP_ID: 0x000C)
 The RAS_AGENT service group provides services to enumerate various error
 sources in a system and to retrieve their descriptors.
 
