@@ -365,7 +365,32 @@ Refer <<section-hart-suspend-types>> for more details.
 |===
 
 ==== Service: HSM_GET_SUSPEND_INFO (SERVICE_ID: 0x05)
-This service is used to get the attributes of a suspend type.
+This service is used to get the attributes of a suspend type. The attributes of
+a suspend type include various associated latencies. The entry latency for a 
+suspend type is the maximum time required by the hart to transition from the
+execution state to the suspend state. The exit latency is the time required by
+the hart to transition from the suspend state to execution state after the wakeup
+event.
+
+For each suspend state there is a point of no return after which the suspend
+state transition cannot be reversed. The wakeup latency is the maximum time
+required by the hart to transition from the point of no return to the execution
+state. If the platform returns `0` in `WAKEUP_LATENCY` then the application
+processor can use the `(ENTRY_LATENCY + EXIT_LATENCY)` as the wakeup latency.
+
+The minimum residency of a suspend state is the minimum time the application
+processor must remain in that suspend state to become energy efficient compared
+to the shallower suspend state. 
+
+NOTE: The energy is also consumed while entering and exiting a suspend state. The
+application processor must spend time equal to or more than minimum residency to
+justify the energy cost of entering and exiting that suspend state.
+
+NOTE: The application processor entering into a deeper suspend state with a high
+minimum residency will incur a longer wakeup latency due to more time required
+to exit that suspend state. If the predicted idle time by the application processor
+is less than the minimum residency of a suspend state, it should select the
+shallower suspend state to minimize the wakeup latency to achieve energy savings.
 
 [#table_hsm_getsuspendinfo_request_data]
 .Request Data
