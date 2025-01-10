@@ -994,7 +994,7 @@ specific performance domain and performance service.
 | int32
 | Return error code.
 
-[cols="6,5", options="header"]
+[cols="7,5", options="header"]
 !===
 ! Error Code
 ! Description
