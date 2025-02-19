@@ -234,10 +234,11 @@ shared memory region but there must be no overlap among the queues. The
 RPMI queues in shared memory.
 
 NOTE: A platform may allocate separate non-contiguous shared memory regions
-for queues which may require multiple PMA entries to define the memory attributes.
-To avoid this the platform can allocate contiguous regions for all four queues.
-For example, the platform may allocate `4096 bytes` of shared memory for all
-four queues and memory attributes can be covered with single PMA entry.
+for queues which may require platform to configure and manage memory attributes
+separately for each region. Instead, the platform can allocate contiguous regions
+for all four queues. For example, the platform may allocate `4096 bytes` of
+shared memory for all four queues and memory attributes can be configured once
+only for single contiguous region.
 
 [#transport_shared_memory_qplace]
 .Recommended Placement of Queues in Shared Memory
