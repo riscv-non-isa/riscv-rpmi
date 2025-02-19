@@ -88,6 +88,10 @@ shared memory resides in a platform, but it must be accessible from both the
 application processors and the platform microcontroller.
 
 The platform must setup the PMA for the shared memory used for RPMI transport.
+At a minimum, the platform must configure the physical memory attribute of the
+shared memory as an I/O type with read/write access that is coherent and non-cacheable.
+Refer the PMA (Physical Memory Attributes) section defined in
+RISC-V Privileged Specification cite:[priv_v1_12] for details.
 
 NOTE: Its possible that the application processor and the platform
 microcontroller are not cache-coherent and using the shared memory may lead to
@@ -95,7 +99,7 @@ caching side effects such as data inconsistency between the platform
 microcontroller and the application processor, write propagation delays and
 others issues which may lead to race conditions. To avoid the caching
 side-effects, the platform can configure the memory attribute of the shared
-memory as non-cacheable or IO memory for both the application processor and the
+memory as non-cacheable IO memory for both the application processor and the
 platform microcontroller. In addition, the implementation can perform manual
 cache maintenance using cache flush and invalidate operations.
 
@@ -308,6 +312,8 @@ The layout and data format of a fast-channel are RPMI service specific in a
 service group and defined in the respective service group sections. 
 
 The platform must setup the PMA for the shared memory used for the fast-channels.
+At a minimum, the platform must configure the physical memory attribute of the
+shared memory as an I/O type with read/write access that is coherent and non-cacheable.
 
 NOTE: It is possible that the application processor and the platform
 microcontroller are not cache-coherent and using the shared memory may lead to
@@ -315,6 +321,6 @@ caching side effects such as data inconsistency between the platform
 microcontroller and the application processor, write propagation delays and
 others issues which may lead to race conditions. To avoid the caching
 side-effects, the platform can configure the memory attribute of the shared
-memory as non-cacheable or IO memory for both the application processor and the
+memory as non-cacheable IO memory for both the application processor and the
 platform microcontroller. In addition, the implementation can perform manual
 cache maintenance using cache flush and invalidate operations.
