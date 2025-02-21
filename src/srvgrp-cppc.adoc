@@ -180,18 +180,20 @@ Feedback fast-channel for an application processor.
 
 ===== Performance Request Fast-channel Doorbell
 A doorbell can also be supported for this fast-channel type which is shared
-between all the application processors. If a doorbell is available then it must
-be supported through a read-modify-write sequence to a memory-mapped register.
+between all the application processors. The doorbell, if supported must be a 
+memory mapped register with write access.
 The doorbell details and attributes such as doorbell register address, doorbell
-set mask and doorbell preserve mask can be discovered by the application
-processor through the `CPPC_GET_FAST_CHANNEL_REGION` service.
+write value can be discovered by the application processor through the
+`CPPC_GET_FAST_CHANNEL_REGION` service.
 
-The doorbell register address is the physical address of the register which needs
-to be written to trigger the doorbell interrupt. The doorbell set mask is the mask
-of bits which must be set when writing in the doorbell register. The doorbell preserve
-mask is the mask of bits which must be preserved when writing in the doorbell register.
-The width of the doorbell set mask and doorbell preserve mask must be equal to the
-doorbell register width.
+The doorbell register address is the physical address of the register.
+The doorbell write value is the value which must be written in the doorbell register
+to trigger the doorbell interrupt.
+
+The width of the doorbell write value must be equal to the doorbell register width.
+
+NOTE: The write value may also contains other set bits which must persist on every
+write to the doorbell register.
 
 [#cppc-notifications]
 ==== Notifications
@@ -551,7 +553,7 @@ used.
 	0b00: 8-bit.
 	0b01: 16-bit.
 	0b10: 32-bit.
-	0b11: 64-bit.
+	0b11: Reserved.
 ! [0]
 ! Performance Request fast-channel doorbell support.
 
@@ -590,36 +592,11 @@ used.
 | Upper 32-bit of doorbell register address for Performance Request fast-channel.
 
 | 8
-| DB_SETMASK_LOW
+| DB_WRITE_VALUE
 | uint32
-| Lower 32-bit of doorbell set mask for Performance Request fast-channel. +
-This represents the mask of bits which must be set in the doorbell register. +
+| 32-bit doorbell write value for Performance Request fast-channel. +
 If the doorbell register width is less than 32-bit, the lower bits in this field
-equal to the doorbell register width must be used as set mask.
-
-| 9
-| DB_SETMASK_HIGH
-| uint32
-| Upper 32-bit of doorbell set mask for Performance Request fast-channel. +
-This represents the mask of bits which must be set in the doorbell register. +
-The value of this field is unspecified and invalid if the doorbell register width
-is equal to or less than 32-bit.
-
-| 10
-| DB_PRESERVEMASK_LOW
-| uint32
-| Lower 32-bit doorbell preserve mask for Performance Request fast-channel. +
-This represents the mask of bits which must be preserved in the doorbell register. +
-If the doorbell register width is less than 32-bit, the lower bits in this field
-equal to the doorbell register width must be used as preserve mask.
-
-| 11
-| DB_PRESERVEMASK_HIGH
-| uint32
-| Upper 32-bit doorbell preserve mask for Performance Request fast-channel. +
-This represents the mask of bits which must be preserved in the doorbell register. +
-The value of this field is unspecified and invalid if the doorbell register width
-is equal to or less than 32-bit.
+equal to the doorbell register width must be used as write value.
 |===
 
 ==== Service: CPPC_GET_FAST_CHANNEL_OFFSET (SERVICE_ID: 0x06)
