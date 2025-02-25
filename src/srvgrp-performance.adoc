@@ -162,15 +162,17 @@ The fast-channel currently supports only the following PERFORMANCE services:
 
 
 *Doorbell Support*::
-* The doorbell details such as doorbell register address and preserve mask can
+* The doorbell, if supported must be a memory mapped register with write access.
+* The doorbell details such as doorbell register address and write value can
   be discovered by the application processor through the
   `PERF_GET_FAST_CHANNEL_ATTRIBUTES` service.
-* The doorbell register address is the physical address of the register which
-  needs to be written to trigger the doorbell interrupt. The doorbell set mask
-  is the mask of bits which must be set when writing in the doorbell register.
-  The doorbell preserve mask is the mask of bits which must be preserved when
-  writing in the doorbell register. The width of the doorbell set mask and
-  doorbell preserve mask must be equal to the doorbell register width.
+* The doorbell register address is the physical address of the register.
+  The doorbell write value is the value which must be written in the doorbell register
+  to trigger the doorbell interrupt. The width of the doorbell write value must
+  be equal to the doorbell register width.
+
+  NOTE: The write value may also contains other set bits which must persist on every write to the doorbell register.
+
 * Doorbell support is not available for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
   service calls.
 * When fast-channels are implemented for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
@@ -1029,7 +1031,7 @@ specific performance domain and performance service.
 	0b00: 8-bit.
 	0b01: 16-bit.
 	0b10: 32-bit.
-	0b11: 64-bit.
+	0b11: Reserved.
 
 ! [0]	! Doorbell support.
 
@@ -1065,30 +1067,10 @@ This field is unused if the doorbell is not supported.
 This field is unused if the doorbell is not supported.
 
 | 7
-| DB_ID_LOW
+| DB_WRITE_VALUE
 | uint32
-| Lower 32-bit of doorbell ID. This represents the mask of bits which must be
-set in the doorbell register. This field is unused if the doorbell is not supported.
-
-| 8
-| DB_ID_HIGH
-| uint32
-| Upper 32-bit of doorbell ID. This represents the mask of bits which must be
-set in the doorbell register. This field is unused if the doorbell is not supported.
-
-| 9
-| DB_PRESERVED_LOW
-| uint32
-| A lower 32-bit doorbell preserved mask to apply for this service before
-ringing the doorbell. This represents the mask of bits which must be preserved
-in the doorbell register. This field is unused if the doorbell is not supported.
-
-| 10
-| DB_PRESERVED_HIGH
-| uint32
-| An upper 32-bit doorbell preserved mask to apply for this service before
-ringing the doorbell. This represents the mask of bits which must be preserved
-in the doorbell register. This field is only valid if the doorbell register width
-is 64-bit and unused if the doorbell is not supported.
+| 32-bit doorbell write value for Performance Request fast-channel. +
+If the doorbell register width is less than 32-bit, the lower bits in this field
+equal to the doorbell register width must be used as write value.
 
 |===
