@@ -125,12 +125,9 @@ context.
 	FLAGS[7:4]: Reserved and must be 0.
 
 ----
-FLAGS[3]: Doorbell interrupt request.
-This flag represents if the doorbell interrupt is requested to notify
-about the response of a request message.
+FLAGS[3]: Reserved for RPMI transport.
 
-0b0: Doorbell interrupt is not requested.
-0b1: Doorbell interrupt is requested.
+Refer the corresponding RPMI transport chapter for more details.
 ----
 ----
 FLAGS[2:0]: Message Type.
@@ -191,26 +188,6 @@ may use the token for debugging or logging purposes.
 
 NOTE: The RPMI specification recommends monotonically increasing token numbers
 and the token number can be initialized from any value without any constraints.
-
-If the doorbell interrupts are supported and enabled, the sender of the RPMI
-normal request message can set the `FLAGS[3]: Doorbell interrupt request` bit to
-`1` in the message header to inform the service provider to ring the doorbell
-after sending the response message back. If the `FLAGS[3]` bit is `0` in the RPMI
-normal request message header, it means that the sender is going to poll for the
-response message in the queue and the service provider does not need to ring the
-doorbell.
-
-If the sender of an RPMI normal request message sets the `FLAGS[3]` bit to `1`
-without supporting or enabling the doorbell interrupt, the behavior is undefined.
-
-NOTE: The `FLAGS[3]` bit can be used for a particular RPMI normal request message
-or for the entire life-cycle of RPMI message communication. For example, if the
-P2A doorbell is MSI and the application processor has configured MSI target details
-via `SYSTEM_MSI` service group, then `FLAGS[3]` bit can always be set to `1` so
-that the platform microcontroller will always send the MSI for every response.
-The application processor can also selectively disable it for a request message
-so that the platform microcontroller does not trigger the doorbell for the response
-message.
 
 For an RPMI notification message, the platform microcontroller will set
 appropriate values for the `TOKEN`, `SERVICEGROUP_ID`, and `DATALEN` fields
