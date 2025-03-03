@@ -38,52 +38,9 @@ the platform microcontroller can avoid implementing the P2A channel.
 The current RPMI specification only defines a shared memory based transport but
 other transport types can be added in the future.
 
-NOTE: The shared memory for RPMI transport and fast-channels allocated
-in DRAM or in on-chip RAM will require memory attributes configuration. These
-memory attributes also called PMA (Physical Memory Attributes) are defined in
-RISC-V Privileged Specification cite:[priv_v1_12].
-
 [#transport_bidir_comm]
 .Bi-directional Communication
 image::transport-bidirectional.png[400,400, align="center"]
-
-=== Doorbell Interrupt
-An RPMI transport may also provide optional doorbell interrupts for application
-processors and/or the platform microcontroller to signal the arrival of new messages.
-This doorbell interrupt can be either a message-signaled interrupt (MSI) or a
-wired interrupt. The RPMI implementations may ignore the doorbell mechanism of
-RPMI transport and always use a polling mechanism to check the arrival of new
-messages.
-
-==== A2P Doorbell
-The A2P doorbell is a signal for new messages from the application processors
-(APs) to the platform microcontroller (PuC).
-
-The platform must support A2P doorbell interrupt triggering from application
-processors through 32-bit memory-mapped register with write access, which can be
-discovered by the application processors using hardware description mechanisms
-such as device tree or ACPI.
-
-==== P2A Doorbell
-The P2A doorbell is a signal for new messages from the platform microcontroller
-(PuC) to the application processors (APs).
-
-If the P2A doorbell is a wired interrupt then the platform must provide a
-way to the platform microcontroller to trigger the interrupt and application
-processors must discover it using standard hardware description mechanisms
-such as device tree or ACPI.
-
-If the P2A doorbell is a MSI then the application processors must configure
-the P2A doorbell MSI on the platform microcontroller side using RPMI services
-defined by the `SYSTEM_MSI` service group.
-
-NOTE: If the platform supports PLIC, the platform need to provide a MMIO
-register to inject an edge-triggered interrupt.
-
-NOTE: The doorbell attribute contains a doorbell write value which must be written
-to the doorbell memory mapped register to trigger the interrupt. The write value
-may also contains other set bits which must persist on every write to the
-doorbell register.
 
 === Shared Memory Transport
 The RPMI shared memory transport defines a mechanism to exchange messages via
@@ -277,7 +234,6 @@ M = (X / slot-size) : Total slot count in a queue
 ```
 ====
 
-
 ===== Queue Operation
 In a queue, the `head` is used to dequeue the message and the `tail` is used to 
 enqueue the message.
@@ -290,6 +246,70 @@ due to mechanisms such as kexec and others that can spawn another OS/firmware
 from the currently running OS/firmware, notifications or response messages may
 be delivered that are not intended for the newly spawned OS/firmware, and such
 messages may be ignored.
+
+==== Doorbell Interrupt
+An RPMI shared memory transport may also provide optional doorbell interrupts
+for application processors and/or the platform microcontroller to signal the
+arrival of new messages.
+This doorbell interrupt can be either a message-signaled interrupt (MSI) or a
+wired interrupt. The RPMI implementations may ignore the doorbell mechanism of
+RPMI shared memory transport and always use a polling mechanism to check the
+arrival of new messages.
+
+===== A2P Doorbell
+The A2P doorbell is a signal for new messages from the application processors
+(APs) to the platform microcontroller (PuC).
+
+The platform must support A2P doorbell interrupt triggering from application
+processors through 32-bit memory-mapped register with write access, which can be
+discovered by the application processors using hardware description mechanisms
+such as device tree or ACPI.
+
+===== P2A Doorbell
+The P2A doorbell is a signal for new messages from the platform microcontroller
+(PuC) to the application processors (APs).
+
+If the P2A doorbell is a wired interrupt then the platform must provide a
+way to the platform microcontroller to trigger the interrupt and application
+processors must discover it using standard hardware description mechanisms
+such as device tree or ACPI.
+
+If the P2A doorbell is a MSI then the application processors must configure
+the P2A doorbell MSI on the platform microcontroller side using RPMI services
+defined by the `SYSTEM_MSI` service group.
+
+NOTE: If the platform supports PLIC, the platform need to provide a MMIO
+register to inject an edge-triggered interrupt.
+
+NOTE: The doorbell attribute contains a doorbell write value which must be written
+to the doorbell memory mapped register to trigger the interrupt. The write value
+may also contains other set bits which must persist on every write to the
+doorbell register.
+
+==== Integration with RPMI Message Protocol
+If the doorbell interrupts are supported and enabled, the shared memory transport
+uses `FLAGS[3]` bit in the <<table_message_header,message header>> of
+<<messaging_message_types_table,RPMI normal request>> as
+a **doorbell interrupt request** flag. This flag represents if the doorbell
+interrupt is requested to notify about the response of a request message.
+
+The sender of the <<messaging_message_types_table,RPMI normal request>> type
+message can set the `FLAGS[3]` bit to `1` to inform the service provider to ring
+the doorbell after sending the response message back. If the `FLAGS[3]` bit is `0`,
+it means that the sender is going to poll for the response message in the queue
+and the service provider does not need to ring the doorbell.
+
+If the sender of an RPMI normal request message sets the `FLAGS[3]` bit to `1`
+without supporting or enabling the doorbell interrupt, the behavior is undefined.
+
+NOTE: The `FLAGS[3]` bit can be used for a particular RPMI normal request message
+or for the entire life-cycle of RPMI message communication. For example, if the
+P2A doorbell is MSI and the application processor has configured MSI target details
+via `SYSTEM_MSI` service group, then `FLAGS[3]` bit can always be set to `1` so
+that the platform microcontroller will always send the MSI for every response.
+The application processor can also selectively disable it for a request message
+so that the platform microcontroller does not trigger the doorbell for the response
+message.
 
 === Shared Memory based Fast-channels
 A fast-channel is a unidirectional shared memory channel with a dedicated RPMI
