@@ -10,22 +10,21 @@ ifndef::rootpath[]
 endif::rootpath[]
 
 ===  Service Group - CLOCK (SERVICEGROUP_ID: 0x0008)
-This service group is for the management of system clocks. Services defined in
-this group are used to enable or disable clocks, and to set or get clock rates.
+This service group is used to manage system clocks. Services defined in this group
+are used to enable or disable clocks, set or get clock rates, etc.
 
-Each clock in the system is identified by the clock ID, which is an 32-bit
-integer identifier assigned to each clock. The mapping of CLOCK_ID and clock is
-known to both the application processor and the platform microcontroller.
-Clock ID identifiers are sequential and starting from `0`.
+Each clock in the system is identified by a clock ID, which is a 32-bit integer
+identifier assigned to each clock. The mapping of CLOCK_ID to clock is known to
+both the application processor and the platform microcontroller.
+Clock IDs are sequential and start from `0`.
 
-The device or the group of devices sharing the same clock source form a
-single clock domain, which is identified by the CLOCK_ID. Any change to the
-clock source affects the entire domain which may contain multiple devices.
+A device or a group of devices sharing the same clock source form a single clock
+domain identified by the CLOCK_ID. Any change to the clock source affects the
+entire domain, which may include multiple devices.
 
-The topology of the devices and the clock source is dependent on how the system
-is designed and implementation specific. The OS can discover this topology
-through supported hardware description mechanisms.
-
+The topology of the devices and the clock source depends on the system design and
+is implementation specific. The operating system can discover this topology through
+supported hardware description mechanisms.
 
 The following table lists the services in the CLOCK service group:
 
@@ -76,10 +75,10 @@ Each clock rate is a array of two 32-bit values `(uint32, uint32)` represented
 as `(clock_rate_low, clock_rate_high)` and packed in the same order where
 `clock_rate_low` is at the lower index than the `clock_rate_high`.
 
-===== Discrete Clock Format
-A set of discrete clock rate arranged in a sequence, starting from the
+===== Discrete Format
+A set of discrete clock rates arranged in a sequence, starting from the
 lowest value at the lowest index and increasing sequentially to higher clock
-rate. The following table shows the structure of the Discrete clock format.
+rate. The following table shows the structure of the discrete clock rate format.
 
 ```c
 [clock_rate1, clock_rate2, clock_rate3, ... , clock_rateN]
@@ -88,6 +87,7 @@ where:
 clock_rate1 < clock_rate2 < clock_rate3 < ... < clock_rateN
 ```
 
+[#clock-rate-format-discrete]
 .Discrete Clock Format Structure
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
@@ -104,15 +104,17 @@ clock_rate1 < clock_rate2 < clock_rate3 < ... < clock_rateN
 | Upper 32-bit clock rate in Hz.
 |===
 
-===== Linear Clock Format
-A linear range of clock rate with a constant step size.
-The following table shows the structure of the Linear clock format.
+[#clock-rate-format-linear]
+===== Linear Range Format
+A linear range of clock rates represented by minimum and maximum clock rate and
+a constant step size. The following table shows the fixed structure of the linear
+range format for clock rates.
 
 ```c
-[clock_rate_minimum, clock_rate_maximum, clock_step]
+[clock_rate_min, clock_rate_max, clock_step]
 ```
 
-.Linear Clock Format Structure
+.Linear Range Format Structure
 [cols="1,3,5" width=100%, align="center", options="header"]
 |===
 | Word
@@ -143,6 +145,18 @@ The following table shows the structure of the Linear clock format.
 | CLOCK_STEP_HIGH
 | Upper 32-bit of the step between two successive rates in Hz.
 |===
+
+A clock may also support clock rates which can be represented by multiple
+linear ranges. For example,
+```c
+[clock_rate_min0, clock_rate_max0, clock_rate_step0],
+[clock_rate_min1, clock_rate_max1, clock_rate_step1], 
+ ...,
+[clock_rate_minN, clock_rate_maxN, clock_rate_stepN]
+```
+The linear ranges must be packed sequentially such that
+`clock_rate_max0 < clock_rate_min1`, `clock_rate_max1 < clock_rate_min2` and
+so on.
 
 [#clock-notifications]
 ==== Notifications
@@ -275,9 +289,11 @@ called `CLOCK_ID`.
 This service provides detailed attributes of a clock, including its name,
 represented as a 16-byte array of ASCII strings. It also specifies the
 transition latency, which denotes the maximum time for the clock to stabilize
-after a configuration change. Moreover, it indicates the number of clock rates
-supported by the requested clock. The `FLAGS` field encodes the clock formats
-supported by the clock.
+after a configuration change.
+The `FLAGS` field encodes the clock formats supported by the clock. When the
+format is of the discrete type, the `NUM_RATES` field returns the number of discrete
+clock rates supported by the clock. In the case of linear range format the `NUM_RATES`
+will return the number of linear ranges supported.
 
 [#table_clock_getattrs_request_data]
 .Request Data
@@ -340,7 +356,7 @@ supported by the clock.
 Refer to <<clock-rate-format-section>> for more details.
 ----
 0b00: Discrete format.
-0b01: Linear format.
+0b01: Linear range format.
 0b10 - 0b11: Reserved.
 ----
 
@@ -349,7 +365,8 @@ Refer to <<clock-rate-format-section>> for more details.
 | 2
 | NUM_RATES
 | uint32
-| Number of clock rates.
+| The number of discrete clock rates if the format is of discrete type, or the
+  number of linear ranges if the format is linear range.
 
 | 3
 | TRANSITION_LATENCY
@@ -363,20 +380,36 @@ Refer to <<clock-rate-format-section>> for more details.
 |===
 
 ==== Service: CLK_GET_SUPPORTED_RATES (SERVICE_ID: 0x04)
-Each domain may support multiple clock rate values which are allowed by the
-domain to operate. Message can also pass the `CLOCK_RATE_INDEX` which is the index
-to the first rate value to be described in the return rate array. If all
-supported rate values are required then this index value can be `0`.
+This service is used to get the supported clock rates. The clock rate data returned
+by this service depends on the format supported by the clock.
 
-Total words required for the number of clock rates according to the format in
-one message cannot exceed the total words available in one message DATA field.
-If they exceed then the platform microcontroller will return the number of
-clock rates which can be accommodated in one message and set the `REMAINING` field
-accordingly. The application processor, when `REMAINING` field is not `0` must
+If the format is discrete, the message can pass the `CLOCK_RATE_INDEX` which is
+the index to the first rate value to be described in the returned rate array. If all
+supported rate values are required then this index value can be `0`. Similarly, if
+the format is linear range, then the `CLOCK_RATE_INDEX` is the index of the first linear
+range to be described in the returned clock rate linear ranges. If all the supported
+linear ranges are needed then this index value can be `0`.
+
+The total number of words required for the number of discrete clock rates or
+linear ranges according to the format in one message must not exceed the total
+words available in a message DATA field. If the format is linear range and a clock
+supports multiple linear ranges, then only complete linear ranges must be returned
+as per the data format of the linear range described in <<clock-rate-format-linear>>.
+
+If the total number of words required to store all supported discrete clock rates
+or the linear ranges exceed the available words in message DATA field then `REMAINING`
+and `RETURNED` must be set accordingly. In such condition, if the format is
+discrete, the platform microcontroller will return the discrete clock rates which
+can be accommodated in one message and set the `RETURNED` field to number of
+discrete clock rates returned and `REMAINING` field is set to the remaining number
+of discrete clock rates. Similarly if the format is linear, the linear ranges
+which can be accommodated in one message are returned with `RETURNED` field set
+to the number of linear ranges returned and `REMAINING` field is set to the
+remaining number of linear ranges.
+
+The application processor, when `REMAINING` field is not `0` must
 call this service again with appropriate `CLOCK_RATE_INDEX` set to get the
-remaining clock rates. It's possible that multiple service calls may be required
-to get all the clock rates. In case the clock format is a linear range the
-`RETURNED` field will be set to `3`.
+remaining discrete clock rates or linear ranges.
 
 [#table_clock_getsupprates_request_data]
 .Request Data
@@ -434,18 +467,20 @@ to get all the clock rates. In case the clock format is a linear range the
 | 2
 | REMAINING
 | uint32
-| Remaining number of clock rates (number of arrays).
+| The remaining number of discrete clock rates if the format is discrete type, or
+the remaining number of linear ranges if the format is linear range.
 
 | 3
 | RETURNED
 | uint32
-| Number of clock rates returned (number of arrays).
+| The number of discrete clock rates returned if the format is discrete type, or
+the number of linear ranges returned if the format is linear range.
 
 | 4
-| CLOCK_RATE[N]
+| CLOCK_RATE[ ]
 | uint32[2]
-| Clock rate.
-
+| Clock rates. +
+The clock rate data structure and its packing is according to the supported format.
 Refer to <<clock-rate-format-section>> for more details.
 |===
 
