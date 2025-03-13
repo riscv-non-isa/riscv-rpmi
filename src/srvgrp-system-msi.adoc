@@ -16,12 +16,11 @@ request, CPU hotplug event, memory hotplug event, etc.
 
 The number of system MSIs supported by this service group is fixed and referred
 to as `SYS_NUM_MSI`. Each system MSI is associated with a unique index which is
-also referred to as `SYS_MSI_INDEX` where `0 <= SYS_MSI_INDEX < SYS_NUM_MSI`.
+also referred to as `SYS_MSI_INDEX` where `0 <&#8203;= SYS_MSI_INDEX < SYS_NUM_MSI`.
 
 The association between system events and system MSI index (aka `SYS_MSI_INDEX`)
 is platform specific and must be discovered using hardware description mechanisms
-such as device tree or ACPI. The `SYS_NUM_MSI` value and `SYS_MSI_INDEX` of the
-P2A doorbell system MSI can be discovered using the `SYSMSI_GET_ATTRIBUTES` service.
+such as device tree or ACPI.
 
 The system MSI state is 32-bit word also referred to as `SYS_MSI_STATE` which
 includes whether the system MSI is enabled/disabled and whether system MSI is
@@ -233,17 +232,11 @@ This service is used to discover attributes of the system MSI service group.
 | Number of system MSIs.
 
 | 2
-| P2A_DB_INDEX
-| uint32
-| System MSI index or `SYS_MSI_INDEX` of the P2A doorbell. If P2A doorbell
-  is not supported as system MSI then `0xffffffff` value should be returned.
-
-| 3
 | FLAGS0
 | uint32
 | _Reserved_ and must be `0`.
 
-| 4
+| 3
 | FLAGS1
 | uint32
 | _Reserved_ and must be `0`.
