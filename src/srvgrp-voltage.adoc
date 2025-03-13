@@ -337,8 +337,8 @@ supported voltage range.
 | 2
 | NUM_LEVELS
 | uint32
-| Number of voltage levels (number of arrays) supported by the domain. If the
-voltage level format is linear range then each linear range is considered as a
+| The number of voltage levels (number of arrays) supported by the domain. If the
+voltage level format is a linear range, then each linear range is considered a
 single voltage level.
 
 | 3

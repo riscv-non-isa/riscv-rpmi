@@ -81,10 +81,10 @@ lowest value at the lowest index and increasing sequentially to higher clock
 rate. The following table shows the structure of the discrete clock rate format.
 
 ```c
-[clock_rate1, clock_rate2, clock_rate3, ... , clock_rateN]
+[clock_rate0, clock_rate1, clock_rate2, ... , clock_rate(N-1)]
 
 where:
-clock_rate1 < clock_rate2 < clock_rate3 < ... < clock_rateN
+clock_rate0 < clock_rate1 < clock_rate2 < ... < clock_rate(N-1)
 ```
 
 [#clock-rate-format-discrete]
@@ -149,13 +149,13 @@ range format for clock rates.
 A clock may also support clock rates which can be represented by multiple
 linear ranges. For example,
 ```c
+[clock_rate_min0, clock_rate_max0, clock_rate_step0],
 [clock_rate_min1, clock_rate_max1, clock_rate_step1],
-[clock_rate_min2, clock_rate_max2, clock_rate_step2],
  ...,
-[clock_rate_minN, clock_rate_maxN, clock_rate_stepN]
+[clock_rate_min(N-1), clock_rate_max(N-1), clock_rate_step(N-1)]
 ```
 The linear ranges must be packed sequentially such that
-`clock_rate_max1 < clock_rate_min2`, `clock_rate_max2 < clock_rate_min3` and
+`clock_rate_max0 < clock_rate_min1`, `clock_rate_max1 < clock_rate_min2` and
 so on.
 
 [#clock-notifications]
