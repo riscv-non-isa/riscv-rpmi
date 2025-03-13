@@ -88,13 +88,24 @@ voltage1 < voltage2 < voltage3 < ... < voltageN
 | Discrete voltage level in microvolts (uV).
 |===
 
-===== Linear Format
+===== Linear Range Format
 A linear range of voltage levels with a constant step size. The following table
-shows the structure of the linear voltage format.
+shows the structure of the linear range voltage format.
 
 ```c
-[voltage_minimum, voltage_maximum, voltage_step]
+[voltage_min, voltage_max, voltage_step]
 ```
+
+Multi-linear range format can be supported by having multiple `linear range` tuple
+arranged in an continuous array format.
+```c
+[voltage_min1, voltage_max1, voltage_step1],
+[voltage_min2, voltage_max2, voltage_step2],
+...
+[voltage_minN, voltage_maxN, voltage_stepN],
+```
+The format must be packed sequentially such that voltage_max1 < voltage_min2,
+voltage_max2 < voltage_min3 and so on.
 
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
@@ -244,11 +255,12 @@ system.
 Each domain may support multiple voltage levels, which are permitted by the domain
 for operation. The number of levels indicates the total count of voltage levels
 supported within a voltage domain. Transition latency denotes the maximum time
-required for the voltage to stabilize upon a change in the regulator. Depending
-on the hardware, voltage levels can be of various formats, and the current
-service supports discrete and linear formats. Each domain can support only one
-voltage level format. Additional voltage formats can be accommodated in the
-future if required.
+required for the voltage to stabilize upon a change in the regulator. The `FLAGS`
+field encodes the voltage format supported by the hardware, including discrete
+and linear range formats." The `NUM_LEVELS` field returns the number of discrete
+voltage in case discrete format and number of linear range tuple in linear range
+voltage format. Each domain can support only one voltage level format. Additional
+voltage formats can be accommodated in the future if required.
 
 [#table_voltage_getdomainattrs_request_data]
 .Request Data
@@ -306,8 +318,8 @@ future if required.
 ! Voltage format. +
 Refer to <<voltage-level-format-section>> for more details.
 ----
-0b000: Discrete voltage.
-0b001: Linear.
+0b000: Discrete format.
+0b001: Linear range format.
 0b010 - 0b111: Reserved.
 ----
 
@@ -324,7 +336,7 @@ supported voltage range.
 | NUM_LEVELS
 | uint32
 | Number of voltage levels (number of arrays) supported by the domain. Each
-linear format voltage level represents 1 voltage level.
+linear range format voltage level represents 1 voltage level.
 
 | 3
 | TRANS_LATENCY
@@ -368,7 +380,8 @@ calls may be necessary to retrieve all the voltage levels.
 | 1
 | VOLTAGE_LEVEL_INDEX
 | uint32
-| Voltage level index.
+| The index of discrete voltage if the format is discrete, or index of linear
+range tuple if the format is linear range.
 |===
 
 [#table_voltage_getdomainlevels_response_data]
@@ -408,17 +421,20 @@ calls may be necessary to retrieve all the voltage levels.
 | 2
 | REMAINING
 | uint32
-| Remaining number of voltage levels (number of arrays).
+| The remaining number of discrete voltage if the format is discrete type, or
+number of linear range tuple if the format is linear range.
 
 | 3
 | RETURNED
 | uint32
-| Number of voltage levels (number of arrays) returned in this request.
+| The number of discrete voltage levels returned if the format is discrete type,
+or the number of linear range tuple if the format is linear range.
 
 | 4
-| VOLTAGE_LEVEL[N]
+| VOLTAGE_LEVEL[]
 | uint32[]
 | Voltage levels. +
+The voltage format data structure and its packing is according to the supported format.
 Refer to <<voltage-level-format-section>> for more details.
 
 |===

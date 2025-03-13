@@ -622,7 +622,7 @@ levels.
 | Number of levels returned (number of arrays).
 
 | 4
-| LEVEL[N]
+| LEVEL[]
 | uint32[4]
 | List of performance levels attributes. +
 Refer to <<section-perf-attribute>> for the complete structure of performance
