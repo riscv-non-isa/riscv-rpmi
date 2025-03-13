@@ -149,13 +149,13 @@ range format for clock rates.
 A clock may also support clock rates which can be represented by multiple
 linear ranges. For example,
 ```c
-[clock_rate_min0, clock_rate_max0, clock_rate_step0],
-[clock_rate_min1, clock_rate_max1, clock_rate_step1], 
+[clock_rate_min1, clock_rate_max1, clock_rate_step1],
+[clock_rate_min2, clock_rate_max2, clock_rate_step2],
  ...,
 [clock_rate_minN, clock_rate_maxN, clock_rate_stepN]
 ```
 The linear ranges must be packed sequentially such that
-`clock_rate_max0 < clock_rate_min1`, `clock_rate_max1 < clock_rate_min2` and
+`clock_rate_max1 < clock_rate_min2`, `clock_rate_max2 < clock_rate_min3` and
 so on.
 
 [#clock-notifications]
