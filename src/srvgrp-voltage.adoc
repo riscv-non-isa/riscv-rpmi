@@ -10,11 +10,11 @@ ifndef::rootpath[]
 endif::rootpath[]
 
 ===  Service Group - VOLTAGE (SERVICEGROUP_ID: 0x0007)
-The system can be classified into multiple domains for voltage control. Each
-domain is the logical grouping of one or more devices powered by a single
-voltage source. Actions associated with messages within each domain control the
-voltage source, thereby influencing either the individual device or the collective
-group of devices sharing the same voltage source. Each domain is identified by
+This service group is used to control the voltage level of the voltage domains.
+A voltage domain is the logical grouping of one or more devices powered by a
+single controllable voltage source. A system may have multiple voltage domains
+and the services defined in this service group are used to manage and control the
+voltage levels of these voltage domains. Each voltage domain is identified by
 `DOMAIN_ID` which is a 32-bit integer starting from `0`.
 
 The following table lists the services in the VOLTAGE service group:
@@ -62,7 +62,7 @@ The following table lists the services in the VOLTAGE service group:
 
 [#voltage-level-format-section]
 ==== Voltage Level Format
-There are 2 types of voltage level formats supported in the VOLTAGE service
+There are two types of voltage level formats supported in the VOLTAGE service
 group. The voltage levels are represented as a group.
 
 ===== Discrete Format
@@ -71,10 +71,10 @@ lowest value at the lowest index and increasing sequentially to higher levels.
 The following table shows the structure of the discrete format.
 
 ```c
-[voltage1, voltage2, voltage3, ... , voltageN]
+[voltage0, voltage1, voltage2, ... , voltage(N-1)]
 
 where:
-voltage1 < voltage2 < voltage3 < ... < voltageN
+voltage0 < voltage1 < voltage2 < ... < voltage(N-1)
 ```
 
 [cols="1,2,5" width=100%, align="center", options="header"]
@@ -99,13 +99,15 @@ shows the structure of the linear range voltage format.
 Multi-linear range format can be supported by having multiple `linear range` tuple
 arranged in an continuous array format.
 ```c
+[voltage_min0, voltage_max0, voltage_step0],
 [voltage_min1, voltage_max1, voltage_step1],
-[voltage_min2, voltage_max2, voltage_step2],
 ...
-[voltage_minN, voltage_maxN, voltage_stepN],
+[voltage_min(N-1), voltage_max(N-1), voltage_step(N-1)],
 ```
-The format must be packed sequentially such that voltage_max1 < voltage_min2,
-voltage_max2 < voltage_min3 and so on.
+The format must be packed sequentially such that `voltage_max0 < voltage_min1,
+voltage_max1 < voltage_min2` and so on.
+
+Each linear range is considered as a single voltage level.
 
 [cols="1,2,5" width=100%, align="center", options="header"]
 |===
@@ -335,8 +337,9 @@ supported voltage range.
 | 2
 | NUM_LEVELS
 | uint32
-| Number of voltage levels (number of arrays) supported by the domain. Each
-linear range format voltage level represents 1 voltage level.
+| Number of voltage levels (number of arrays) supported by the domain. If the
+voltage level format is linear range then each linear range is considered as a
+single voltage level.
 
 | 3
 | TRANS_LATENCY
