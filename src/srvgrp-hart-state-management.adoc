@@ -150,7 +150,7 @@ for future use.
 ! `EVENT_ID` or `REQ_STATE` is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
-! Notification is not supported.
+! Notification for the `EVENT_ID` is not supported.
 !===
 - Other errors <<table_error_codes>>.
 
@@ -366,11 +366,12 @@ Refer <<section-hart-suspend-types>> for more details.
 
 ==== Service: HSM_GET_SUSPEND_INFO (SERVICE_ID: 0x05)
 This service is used to get the attributes of a suspend type. The attributes of
-a suspend type include various associated latencies. The entry latency for a 
-suspend type is the maximum time required by the hart to transition from the
-execution state to the suspend state. The exit latency is the time required by
-the hart to transition from the suspend state to execution state after the wakeup
-event.
+a suspend type include various associated latencies. The entry latency for a
+suspend type is the maximum amount of time that the hart requires to transition
+from the execution state to the low-power suspend state when the hart invokes an
+quiesced state entry mechanism such as WFI.
+The exit latency is the time required by the hart to transition from the suspend
+state to execution state after the wakeup event.
 
 For each suspend state there is a point of no return after which the suspend
 state transition cannot be reversed. The wakeup latency is the maximum time
@@ -380,7 +381,7 @@ processor can use the `(ENTRY_LATENCY + EXIT_LATENCY)` as the wakeup latency.
 
 The minimum residency of a suspend state is the minimum time the application
 processor must remain in that suspend state to become energy efficient compared
-to the shallower suspend state. 
+to the shallower suspend state.
 
 NOTE: The energy is also consumed while entering and exiting a suspend state. The
 application processor must spend time equal to or more than minimum residency to
@@ -605,7 +606,7 @@ Once the hart is stopped, it can only be restarted by explicitly invoking the
 |===
 
 ==== Service: HSM_HART_SUSPEND (SERVICE_ID: 0x08)
-This service is used to put a hart in a low power suspend state supported by the
+This service is used to put a hart in a low-power suspend state supported by the
 platform. Each suspend type is a 32-bit value which is discovered through the
 `HSM_GET_SUSPEND_TYPES` service.
 
