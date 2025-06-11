@@ -69,4 +69,14 @@ data format.
 | 0x80000001
 | RO
 | RPMI service group version.
+
+| IMPLEMENTATION_ID
+| 0x80000002
+| RO
+| RPMI implementation ID.
+
+| IMPLEMENTATION_VERSION
+| 0x80000003
+| RO
+| RPMI implementation version.
 |===

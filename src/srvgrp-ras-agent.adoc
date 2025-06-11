@@ -134,7 +134,7 @@ for future use.
 ! `EVENT_ID` or `REQ_STATE` is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
-! Notification is not supported.
+! Notification for the `EVENT_ID` is not supported.
 !===
 - Other errors <<table_error_codes>>.
 
