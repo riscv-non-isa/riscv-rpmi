@@ -104,8 +104,8 @@ listed in the below table.
 | 0x01
 | REQUEST_HANDLE_ERROR
 | NA
-| This event indicates that the platform microcontroller is unable to
-serve the message requests.
+| This event indicates that the platform microcontroller is unable to serve the
+message requests and acknowledgements are not guaranteed.
 |===
 
 ==== Service: BASE_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
@@ -170,7 +170,7 @@ for future use.
 ! `EVENT_ID` or `REQ_STATE` is invalid.
 
 ! RPMI_ERR_NOT_SUPPORTED
-! Notification is not supported.
+! Notification for the `EVENT_ID` is not supported.
 !===
 - Other errors <<table_error_codes>>.
 
