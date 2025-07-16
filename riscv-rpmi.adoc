@@ -5,7 +5,7 @@
 :company: RISC-V.org
 :revdate: 1/2023
 :revnumber: 1.0
-:revremark: Frozen
+:revremark: Ratified
 :revinfo:
 :url-riscv: http://riscv.org
 :doctype: book
@@ -39,11 +39,10 @@ endif::[]
 :xrefstyle: short
 
 [WARNING]
-.This document is in the link:http://riscv.org/spec-state[Frozen state]
+.This document is in the link:http://riscv.org/spec-state[Ratified state]
 ====
-Changes are highly unlikely. A high threshold will be applied, and modifications
-will only be made in response to critical issues. Any other proposed changes
-should be addressed through a follow-on extensions.
+No changes are allowed. Any necessary or desired modifications must be addressed
+through a follow-on extension. Ratified extensions are never revised.
 ====
 
 [preface]
