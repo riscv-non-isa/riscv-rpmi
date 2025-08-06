@@ -1,3 +1,0 @@
-= Platform Management Interface  (RPMI)
-
-Platform Management Interface Specification (RPMI)

@@ -1,1 +1,0 @@
-../../../src/rpmi-mpxy.adoc

@@ -1,1 +1,0 @@
-../../../src/srvgrp-hart-state-management.adoc
