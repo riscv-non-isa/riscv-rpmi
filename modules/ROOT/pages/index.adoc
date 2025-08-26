@@ -1,3 +1,5 @@
-= Platform Management Interface  (RPMI)
+image::risc-v_logo.svg[]
 
-Platform Management Interface Specification (RPMI)
+== Platform Management Interface Specification
+
+Version v1.0, 2025-07-16: Ratified
