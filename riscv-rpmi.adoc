@@ -97,7 +97,10 @@ include::src/srvgrp-ras-agent.adoc[]
 
 include::src/srvgrp-request-forward.adoc[]
 
+include::src/srvgrp-logging.adoc[]
+
 include::src/rpmi-mpxy.adoc[]
+
 
 // The index must precede the bibliography
 //include::src/index.adoc[]
