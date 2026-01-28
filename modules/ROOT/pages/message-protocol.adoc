@@ -1,1 +1,1 @@
-../../../src/message-protool.adoc
+../../../src/message-protocol.adoc

@@ -1,4 +1,5 @@
 .Platform Management Interface (RPMI)
+* xref:index.adoc[Platform Management Interface (RPMI)]
 * xref:contributors.adoc[Contributors]
 * xref:changelog.adoc[Changelog]
 * xref:terms.adoc[Terms and Abbreviations]
@@ -20,3 +21,4 @@
 * xref:srvgrp-ras-agent.adoc[Service Group - RAS_AGENT (SERVICEGROUP_ID: 0x000C)]
 * xref:srvgrp-request-forward.adoc[Service Group - REQUEST_FORWARD (SERVICEGROUP_ID: 0x000D)]
 * xref:rpmi-mpxy.adoc[Integration with SBI MPXY Extension]
+* xref:bibliography.adoc[Bibliography]
