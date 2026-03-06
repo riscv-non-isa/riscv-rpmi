@@ -16,7 +16,7 @@ DATE ?= $(shell date +%Y-%m-%d)
 VERSION ?= v1.0
 REVMARK ?= Ratified
 DOCKER_RUN := docker run --rm -v ${PWD}:/build -w /build \
-riscvintl/riscv-docs-base-container-image:latest
+ghcr.io/riscv/riscv-docs-base-container-image:latest
 
 HEADER_SOURCE := riscv-rpmi.adoc
 PDF_RESULT := riscv-rpmi.pdf
