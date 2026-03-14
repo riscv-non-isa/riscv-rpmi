@@ -6,4 +6,6 @@ nav:
 
 asciidoc:
   attributes:
+    page-pdf_url: _attachments/riscv-rpmi.pdf
+    more_details_url: https://riscv.atlassian.net/wiki/external/OWIyYzBlNTUyNWM5NDI4ZmIzMDliZjcxOGY1ZDYwZWY
     page-group: platform-software
