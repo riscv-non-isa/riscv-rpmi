@@ -1,0 +1,13 @@
+image::risc-v_logo.svg[]
+
+== RISC-V Platform Management Interface Specification (RPMI)
+
+Version v1.0, 2025-07-16: Ratified
+
+
+[WARNING]
+.This document is in the link:http://riscv.org/spec-state[Ratified state]
+====
+No changes are allowed. Any necessary or desired modifications must be addressed
+through a follow-on extension. Ratified extensions are never revised.
+====

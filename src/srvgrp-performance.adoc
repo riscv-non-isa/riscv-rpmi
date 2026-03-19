@@ -1,13 +1,13 @@
-:path: src/
-:imagesdir: ../images
+// :path: src/
+// :imagesdir: ../images
 
-ifdef::rootpath[]
-:imagesdir: {rootpath}{path}{imagesdir}
-endif::rootpath[]
+// ifdef::rootpath[]
+// :imagesdir: {rootpath}{path}{imagesdir}
+// endif::rootpath[]
 
-ifndef::rootpath[]
-:rootpath: ./../
-endif::rootpath[]
+// ifndef::rootpath[]
+// :rootpath: ./../
+// endif::rootpath[]
 
 ===  Service Group - PERFORMANCE (SERVICEGROUP_ID: 0x000A)
 This PERFORMANCE service group is used to manage the performance of a

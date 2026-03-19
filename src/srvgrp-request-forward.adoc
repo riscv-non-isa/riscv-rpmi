@@ -1,13 +1,13 @@
-:path: src/
-:imagesdir: ../images
+// :path: src/
+// :imagesdir: ../images
 
-ifdef::rootpath[]
-:imagesdir: {rootpath}{path}{imagesdir}
-endif::rootpath[]
+// ifdef::rootpath[]
+// :imagesdir: {rootpath}{path}{imagesdir}
+// endif::rootpath[]
 
-ifndef::rootpath[]
-:rootpath: ./../
-endif::rootpath[]
+// ifndef::rootpath[]
+// :rootpath: ./../
+// endif::rootpath[]
 
 ===  Service Group - REQUEST_FORWARD (SERVICEGROUP_ID: 0x000D)
 The REQUEST_FORWARD service group allows application processors to retrieve and

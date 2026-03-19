@@ -1,13 +1,13 @@
-:path: src/
-:imagesdir: ../images
+// :path: src/
+// :imagesdir: ../images
 
-ifdef::rootpath[]
-:imagesdir: {rootpath}{path}{imagesdir}
-endif::rootpath[]
+// ifdef::rootpath[]
+// :imagesdir: {rootpath}{path}{imagesdir}
+// endif::rootpath[]
 
-ifndef::rootpath[]
-:rootpath: ./../
-endif::rootpath[]
+// ifndef::rootpath[]
+// :rootpath: ./../
+// endif::rootpath[]
 
 === Service Group: BASE (SERVICEGROUP_ID: 0x0001)
 The BASE service group is mandatory and provides the following services:

@@ -1,13 +1,13 @@
-:path: src/
-:imagesdir: ../images
+// :path: src/
+// :imagesdir: ../images
 
-ifdef::rootpath[]
-:imagesdir: {rootpath}{path}{imagesdir}
-endif::rootpath[]
+// ifdef::rootpath[]
+// :imagesdir: {rootpath}{path}{imagesdir}
+// endif::rootpath[]
 
-ifndef::rootpath[]
-:rootpath: ./../
-endif::rootpath[]
+// ifndef::rootpath[]
+// :rootpath: ./../
+// endif::rootpath[]
 
 :stem: latexmath
 
