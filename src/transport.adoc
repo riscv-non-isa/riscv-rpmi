@@ -170,8 +170,8 @@ exclusive where only the message consumer should update the `head` and only the
 message producer should update `tail` of the RPMI shared memory queue.
 
 NOTE: For example, only application processors should enqueue new messages
-and update `head` of the A2P REQ queue whereas only platform microcontroller
-should dequeue messages and update `tail` of the A2P REQ queue.
+and update the `tail` of the A2P REQ queue, whereas only the platform microcontroller
+should dequeue messages and update the `head` of the A2P REQ queue.
 
 ==== Queue Placement
 The RPMI shared memory transport divides the underlying shared memory region
