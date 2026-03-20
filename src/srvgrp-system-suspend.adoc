@@ -1,13 +1,13 @@
-// :path: src/
-// :imagesdir: ../images
+:path: src/
+:imagesdir: ../images
 
-// ifdef::rootpath[]
-// :imagesdir: {rootpath}{path}{imagesdir}
-// endif::rootpath[]
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
 
-// ifndef::rootpath[]
-// :rootpath: ./../
-// endif::rootpath[]
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - SYSTEM_SUSPEND (SERVICEGROUP_ID: 0x0004)
 This service group defines services used to request platform microcontroller

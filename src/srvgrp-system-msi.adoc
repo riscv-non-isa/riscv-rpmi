@@ -1,13 +1,13 @@
-// :path: src/
-// :imagesdir: ../images
+:path: src/
+:imagesdir: ../images
 
-// ifdef::rootpath[]
-// :imagesdir: {rootpath}{path}{imagesdir}
-// endif::rootpath[]
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
 
-// ifndef::rootpath[]
-// :rootpath: ./../
-// endif::rootpath[]
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - SYSTEM_MSI (SERVICEGROUP_ID: 0x0002)
 The SYSTEM_MSI service group defines services to allow application processors
