@@ -1,5 +1,5 @@
 .Platform Management Interface (RPMI)
-* xref:index.adoc[Platform Management Interface (RPMI)]
+* xref:index.adoc[Title Page)]
 * xref:copyright.adoc[Copyright and License]
 * xref:contributors.adoc[Contributors]
 * xref:changelog.adoc[Changelog]
