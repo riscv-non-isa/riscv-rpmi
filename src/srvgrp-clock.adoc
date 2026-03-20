@@ -1,13 +1,13 @@
-// :path: src/
-// :imagesdir: ../images
+:path: src/
+:imagesdir: ../images
 
-// ifdef::rootpath[]
-// :imagesdir: {rootpath}{path}{imagesdir}
-// endif::rootpath[]
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
 
-// ifndef::rootpath[]
-// :rootpath: ./../
-// endif::rootpath[]
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
 
 ===  Service Group - CLOCK (SERVICEGROUP_ID: 0x0008)
 This service group is used to manage system clocks. Services defined in this group
