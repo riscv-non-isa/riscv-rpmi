@@ -122,7 +122,12 @@ RPMI service groups defined by this specification.
 | REQUEST_FORWARD
 | M-mode, S-mode
 
-| 0x000E - 0x7BFF
+| 0x000E
+| 2.0
+| LOGGING
+| M-mode, S-mode
+
+| 0x000F - 0x7BFF
 |
 | _Reserved for Future Use_
 |
