@@ -1,0 +1,14 @@
+name: rpmi
+title: Platform Management Interface (RPMI)
+version: v1.0
+nav:
+- modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+    page-group: platform-software
+    page-card-description: 'Platform management services and messaging definitions.'
+    page-release-date: 'July 2025'
+    page-pdf_url: _attachments/riscv-rpmi.pdf
+    more_details_url: https://riscv.atlassian.net/wiki/external/OWIyYzBlNTUyNWM5NDI4ZmIzMDliZjcxOGY1ZDYwZWY
+    asamBibliography: 'ROOT:pages/rpmi.bib'
