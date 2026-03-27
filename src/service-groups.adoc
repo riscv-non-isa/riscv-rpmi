@@ -138,28 +138,28 @@ RPMI service groups defined by this specification.
 |
 |===
 
-include::srvgrp-base.adoc[]
+include::partial$srvgrp-base.adoc[]
 
-include::srvgrp-system-msi.adoc[]
+include::partial$srvgrp-system-msi.adoc[]
 
-include::srvgrp-system-reset.adoc[]
+include::partial$srvgrp-system-reset.adoc[]
 
-include::srvgrp-system-suspend.adoc[]
+include::partial$srvgrp-system-suspend.adoc[]
 
-include::srvgrp-hart-state-management.adoc[]
+include::partial$srvgrp-hart-state-management.adoc[]
 
-include::srvgrp-cppc.adoc[]
+include::partial$srvgrp-cppc.adoc[]
 
-include::srvgrp-voltage.adoc[]
+include::partial$srvgrp-voltage.adoc[]
 
-include::srvgrp-clock.adoc[]
+include::partial$srvgrp-clock.adoc[]
 
-include::srvgrp-device-power.adoc[]
+include::partial$srvgrp-device-power.adoc[]
 
-include::srvgrp-performance.adoc[]
+include::partial$srvgrp-performance.adoc[]
 
-include::srvgrp-management.adoc[]
+include::partial$srvgrp-management.adoc[]
 
-include::srvgrp-ras-agent.adoc[]
+include::partial$srvgrp-ras-agent.adoc[]
 
-include::srvgrp-request-forward.adoc[]
+include::partial$srvgrp-request-forward.adoc[]
