@@ -2,7 +2,7 @@
 :imagesdir: ../images
 
 ifdef::rootpath[]
-:imagesdir: {rootpath}{path}{imagesdir}
+:imagesdir: {rootpath}{path}../images
 endif::rootpath[]
 
 ifndef::rootpath[]
