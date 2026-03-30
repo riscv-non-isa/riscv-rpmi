@@ -1,0 +1,620 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+===  Service Group - SYSTEM_IRQ (SERVICEGROUP_ID: 0x000F)
+The SYSTEM_IRQ service group defines services to allow application processors
+receive external interrupts from the platform microcontroller. The platform
+microcontroller can use this service group to forward platform interrupts or
+inject software generated interrupts.
+
+A platform microcontroller can trigger interrupt to a fixed number of
+targets using this service group where a target can be either direct or
+indirect. A direct target is an external interrupt line of a particular
+application processor associated with the RISC-V privilege level same as
+the underlying RPMI context. An indirect target is an interrupt source
+line of some other hardware interrupt controller which eventually triggers
+external interrupt to any of the application processors at RISC-V privilege
+level same as the underlying RPMI context. The number of targets supported
+by this service group is referred to as `SYS_NUM_TARGET`. Each target is
+assigned a unique index which is also referred to as `SYS_TARGET_INDEX`
+where `0 <&#8203;= SYS_TARGET_INDEX < SYS_NUM_TARGET`.
+
+To implement this service group, the platform microcontroller must have an
+implementation specific way to set and clear interrupt for all supported
+targets.
+
+The number of system interrupts (IRQs) supported by this service group
+is fixed and referred to as `SYS_NUM_IRQ`. Each system IRQ is assigned
+a unique index which is also referred to as `SYS_IRQ_INDEX` where
+`0 <&#8203;= SYS_IRQ_INDEX < SYS_NUM_IRQ`.
+
+The association between actual source of interrupt and system IRQ index
+(aka `SYS_IRQ_INDEX`) is platform specific and must be discovered using
+hardware description mechanisms such as device tree or ACPI.
+
+A system IRQ can only be associated with one of the supported targets
+and this can be configured by the application processors using the
+`SYSIRQ_SET_IRQ_TARGET` service. By default, the platform microcontroller
+will associate any target with a system IRQ.
+
+The system IRQ state is a 32-bit word also referred to as `SYS_IRQ_STATE`
+which includes whether the system IRQ is enabled/disabled and whether
+system IRQ is currently pending at the platform microcontroller. The
+<<table_sysirq_state>> below shows the encoding of `SYS_IRQ_STATE`.
+
+[#table_sysirq_state]
+.System IRQ State
+[cols="2,3,7a", width=60%, align="center", options="header"]
+|===
+| Bits
+| Permission
+| Description
+
+| [31:2]
+| NA
+| _Reserved_ and must be `0`.
+
+| [1]
+| Read-Only
+| System IRQ pending state. +
+  0b1: IRQ is pending. +
+  0b0: IRQ is not pending.
+
+| [0]
+| Read-Write
+| System IRQ enable state. +
+  0b1: IRQ enabled. +
+  0b0: IRQ disabled.
+|===
+
+The platform microcontroller must set interrupt for a particular target when
+at least one system IRQ associated with the target is pending and enabled.
+
+The platform microcontroller must clear interrupt for a particular target when
+none of the system IRQs associated with the target are pending and enabled.
+
+Upon receiving external interrupt, an application processor must claim pending
+and enabled interrupts the `SYSIRQ_CLAIM` service.
+
+Upon successful claim of a system IRQ by an application processor, the platform
+microcontroller must clear the pending state of the system IRQ.
+
+The <<table_sysirq_services>> below lists the services in the SYSTEM_IRQ
+service group:
+
+[#table_sysirq_services]
+.SYSTEM_IRQ Services
+[cols="1, 3, 2", width=100%, align="center", options="header"]
+|===
+| Service ID
+| Service Name
+| Request Type
+
+| 0x01
+| SYSIRQ_ENABLE_NOTIFICATION
+| NORMAL_REQUEST
+
+| 0x02
+| SYSIRQ_GET_ATTRIBUTES
+| NORMAL_REQUEST
+
+| 0x03
+| SYSIRQ_GET_TARGET_ATTRIBUTES
+| NORMAL_REQUEST
+
+| 0x04
+| SYSIRQ_GET_IRQ_ATTRIBUTES
+| NORMAL_REQUEST
+
+| 0x05
+| SYSIRQ_SET_IRQ_STATE
+| NORMAL_REQUEST
+
+| 0x06
+| SYSIRQ_GET_IRQ_STATE
+| NORMAL_REQUEST
+
+| 0x07
+| SYSIRQ_SET_IRQ_TARGET
+| NORMAL_REQUEST
+
+| 0x08
+| SYSIRQ_GET_IRQ_TARGET
+| NORMAL_REQUEST
+
+| 0x09
+| SYSIRQ_CLAIM
+| NORMAL_REQUEST
+|===
+
+
+[#system-irq-notifications]
+==== Notifications
+This service group does not support any events for notification.
+
+==== Service: SYSIRQ_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
+This service allows the application processor to subscribe to `SYSTEM_IRQ`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<system-irq-notifications>>.
+
+Refer to <<table_common_ennotification_request_data>> for Request Data and
+<<table_common_ennotification_response_data>> for Response Data.
+
+
+==== Service: SYSIRQ_GET_ATTRIBUTES (SERVICE_ID: 0x02)
+This service is used to discover attributes of the system IRQ service group.
+
+[#table_sysirq_getattrs_request_data]
+.Request Data
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
+
+[#table_sysirq_getattrs_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| SYS_NUM_TARGET
+| uint32
+| Number of targets.
+
+| 2
+| SYS_NUM_IRQ
+| uint32
+| Number of system IRQs.
+
+| 3:7
+| FLAGS
+| uint32[5]
+| _Reserved_ and must be `0`.
+|===
+
+
+==== Service: SYSIRQ_GET_TARGET_ATTRIBUTES (SERVICE_ID: 0x03)
+This service is used to discover attributes of a particular target.
+
+[#table_sysirq_gettargetattrs_request_data]
+.Request Data
+[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYS_TARGET_INDEX
+| uint32
+| Index of the target.
+|===
+
+[#table_sysirq_gettargetattrs_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SYS_TARGET_INDEX` value is greater than `SYS_NUM_TARGET`.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| SYS_TARGET_FLAGS
+| uint32
+|
+[cols="2,9a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:1]
+! _Reserved_ and must be `0`.
+
+! [0]
+! Target type. +
+
+       0b1: Indirect target
+       0b0: Direct target
+!===
+
+| 2
+| SYS_TARGET_HART_ID
+| uint32
+| Hart ID of the direct target. This field should be ignored for indirect target.
+
+| 3:7
+| SYS_TARGET_NAME
+| uint8[20]
+| Target name, a NULL-terminated ASCII string up to 20-bytes.
+|===
+
+
+==== Service: SYSIRQ_GET_IRQ_ATTRIBUTES (SERVICE_ID: 0x04)
+This service is used to discover attributes of a particular system IRQ.
+
+[#table_sysirq_getirqattrs_request_data]
+.Request Data
+[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYS_IRQ_INDEX
+| uint32
+| Index of the system IRQ.
+|===
+
+[#table_sysirq_getirqattrs_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ`.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1:2
+| FLAGS
+| uint32[2]
+| _Reserved_ and must be `0`.
+
+| 3:7
+| SYS_IRQ_NAME
+| uint8[20]
+| System IRQ name, a NULL-terminated ASCII string up to 16-bytes.
+|===
+
+
+[#srvgrp_sysirq_set_irq_state]
+==== Service: SYSIRQ_SET_IRQ_STATE (SERVICE_ID: 0x05)
+This service is used to update the state of a system IRQ. Specifically,
+it allows application processors to enable or disable a system IRQ. The
+read-only bits of the system IRQ state are not updated by this service.
+
+[#table_sysirq_setirqstate_request_data]
+.Request Data
+[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYS_IRQ_INDEX
+| uint32
+| Index of the system IRQ.
+
+| 1
+| SYS_IRQ_STATE
+| uint32
+| System IRQ state as defined in <<table_sysirq_state>>.
+|===
+
+[#table_sysirq_setirqstate_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! IRQ is enabled or disabled successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ` or
+ `SYS_IRQ_STATE` value is reserved or invalid.
+
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+
+[#srvgrp_sysirq_get_irq_state]
+==== Service: SYSIRQ_GET_IRQ_STATE (SERVICE_ID: 0x06)
+This service is used to get the current state of a system IRQ.
+
+[#table_sysirq_getirqstate_request_data]
+.Request Data
+[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYS_IRQ_INDEX
+| uint32
+| Index of the system IRQ.
+|===
+
+[#table_sysirq_getirqstate_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! IRQ state is returned successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ`.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| SYS_IRQ_STATE
+| uint32
+| System IRQ state as defined in <<table_sysirq_state>>.
+|===
+
+
+[#srvgrp_sysirq_set_irq_target]
+==== Service: SYSIRQ_SET_IRQ_TARGET (SERVICE_ID: 0x07)
+This service is used to associate a system IRQ with a target.
+
+[#table_sysirq_setirqtarget_request_data]
+.Request Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYS_IRQ_INDEX
+| uint32
+| Index of the system IRQ.
+
+| 1
+| SYS_IRQ_TARGET
+| uint32
+| Target to be associated with the system IRQ. +
+A value `0xffffffff` imply any target whereas all other values +
+imply `SYS_TARGET_INDEX` of a specific target.
+|===
+
+[#table_sysirq_setirqtarget_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Target configured successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ` +
+or `SYS_IRQ_TARGET` value is greater than `SYS_NUM_TARGET` and less than `0xffffffff`.
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+
+[#srvgrp_sysirq_get_irq_target]
+==== Service: SYSIRQ_GET_IRQ_TARGET (SERVICE_ID: 0x08)
+This service is used to get the target associated with a system IRQ.
+
+[#table_sysirq_getirqtarget_request_data]
+.Request Data
+[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYS_IRQ_INDEX
+| uint32
+| Index of the system IRQ.
+|===
+
+[#table_sysirq_getirqtarget_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Target details returned successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ`.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| SYS_IRQ_TARGET
+| uint32
+| Target associated with the system IRQ. +
+A value `0xffffffff` imply any target and all other values +
+imply `SYS_TARGET_INDEX` of a specific target. If target +
+associated with a system IRQ was not set to a specific target +
+using `SYSIRQ_SET_IRQ_TARGET` service then by default this +
+value will be `0xffffffff`.
+|===
+
+
+[#srvgrp_sysirq_claim]
+==== Service: SYSIRQ_CLAIM (SERVICE_ID: 0x09)
+This service is used to claim pending and enabled interrupts to be
+handled for a particular target.
+
+[#table_sysirq_claim_request_data]
+.Request Data
+[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYS_TARGET_INDEX
+| uint32
+| Index of the target.
+|===
+
+[#table_sysirq_claim_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! IRQs claimed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `HART_ID` is invalid.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| RETURNED
+| uint32
+| Number of claimed IRQs returned.
+
+| 2
+| SYS_IRQ_INDEX[]
+| uint32
+| System IRQ indexes of claimed IRQs.
+|===

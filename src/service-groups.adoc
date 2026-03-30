@@ -127,7 +127,12 @@ RPMI service groups defined by this specification.
 | LOGGING
 | M-mode, S-mode
 
-| 0x000F - 0x7BFF
+| 0x000F
+| 2.0
+| SYSTEM_IRQ
+| M-mode, S-mode
+
+| 0x0010 - 0x7BFF
 |
 | _Reserved for Future Use_
 |
