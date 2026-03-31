@@ -1,0 +1,257 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+===  Service Group - TEE (SERVICEGROUP_ID: 0x0010)
+This TEE service group provides RPMI client a mechanism to invoke services in
+a Trusted Execution Environment (TEE). A TEE is an isolated secure environment
+that runs alongside the Rich Execution Environment (REE) and provides
+security-sensitive services such as secure storage, cryptographic operations,
+and trusted applications.
+
+The TEE service group defines RPMI services for invoking a TEE service
+synchronously where the `TEE_COMMUNICATE` RPMI service is used as a synchronous
+call from the non-secure world to the secure world. The communication protocol
+and data format are specific to each TEE implementation identified by
+`TEE_IMPL_ID`.
+
+The following table lists the services in the TEE service group:
+
+[#table_tee_services]
+.TEE Services
+[cols="1, 3, 2", width=100%, align="center", options="header"]
+|===
+| Service ID
+| Service Name
+| Request Type
+
+| 0x01
+| TEE_ENABLE_NOTIFICATION
+| NORMAL_REQUEST
+
+| 0x02
+| TEE_GET_ATTRIBUTES
+| NORMAL_REQUEST
+
+| 0x03
+| TEE_COMMUNICATE
+| NORMAL_REQUEST
+|===
+
+==== TEE Implementation IDs
+The TEE service group defines space for standard implementation IDs and for
+implementation specific IDs. The standard implementation IDs are listed in the
+table below.
+
+[#table_tee_impl_id]
+.TEE Implementation IDs
+[cols="2, 3a", width=100%, align="center", options="header"]
+|===
+| Implementation ID
+| Name
+
+| 0x00000000
+| OP-TEE
+
+| 0x00000001 - 0x7FFFFFFF
+| _Reserved for Future Use_
+
+| 0x80000000 - 0xFFFFFFFF
+| _Implementation Specific_
+|===
+
+[#tee-notifications]
+==== Notifications
+This service group does not support any events for notification.
+
+==== Service: TEE_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
+This service allows the application processor to subscribe to `TEE`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<tee-notifications>>.
+
+Refer to <<table_common_ennotification_request_data>> for Request Data and
+<<table_common_ennotification_response_data>> for Response Data.
+
+==== Service: TEE_GET_ATTRIBUTES (SERVICE_ID: 0x02)
+This RPMI service gets the attributes of the Trusted Execution Environment,
+including TEE implementation ID and communication data format information.
+
+[#table_tee_get_attributes_request_data]
+.Request Data
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
+
+[#table_tee_get_attributes_response_data]
+.Response Data
+[cols="1, 4, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+[cols="4,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| TEE_IMPL_ID
+| uint32
+| TEE implementation identifier. See <<table_tee_impl_id>> for the list of
+defined implementation IDs.
+
+| 2
+| COMM_REQ_REGS
+| uint32
+| Number of XLEN-bit values in `TEE_COMMUNICATE` request data.
+
+| 3
+| COMM_RESP_REGS
+| uint32
+| Number of XLEN-bit values in `TEE_COMMUNICATE` response data.
+
+|===
+
+The `TEE_COMMUNICATE` request and response data sizes can be calculated as:
+
+* Request size (bytes) = `COMM_REQ_REGS` × (XLEN / 8)
+* Response size (bytes) = `COMM_RESP_REGS` × (XLEN / 8)
+
+Where XLEN is the width of an integer register in bits (32 or 64), as defined
+by the RISC-V Privileged Architecture cite:[priv_v1_12].
+
+==== Service: TEE_COMMUNICATE (SERVICE_ID: 0x03)
+The `TEE_COMMUNICATE` service invokes a TEE service implemented in the secure
+execution environment. The format of request and response data is specific to
+each TEE implementation identified by `TEE_IMPL_ID`. The RPMI client must use
+the appropriate data format for the TEE implementation in use.
+
+The request data size is `COMM_REQ_REGS` × (XLEN / 8) bytes and the response
+data size is `COMM_RESP_REGS` × (XLEN / 8) bytes, where `COMM_REQ_REGS` and
+`COMM_RESP_REGS` are obtained from the `TEE_GET_ATTRIBUTES` service.
+
+[#table_tee_communicate_request_data]
+.Request Data
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TEE_COMM_DATA[N]
+| uint8
+| An array of `N` bytes representing implementation-specific request data. +
+The value `N` = `COMM_REQ_REGS` × (XLEN / 8) bytes.
+|===
+
+[#table_tee_communicate_response_data]
+.Response Data
+[cols="1, 6, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,4", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_NOTSUPP
+! TEE communication not supported.
+
+! RPMI_ERR_FAILED
+! TEE communication or domain transition failed.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| TEE_COMM_RETURN_DATA[M]
+| uint8
+| An array of `M` bytes representing implementation-specific response data. +
+The value `M` = `COMM_RESP_REGS` × (XLEN / 8) bytes.
+|===
+
+==== Implementation-Specific Data Formats
+
+===== OP-TEE (TEE_IMPL_ID: 0x00000000)
+
+The OP-TEE ABI uses 8 input values (a0-a7) and 4 output values (a0-a3). These
+XLEN-bit values are transported over MPXY shared memory.
+
+*Request Data Format:*
+----
+COMM_REQ_REGS = 8
+
+For XLEN=64:
+  Words 0-1:  a0 (little-endian 64-bit)
+  Words 2-3:  a1
+  Words 4-5:  a2
+  Words 6-7:  a3
+  Words 8-9:  a4
+  Words 10-11: a5
+  Words 12-13: a6
+  Words 14-15: a7
+  Total: 16 words (64 bytes)
+
+For XLEN=32:
+  Word 0: a0
+  Word 1: a1
+  ...
+  Word 7: a7
+  Total: 8 words (32 bytes)
+----
+
+*Response Data Format:*
+----
+COMM_RESP_REGS = 4
+
+For XLEN=64:
+  Word 0:    STATUS
+  Words 1-2: a0 (little-endian 64-bit)
+  Words 3-4: a1
+  Words 5-6: a2
+  Words 7-8: a3
+  Total: 9 words (36 bytes)
+
+For XLEN=32:
+  Word 0: STATUS
+  Word 1: a0
+  Word 2: a1
+  Word 3: a2
+  Word 4: a3
+  Total: 5 words (20 bytes)
+----
