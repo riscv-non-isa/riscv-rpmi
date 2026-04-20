@@ -1,5 +1,5 @@
 name: rpmi
-title: Platform Management Interface (RPMI)
+title: Platform Management Interface
 version: v1.0
 nav:
 - modules/ROOT/nav.adoc
