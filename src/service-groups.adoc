@@ -132,7 +132,12 @@ RPMI service groups defined by this specification.
 | SYSTEM_IRQ
 | M-mode, S-mode
 
-| 0x0010 - 0x7BFF
+| 0x0010
+| 2.0
+| TEE
+| M-mode, S-mode
+
+| 0x0011 - 0x7BFF
 |
 | _Reserved for Future Use_
 |
