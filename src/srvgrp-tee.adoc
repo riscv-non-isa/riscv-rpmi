@@ -1,0 +1,2597 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+===  Service Group - TEE (SERVICEGROUP_ID: 0x0010)
+The TEE service group defines services to allow a client in one or more REEs
+(Rich Execution Environments) to invoke services in one or more TEEs (Trusted
+Execution Environments). A TEE is a secure, hardware-isolated environment
+running a trusted OS, and provides, directly or via hosted Trusted Applications
+(TAs), security-sensitive services such as key management, cryptographic
+operations, hardware-bound decoding of DRM-protected data streams, etc.
+
+Throughout this chapter we refer to REEs and TEEs as described by the Global
+Platform TEE System Architecture cite:[GPArch13].
+
+The TEE service group defines RPMI services enabling the interaction of REEs and
+TEEs in a system where Hypervisor-level software can be optionally present in
+one or both domains.
+
+No assumption is being made for the isolation technology, or collection thereof,
+used to separate the runtime execution of REEs and TEEs. No explicit reference
+is made to a system in which more than two domains exist, and the usage of the
+proposed services does not explore such a system.
+
+In line with the accepted model for REE and TEE execution, the scheduling
+assumption that a TEE and its hypervisor only run when explicitly invoked by an
+REE (and/or its hypervisor) or in order to serve interrupts it has registered.
+
+This yields to an execution model in which the REE domain routinely controls all
+the harts in the system, and invokes the TEE domain to synchronously process
+individual requests. When an interrupt registered by the TEE domain fires upon
+the application processor, its servicing by the TEE domain takes priority over
+any currently running REE task on the same hart.
+
+This service group describes RPMI services to allow the discovery of the REE/TEE
+topology, sharing, lending and donating memory between REEs and TEEs, raising
+asynchronous signals and sending synchronous messages between REEs and TEEs. The
+RPMI services here defined allow multiple combinations of REEs and TEEs to work
+together (single REE with single TEE, multiple REEs with single TEE, multiple
+REEs with multiple TEEs) and interoperate with different hypervisor and firmware
+implementations as long as they all support and implement these services.
+
+We refer to the implementation of the TEE service group in hypervisors and
+M-Mode firmware as the TEE framework, or simply framework.
+
+The <<table_tee_services>> table lists the services in the TEE service group:
+
+[#table_tee_services]
+.TEE Services
+[cols="1, 3, 2", width=100%, align="center", options="header"]
+|===
+| Service ID
+| Service Name
+| Request Type
+
+| 0x01
+| TEE_ENABLE_NOTIFICATION
+| NORMAL_REQUEST
+
+| 0x02
+| TEE_PROBE_FEATURES
+| NORMAL_REQUEST
+
+| 0x03
+| TEE_PROBE_SYSTEM
+| NORMAL_REQUEST
+
+| 0x04
+| TEE_EXIT
+| NORMAL_REQUEST
+
+| 0x05
+| TEE_SIGNAL_BUS_SETUP
+| NORMAL_REQUEST
+
+| 0x06
+| TEE_SIGNAL_BUS_TEARDOWN
+| NORMAL_REQUEST
+
+| 0x07
+| TEE_SIGNAL_RAISE
+| NORMAL_REQUEST
+
+| 0x08
+| TEE_SIGNAL_RETRIEVE
+| NORMAL_REQUEST
+
+| 0x09
+| TEE_MEMORY_PARCEL_CREATE
+| NORMAL_REQUEST
+
+| 0x0A
+| TEE_MEMORY_PARCEL_ACCEPT
+| NORMAL_REQUEST
+
+| 0x0B
+| TEE_MEMORY_PARCEL_RELEASE
+| NORMAL_REQUEST
+
+| 0x0C
+| TEE_MEMORY_PARCEL_RECLAIM
+| NORMAL_REQUEST
+
+| 0x0D
+| TEE_MEMORY_SEGMENT_SEND
+| NORMAL_REQUEST
+
+| 0x0E
+| TEE_MEMORY_SEGMENT_RECEIVE
+| NORMAL_REQUEST
+
+| 0x0F
+| TEE_REGISTER_FOR_LIFECYCLE_SERVICES
+| NORMAL_REQUEST
+
+| 0x10
+| TEE_ON_START_INFO
+| NORMAL_REQUEST
+
+| 0x11
+| TEE_ON_SHUTDOWN_INFO
+| NORMAL_REQUEST
+
+| 0x12
+| TEE_ON_CHANGED_INFO
+| NORMAL_REQUEST
+
+| 0x13
+| TEE_SEND_DATA
+| NORMAL_REQUEST
+
+|===
+
+[#tee-endpoints-and-proxies]
+==== Endpoints and proxies
+
+It is possible for an REE or TEE to contain multiple proxied endpoints, or even
+for the framework itself to contain proxied endpoints, i.e. entities with a
+unique identity to which messages can be routed to, irrespective of their
+physical location inside a specific REE or TEE operating system, which proxies
+them. Proxied endpoints can be used to represent special secure runtime modes
+for on-device accelerators, with whom memory can be shared, donated or lent at
+runtime to model and implement complex secure use cases.
+
+All endpoints, proxied or physical, are given by the framework a unique
+identity. The mechanism by which this happens is outside of the scope of the
+present document.
+
+All proxied endpoints exist within some physical endpoint, i.e. an REE or TEE.
+The physical endpoint where they reside is usually referred to as their proxy.
+
+Most of the services described in this document apply to all endpoints, whether
+they are physical or proxied, TEEs or REEs; in all such cases we'll use the word
+endpoint throughout the document instead of explicitly calling out whether we're
+referring to a TEE or an REE, a physical or proxied entity.
+
+When instead referring to physical entities and not generic endpoints, the REE
+and TEE terms will be used explicitly.
+
+[#tee-notifications]
+==== Notifications
+This service group does not support any events for notification.
+
+==== Service: TEE_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
+This service allows the application processor to subscribe to `TEE`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The framework can send these
+notification messages to the endpoint if they are implemented and
+the endpoint has subscribed to them. The supported events are
+described in <<tee-notifications>>.
+
+Refer to <<table_common_ennotification_request_data>> for Request Data and
+<<table_common_ennotification_response_data>> for Response Data.
+
+
+==== Service: TEE_PROBE_FEATURES (SERVICE_ID: 0x02)
+This service can be used by an endpoint to discover which features the framework
+supports.
+
+The service is used by passing a feature identifier as parameter, and the
+response is interpreted based on the queried feature.
+
+Table <<table_tee_features>> details which features can be queried and how the response
+should be interpreted.
+
+Note that the level of support for memory management services depends on the technology
+used to isolate REEs and TEEs.
+Some isolation technology might not allow memory to be shared of lent (thereby
+changing its properties at runtime) between domains.
+
+[#table_tee_features]
+.TEE framework features
+[cols="3,1,7a", width=100%, align="center", options="header"]
+|===
+| FEATURE
+| ID
+| VALUE
+
+| MEMORY_DONATE
+| 1
+|
+
+[cols="2,9a", options="header"]
+!===
+! Value
+! Description
+
+! 0
+! Not supported
+
+! 1
+! Supported between TEEs, but not between REEs and TEEs.
+
+! 2
+! Fully supported
+
+!===
+
+| MEMORY_LEND
+| 2
+|
+
+[cols="2,9a", options="header"]
+!===
+! Value
+! Description
+
+! 0
+! Not supported
+
+! 1
+! Supported between TEEs, but not between REEs and TEEs.
+
+! 2
+! Fully supported
+
+!===
+
+| MEMORY_SHARE
+| 3
+|
+
+[cols="2,9a", options="header"]
+!===
+! Value
+! Description
+
+! 0
+! Not supported
+
+! 1
+! Supported between TEEs, but not between REEs and TEEs.
+
+! 2
+! Fully supported
+
+!===
+
+| SIGNAL_BUS
+| 4
+|
+
+[cols="2,9a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:12]
+! System MSI index or System IRQ index to be used for receiving availability of
+signals on the signal bus. If signals are not supported, this field is invalid
+and must be zero.
+
+! [11:2]
+! Maximum width of the bus (i.e. maximum number of signals per pair of physical
+endpoints). If signals are not supported, this field is invalid and must be
+zero.
+
+! [1:0]
+! 
+       0: Not supported
+       1: Signals supported and delivered as System MSI.
+       2: Signals supported and delivered as System IRQ.
+       3: Reserved for future use.
+!===
+
+| MULTISEGMENT_OPS
+| 5
+|
+Number of concurrent pending multi-segment memory operations supported per
+endpoint.
+
+A memory operation whose content does not fit in the available transport buffer
+would need to be split into multiple segmented operations, thus making it
+theoretically possible for an endpoint to have more than one memory operation
+pending with the framework at a time.
+
+A value of 0 for this feature means that the framework does not support
+multi-segment memory operations.
+
+| SYSINFO_FORMAT
+| 6
+| List of the formats in which the framework can describe the running system and
+its parts for the TEE_PROBE_SYSTEM and lifecycle services
+
+[cols="1,1, 5a", options="header"]
+!===
+! Bits
+! Name
+! Description
+
+! [31:31]
+! CBOR
+! CBOR cite:[CBOR] description following the CCDL cite:[CCDL] schema in <<table_ccdl_encoding>>.
+
+! [30:0]
+! _Reserved_
+! Must be 0.
+!===
+|===
+
+[#table_tee_probe_features_request_data]
+.Request Data
+[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| FEATURE_ID
+| uint32
+| A feature in the TEE Service group as defined in <<table_tee_features>>.
+|===
+
+[#table_probe_features_response_data]
+.Response Data
+[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! Invalid FEATURE_ID.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| VALUE
+| uint32
+| As defined in <<table_tee_features>>.
+
+|===
+
+
+==== Service: TEE_PROBE_SYSTEM (SERVICE_ID: 0x03)
+This service provides the caller with information on all the endpoints present
+in the system and reachable via the framework.
+
+This service can be used to obtain a description of the whole system (i.e. all
+REEs and TEEs reachable via the services of the TEE Service Group) or selected
+components of it, as described in the following table.
+
+[#table_tee_probe_system_targets]
+.TEE_PROBE_SYSTEM Target Types
+[cols="2,1,9a", options="header"]
+|===
+| Target type
+| VALUE
+| Description.
+
+| Whole system
+| 0
+|
+
+This is the set of all REEs and TEEs reachable via the TEE Services, their
+identifiers, all their proxied endpoints, services and their characteristics.
+This target type allows a newly created endpoint to discover all the other
+entities it can interact with.
+
+| Endpoint
+| 1
+|
+
+Single endpoint in the system (REE, TEE or proxied). If the endpoint is an REE
+or TEE, this includes the list of all of its services. This target type allows
+the caller to discover additional information on an endpoint for which it
+already has the identifier.
+
+| Service
+| 2
+|
+
+Multiple endpoints can implement the same service (identified by a UUID). This
+target type allows the caller to quickly discover all the endpoints which
+implement a specific service without the need to parse the description of the
+whole system.
+
+| Self
+| 3
+|
+
+This target type allows an endpoint to acquire from the framework information
+about itself. This can be used by a newly created REE or TEE to discover if the
+bootloaders which predated it in the current VM shared or lent memory for
+specific use cases, so that this memory can be later reclaimed.
+
+| Memory parcel
+| 4
+|
+
+This target type allows an endpoint to acquire information from the framework
+about a specific memory parcel which it created and is the owner of. This can be
+used by a newly created REE or TEE to discover the details of each memory parcel
+which the bootloaders which predated it in the current VM shared or lent with
+another endpoint.
+
+|===
+
+The current version of the RPMI TEE Service Group only specifies CBOR
+cite:[CBOR] as a mandated format, but other formats may be added in future.
+
+The CBOR response data is encoded according to the CCDL cite:[CCDL]
+schema in the following table.
+
+[#table_ccdl_encoding]
+.CCDL Encoding of system information
+```
+tee-subsystem = [2* domain]
+
+domain = [* endpoint]
+
+endpoint = ee-endpoint / proxied-endpoint
+
+ee-endpoint = {
+  type: "physical",
+  id: uint,
+  name: bstr,
+  persistent: bool,
+  virtualized: bool,
+  proxied-endpoints: [* proxied-endpoint],
+  services: [* buuid],
+  metadata: bstr,
+  ?active_parcels: [* parcel],
+}
+
+proxied-endpoint = {
+  type: "proxied",
+  id: uint,
+  name: bstr,
+  ?active_parcels: [* parcel],
+}
+
+parcel = {
+  id: uint,
+  residual_access: ac,
+  others: [1* parcel_endpoint],
+  label: bstr,
+  ?memory: [1* memory_block],
+}
+
+ac = &(none: 0, ro: 1, wo: 2, rw: 3, rwx: 7)
+
+parcel_endpoint = {
+  id: uint,
+  access: ac,
+  accepted: bool,
+}
+
+memory_block = {
+  address: uint,
+  size: uint,
+}
+
+buuid = #6.37(bstr)
+```
+
+[#table_tee_system_probe_request_data]
+.Request Data
+[cols="2, 6, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYSINFO_FORMAT
+| uint32
+| The format in which the response data will be returned. Needs to be one of the
+formats returned by the TEE_PROBE_FEATURES service.
+
+| 1
+| TARGET_TYPE
+| uint32
+| Type of the target being probed, as described in
+<<table_tee_probe_system_targets>>. Valid values and corresponding expected
+content of the returned response data are described in the following table
+
+[cols="2,12a", options="header"]
+!===
+! Value
+! Content of SYSTEM_DATA in <<table_tee_system_probe_response_data>>.
+
+! 0
+! Whole system.
+
+Description of the whole system topology excluding the items marked as optional
+in <<table_ccdl_encoding>>.
+
+! 1
+! Endpoint
+
+Description of the requested endpoint. Items marked as optional in
+<<table_ccdl_encoding>> are not included.
+
+! 2
+! Service
+
+Description of the subset of the whole system topology comprising all the
+endpoints providing the requested service. Items marked as optional in
+<<table_ccdl_encoding>> are not included.
+
+! 3
+! Self
+
+Description of the calling endpoint including all of its available optional
+items, but not the memory blocks of the active parcels created by the endpoint.
+
+! 4
+! Memory parcel
+
+Full description, including the memory blocks, of the requested parcel. The
+parcel must belong to the calling endpoint.
+
+!===
+
+| 2
+| TARGET_LEN
+| uint32
+| Length (N) in bytes of the TARGET field.
+
+Based on the TARGET_TYPE, the following length values are expected.
+
+[cols="4,3,9a", options="header"]
+!===
+! TARGET_TYPE
+! Length (N)
+! Content
+
+! 0
+! 0
+! NA
+
+! 1
+! 4
+! Endpoint identifier.
+
+! 2
+! 16
+! UUID of the service.
+
+! 3
+! 0
+! NA
+
+! 4
+! 4
+! ID of the parcel.
+
+!===
+
+| 3
+| TARGET[N]
+| uint8
+| The target being probed.
+
+
+
+|===
+
+[#table_tee_system_probe_response_data]
+.Response Data
+[cols="2, 6, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! Invalid SYSINFO_FORMAT, TARGET_TYPE or TARGET.
+
+! RPMI_ERR_DENIED
+! Parcel does not belong to the calling endpoint.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| SYSTEM_DATA_LEN
+| uint32
+| Length (N) in bytes of the returned data.
+
+| 2
+| SYSTEM_DATA[N]
+| uint8
+| Description of the system or portion thereof, as queried, in the requested format.
+|===
+
+[#srvgrp_tee_exit]
+==== Service: TEE_EXIT (SERVICE_ID: 0x04)
+This service is used by an REE or TEE to inform the framework that it is exiting
+the framework infrastructure.
+
+After an REE/TEE sends this message, the framework will refrain from forwarding any
+further message and, for TEEs, interrupts, to it.
+
+[NOTE]
+====
+
+When an REE/TEE is disconnected from the framework:
+
+- All the memory parcels it had accepted and not yet released are forcefully
+released by the framework and the REE/TEE immediately loses access to them.
+
+- The in-progress construction of any multi-segment memory parcel by this
+REE/TEE is aborted and returned to the REE/TEE.
+
+- The in-progress acceptance of any multi-segment memory parcel by this REE/TEE
+is aborted.
+
+- All signal buses that this REE/TEE might have established with other endpoints
+are torn down by the framework and any attempt to access them by the other
+endpoint (to raise or retrieve a signal) before the reception of the
+TEE_ON_SHUTDOWN_INFO message will be answered by the framework as if the bus was
+being torn down. After the reception of the TEE_ON_SHUTDOWN_INFO message, the
+bus is considered torn down.
+
+- Finally a TEE_ON_SHUTDOWN_INFO message containing the identity of this REE/TEE
+is sent to all endpoints which registered for it.
+
+====
+
+[#table_tee_exit_request_data]
+.Request Data
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
+
+[#table_tee_exit_response_data]
+.Response Data
+[cols="2, 6, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! The framework will not return execution to the calling REE/TEE.
+
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+
+[#srvgrp_tee_signal_bus_setup]
+==== Service: TEE_SIGNAL_BUS_SETUP (SERVICE_ID: 0x05)
+Signals differ from data messages in that their implementation by the
+framework is not guaranteed to be synchronous.
+
+When an endpoint running on a certain hart raises a signal to another endpoint,
+the framework does guarantee neither the hart nor the time at which the signal
+will be processed by the target endpoint.
+
+Signals are modeled as bits on a logical bus, which is shared between two
+physical endpoints (REEs/TEEs, which are enough to uniquely identify it) and all
+the endpoints they proxy. The width of the bus, and thereby the number of
+concurrent signals it supports, is set when when the bus is setup by the two
+physical endpoints, using the TEE_SIGNAL_BUS_SETUP service. Likewise the
+partitioning of the signals between the two physical endpoints is statically
+determined by the setup call, and is later enforced by the framework.
+
+NOTE: Because of scheduling constraints, the setup of a signal bus between an REE
+and a TEE can only be initiated by an REE.
+
+This service is invoked by a physical endpoint, its fields verified by the
+framework, and passed to the target physical endpoint, which can accept or deny
+the request to setup and share the bus with the caller.
+
+Signals on the bus can be raised and retrieved by any of the two physical
+endpoints and all the endpoints they proxy. The optional functional partitioning
+of the signals owned by a physical endpoint among use cases and proxied
+endpoints is not enforced or orchestrated by the framework: signals are always
+set and retrieved by the physical endpoints.
+
+[#table_tee_signal_bus_setup_request_data]
+.Request Data
+[cols="2, 6, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SENDER
+| uint32
+| Identifier of the physical endpoint which is setting up the bus.
+
+| 1
+| TARGET
+| uint32
+| Unique identifier of the target physical endpoint with whom the bus is being
+setup.
+
+| 2
+| BUS_WIDTH
+| uint32
+| Number (M) of signals to be supported on the bus.
+
+| 3
+| SENDER_SIGNALS.
+| uint32
+| Number (N) of signals reserved for SENDER to receive.
+
+Signals 0 &#8804; x < N will be reserved for TARGET to raise and SENDER to read.
+
+Signals N &#8804; x < M will be reserved for SENDER to raise and TARGET to read.
+
+|===
+
+[#table_tee_signal_bus_setup_response_data]
+.Response Data
+[cols="2, 3, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Signal bus between SENDER and TARGET has been set up and partitioned as
+requested.
+
+! RPMI_ERR_INVALID_PARAM
+! This error is returned exclusively by the framework.
+
+- SENDER does not correspond to the calling REE/TEE.
+
+- TARGET does not correspond to a physical endpoint (REE/TEE).
+
+! RPMI_ERR_BAD_RANGE
+! This error is returned exclusively by the framework.
+
+- Invalid BUS_WIDTH exceeds maximum supported number of signals.
+
+- SENDER_SIGNALS is larger than BUS_WIDTH.
+
+! RPMI_ERR_ALREADY
+! This error is returned exclusively by the framework.
+
+Bus between SENDER and TARGET already setup.
+
+! RPMI_ERR_DENIED
+! *This is the only error returned by TARGET.*
+
+TARGET rejects the request to establish the bus.
+
+!===
+- Other errors <<table_error_codes>>.
+
+|===
+
+Error conditions leading to the RPMI_ERR_INVALID_PARAM, RPMI_ERR_BAD_RANGE and
+RPMI_ERR_ALREADY are checked by the framework before the Request Data in
+<<table_tee_signal_bus_setup_request_data>> reaches TARGET. TARGET is only
+allowed to respond with either RPMI_SUCCESS or RPMI_ERR_DENIED. The framework
+will proceed with the creation of the bus only if TARGET fills the STATUS field
+with the RPMI_SUCCESS value.
+
+If TARGET returns any other error code than RPMI_SUCCESS or RPMI_ERR_DENIED, the
+framework will interpret it as a malfunction and behave as if it had invoked the
+TEE_EXIT service.
+
+[#srvgrp_tee_signal_bus_teardown]
+==== Service: TEE_SIGNAL_BUS_TEARDOWN (SERVICE_ID: 0x06)
+This service is used by an REE or TEE to tear down the signal bus it has
+established with a target TEE. 
+
+NOTE: For the same reasons as in <<srvgrp_tee_signal_bus_setup>>, the teardown
+of a signal bus between an REE and a TEE can only be initiated by an REE.
+
+This service is invoked by a physical endpoint, its fields verified by the
+framework, and passed to the target physical endpoint, which can only accept
+the request to teardown the signal bus.
+
+[NOTE]
+====
+If a signal bus is torn down  when there are active, not yet retrieved, signals
+on it, those signals will be lost.
+
+After sending a TEE_SIGNAL_BUS_TEARDOWN, SENDER cannot raise any signal, but can
+retrieve pending signals up until the point a response has been received. Upon
+receiving a TEE_SIGNAL_BUS_TEARDOWN, TARGET can retrieve its own active signals,
+but not raise any signals. 
+====
+
+[#table_tee_signal_bus_teardown_request_data]
+.Request Data
+[cols="2, 4, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SENDER
+| uint32
+| Identifier of the physical endpoint which is tearing down the bus.
+
+| 1
+| TARGET
+| uint32
+| Unique identifier of the other physical endpoint with whom the bus is shared.
+
+|===
+
+[#table_tee_signal_bus_teardown_response_data]
+.Response Data
+[cols="2, 3, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Signal bus between SENDER and TARGET has been torn down.
+
+! RPMI_ERR_INVALID_PARAM
+! This error is returned exclusively by the framework.
+
+- SENDER does not correspond to the calling REE/TEE.
+
+- TARGET does not correspond to a physical endpoint (REE/TEE).
+
+! RPMI_ERR_ALREADY
+! This error is returned exclusively by the framework.
+
+No bus exists between SENDER and TARGET.
+
+!===
+- Other errors <<table_error_codes>>.
+
+|===
+
+Error conditions leading to the RPMI_ERR_INVALID_PARAM and RPMI_ERR_ALREADY are
+checked by the framework before the Request Data in
+<<table_tee_signal_bus_setup_request_data>> reaches TARGET. TARGET is only
+allowed to respond with RPMI_SUCCESS and can interpret this as a synchronous
+notification from the framework that the signal bus is no longer available.
+
+If TARGET returns any other error code than RPMI_SUCCESS the framework will
+interpret it as a malfunction and behave as if it had invoked the TEE_EXIT
+service.
+
+
+[#srvgrp_tee_signal_raise]
+==== Service: TEE_SIGNAL_RAISE (SERVICE_ID: 0x07)
+This service is used by an endpoint to raise one or more signals on the signal
+bus shared with the TARGET endpoint.
+
+Upon a successful return, the signals are considered to be raised and will have
+been set as pending. If any of them was already pending, their state does not
+change.
+
+This message does not cause TARGET (or any of its proxied endpoints) to run to
+process the signals: it is implementation dependent when it will run and will
+process them.
+
+[#table_tee_signal_raise_request_data]
+.Request Data
+[cols="2, 6, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TARGET
+| uint32
+| Identifier of the other physical endpoint with whom the bus is shared.
+
+| 1
+| SIGNAL_LEN
+| uint32
+| Length (N) of the SIGNAL array. Length cannot be 0.
+
+| 2
+| SIGNAL[N]
+| uint32
+| Array of signals being set.
+
+Each signal needs to be in the range reserved for SENDER to raise.
+
+|===
+
+
+[#table_tee_signal_raise_response_data]
+.Response Data
+[cols="2, 3, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! The signals were successfully raised on the bus.
+
+! RPMI_ERR_INVALID_PARAM
+! 
+
+- One or more signals are outside SENDER supported range.
+
+- No bus between SENDER and TARGET.
+
+! RPMI_ERR_DENIED
+! The bus is being torn down.
+
+!===
+- Other errors <<table_error_codes>>.
+
+|===
+
+[#srvgrp_tee_signal_retrieve]
+==== Service: TEE_SIGNAL_RETRIEVE (SERVICE_ID: 0x08)
+This service is used by an endpoint to retrieve from the framework its pending
+signals.
+
+Retrieving a signal causes the framework to reset its internal tracking state
+for it, so it can be set again by the endpoints who have write access on the bus
+it is on.
+
+This service will return, per bus, all the signals which are raised and readable
+by the calling endpoint. If more than one bus has active signals, this will be
+indicated in the response and they can be retrieved by the caller with
+additional subsequent calls.
+
+[#table_tee_signal_retrieve_request_data]
+.Request Data
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
+
+[#table_tee_signal_retrieve_response_data]
+.Response Data
+[cols="2, 4, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Signals successfully retrieved.
+
+! RPMI_ERR_NO_DATA
+! No pending signals on any bus.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| 
+
+[cols="2,5, 9a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:31]
+! MORE_AVAILABLE
+! This bit is set to 1 if more signals from other buses are available.
+
+! [30:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+| 2
+| TARGET
+| uint32
+| Other REE/TEE with whom the bus is shared.
+
+| 3
+| SIGNAL_LEN
+| uint32
+| Length (N) of the SIGNAL array. On success, length will never be 0.
+
+| 4
+| SIGNAL[N]
+| uint32
+| Array of active signals on this bus.
+
+Each signal is guaranteed to be in the range reserved for the calling endpoint
+to retrieve.
+
+|===
+
+[#srvgrp_tee_memory_parcel_create]
+==== Service: TEE_MEMORY_PARCEL_CREATE (SERVICE_ID: 0x09)
+This service allows an endpoint to create a memory parcel, which is a structured
+description of a memory management operation between a number of endpoints that
+the framework needs to mediate and enforce.
+
+A memory parcel is identified by a unique handle, refers to one or more
+contiguous memory regions, the operation which is being asked on them and a list
+of endpoints whose access should be changed along with their access rights.
+
+A memory parcel can describe three operations:
+
+- Memory donation, in which the owner of one or more memory regions is
+transferring their ownership to another individual endpoint. The original owner
+does not retain any access to the memory, nor will be able to reclaim the memory
+back at a later time.
+
+- Memory sharing, in which an endpoint which has access to one or more memory
+regions grants access rights to other endpoints, while optionally changing its
+own access rights to it. The memory, with the original access rights, can be
+later reclaimed.
+
+- Memory lending, which is a corner case of memory sharing, in which the
+endpoint does not have any residual access to the memory, but can reclaim it
+later.
+
+The other endpoints involved in the operation need to accept the parcel (via the
+TEE_MEMORY_PARCEL_ACCEPT service) in order for the framework to allow them to
+map and access it, and, when done, are expected to release the parcel (using the
+TEE_MEMORY_PARCEL_RELEASE service). After a parcel has been released by all
+receiving endpoints (or before it has been accepted by any of them), the
+endpoint which created it can reclaim it (using the TEE_MEMORY_PARCEL_RECLAIM
+service), thereby destroying the parcel itself. Parcels describing memory
+donations cannot be reclaimed, and they are destroyed by the framework when they
+are accepted by the endpoint which becomes the new owner of the memory.
+
+If the description of the memory underlying a memory parcel doesn't fit within
+the RPMI transport buffer used to communicate with the framework, endpoints are
+expected to segment it excplicitly via the TEE_MEMORY_SEGMENT_SEND and
+TEE_MEMORY_SEGMENT_RECEIVE services.
+
+After the successful completion of this service (or of the _last_ of the
+following TEE_MEMORY_SEGMENT_SEND in case of segmented memory
+description), the framework is expected to have modified the access to the
+memory for the calling endpoint as instructed, using whichever hardware memory
+firewalling mechanism available on the system.
+
+The caller is required to specify the access permission to this memory for each
+receiver, and the framework will enforce that none of them exceeds the access
+that the caller itself has to the memory.
+
+[NOTE]
+====
+The RPMI TEE Services only describe the messages which are exchanged to operate
+on ownership and access to memory. The mechanisms by which ownership and access
+are enforced and guaranteed are out of scope and depend on the extensions
+present in each RISC-V processor architecture, its implementation and software
+topology.
+
+Each memory region as referenced by these services can only have one owner at
+any given time.
+====
+
+When referred to in service request and response data, memory is always
+represented as a scatter-gather list comprised of 3 fields, with lengths
+specified in number of 4 kB pages (fixed granule size), as in the table
+<<table_mem_blocks>>. The location of the fields in each service request or
+response data is not fixed, and vary based on presence and sizes of other
+fields.
+
+
+[#table_mem_blocks]
+.Memory representation as a scatter-gather list
+[cols="2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Name
+| Type
+| Description
+
+| BLOCK_CNT
+| uint32
+| Total number (M) of contiguous memory blocks. Cannot be 0.
+
+| BLOCK_HIGH[M]
+| uint32
+| Array of memory blocks. Higher 32bit, encoded as follows
+[cols="1,2, 5a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:0]
+! ADDRESS_HIGH
+! Higher 32bits of the physical or guest-physical address of the i-th block, in
+number of 4kB pages.
+!===
+
+| BLOCK_LOW[M]
+| uint32
+| Array of memory blocks. Lower 32bit, encoded as follows
+[cols="1,2, 5a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:12]
+! ADDRESS_LOW
+! Lower 20bits of the physical or guest-physical address of the i-th block, in
+number of 4kB pages.
+
+! [11:0]
+! PAGE_COUNT
+! Number of pages, with an offset of 1.
+Range 0..4095 maps to page count 1..4096.
+
+!===
+
+|===
+
+A single block of memory (`BLOCK_HIGH[i]:BLOCK_LOW[i]`) can thus represent up to
+4096 4kB pages, for a total of 16MB.
+
+[NOTE]
+====
+
+Many of the RPMI TEE Services have Request and Response Data comprising multiple
+variable-length arrays. To ease their parsing by the receiver and framework
+implementations all fixed-length fields are placed first, followed by the
+variable-length fields.
+
+====
+
+In all memory management services, the fields describing access to the memory by
+an endpoint is encoded as in <<table_mem_access>>.
+
+[#table_mem_access]
+.Memory Access
+[cols="2,5, 9a", options="header"]
+|===
+| Bits
+| Field
+| Description
+
+| [31:31]
+| EXECUTE
+| 
+    0b0: non-executable
+    0b1: executable
+
+| [30:30]
+| WRITE
+| 
+    0b0: non-writeable
+    0b1: writeable
+
+| [29:29]
+| READ
+| 
+    0b0: non-readable
+    0b1: readable
+
+| [28:0]
+| _Reserved_
+| Must be 0.
+
+|===
+
+
+[#table_tee_memory_parcel_create_request_data]
+.Request Data
+[cols="3, 6, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| CREATOR
+| uint32
+| Identifier of the endpoint creating the parcel.
+
+This is either the identity of the calling TEE or REE, or of an endpoint which
+is proxied by the calling TEE or REE.
+
+| 1
+| CREATOR_ACCESS
+| uint32
+| Access permission which CREATOR is reserving for itself after the completion
+of this command.
+
+Encoding as in <<table_mem_access>>.
+
+If the OWNER_XFER FLAG is set, this field must be 0.
+
+| 2
+| RECEIVERS_CNT
+| uint32
+| Number (N) of receivers the parcel will grant access to the memory.
+
+| 3
+| FLAGS
+| uint32
+| 
+
+[cols="2,5, 9a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:31]
+! MULTI_SEGMENT
+! This bit is set to 1 if this is the first segment of a multi-segment
+memory management message.
+
+The following segments will be sent via the TEE_MEMORY_SEGMENT_SEND
+service.
+
+! [30:30]
+! OWNER_XFER
+! This bit is set to 1 if this parcel describes a memory donation.
+
+When an ownership transfer is requested, the framework will enforce the
+following for the memory parcel:
+
+- CREATOR must not retain any access to it
+
+- a single receiver is allowed
+
+- the access granted to the receiver must match the current access of the owner.
+
+The parcel created for an ownership transfer becomes invalid after it is
+accepted with the TEE_MEMORY_PARCEL_ACCEPT service and cannot  be
+released by the new owner nor reclaimed by the original owner.
+
+! [29:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+| 4
+| NONCE
+| uint32
+| A token nonce which receivers will need to present to the framework, together
+with MEM_PARCEL, to accept the memory.
+
+It is intended as a way to reduce the likelihood of accidental collisions on
+MEM_PARCEL values, which can be reused by the framework after they have been
+destroyed.
+
+| 5
+| BLOCK_CNT
+| uint32
+| Total number (M) of contiguous memory blocks. Cannot be 0.
+
+| 6:9
+| LABEL
+| uint8[16]
+| Label to be associated with the parcel. The label can be used to associate a
+parcel with a specific use case when the parcel is recovered via the
+TEE_PROBE_SYSTEM service.
+
+| 10
+| RECEIVERS[N]
+| uint32
+| Endpoints which the parcel is granting access to the memory.
+
+| 10+N
+| ACCESS[N]
+| uint32
+| Access permission for each receiver, encoded as in <<table_mem_access>>.
+
+| 10+2N
+| BLOCK_HIGH[M]
+| uint32
+| See <<table_mem_blocks>>.
+
+| 10+2N+M
+| BLOCK_LOW[M]
+| uint32
+| See <<table_mem_blocks>>.
+
+|===
+
+[#table_tee_memory_parcel_create_response_data]
+.Response Data
+[cols="2, 4, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! New access permissions applied to CREATOR.
+Receiver endpoints can now accept the memory using the returned MEM_PARCEL.
+
+! RPMI_ERR_DENIED
+! CREATOR does not have access to the memory.
+
+! RPMI_ERR_HW_FAULT
+! Hardware limitations (e.g. memory firewalling technology) don't allow access
+to the memory to be granted to one or more of the receivers.
+
+! RPMI_ERR_INVALID_PARAM
+!
+
+- The access being granted to a receiver exceeds the access of CREATOR.
+
+- CREATOR is not the REE/TEE this service is being invoked from or one of its
+proxied endpoints.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| MEM_PARCEL
+| uint32
+| Device-unique identifier representing the newly created memory parcel. This
+identifier can be used by the receivers to accept and thereby access the memory.
+
+If the request was the first part of a multi-segment memory operation, then
+MEM_PARCEL is not yet usable with any other service except TEE_MEMORY_SEGMENT_SEND.
+
+|===
+
+[#srvgrp_tee_memory_parcel_accept]
+==== Service: TEE_MEMORY_PARCEL_ACCEPT (SERVICE_ID: 0x0A)
+This service is used by an endpoint to accept memory to which it has been granted
+access and/or ownership.
+
+The endpoint passes in this call the MEM_PARCEL identifier
+representing the memory it's accepting, together with associated information
+used during parcel creation (which is used for validation), i.e. 
+
+- the CREATOR of the MEM_PARCEL and its residual access rights (see <<srvgrp_tee_memory_parcel_create>>)
+
+- its own expected access rights to the memory
+
+- optionally, in case of multiple endpoints having been granted access to the
+memory by the MEM_PARCEL, the list of the their identifiers and their access
+rights to it.
+
+[NOTE]
+====
+The ZERO flag is useful to preserve the confidentiality on memory content for
+use cases in which the original owner has completely removed its access when
+granting it to other endpoints (i.e. it has temporarily lent the memory to other
+endpoints).
+
+The framework complies with this request even if the endpoint is shutdown or
+abort, thus causing all of the memory it was granted access at runtime to be
+available for its owner to reclaim.
+====
+
+[#table_tee_memory_parcel_accept_request_data]
+.Request Data
+[cols="2, 6, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| ACCEPTOR
+| uint32
+| Identifier of the endpoint which is accepting the memory parcel.
+
+This is either the identity of the calling TEE or REE, or of an endpoint which
+is proxied by the calling TEE or REE.
+
+| 1
+| ACCESS
+| uint32
+| Access permissions that ACCEPTOR is expected to have been granted on the
+memory being accepted. This must match the access declared for it in the
+MEM_PARCEL.
+
+Encoding as in <<table_mem_access>>.
+
+| 2
+| MEM_PARCEL
+| uint32
+| Device-unique identifier representing the memory parcel being accepted.
+
+| 3
+| NONCE
+| uint32
+| A token nonce set by the CREATOR of the MEM_PARCEL and associated to it.
+
+| 4
+| CREATOR
+| uint32
+| Identity of the endpoint which invoked the TEE_MEMORY_PARCEL_CREATE which led
+to the creation of the MEM_PARCEL which is being accepted with this service.
+
+| 5
+| CREATOR_ACCESS
+| uint32
+| Access permissions that the creator of the parcel retained as part of the
+invocation to TEE_MEMORY_PARCEL_CREATE.
+
+Encoding as in <<table_mem_access>>.
+
+| 6
+| FLAGS
+| uint32
+| 
+
+[cols="2,5, 10a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:30]
+! GPA_HINT
+! Whether the framework should use the ALIGNMENT or ADDRESS hints when selecting
+the returned GPA. Must be 0 if the endpoint is NOT running on top of a hypervisor.
+
+   0b00: No hint.
+   0b01: Use ALIGNMENT hint.
+   0b10: Use ADDRESS hint.
+   0b11: Reserved.
+
+! [29:25]
+! ALIGNMENT
+! Must be 0 if GPA_HINT is not `0b01`.
+
+The returned address needs to be aligned at the 2^n^ 4kB boundary, with n being
+the value of the ALIGNMENT flag.
+
+! [24:24]
+! CHECK_OTHER
+! Framework must perform a validation of the other endpoints and their
+access as passed in the OTHER and OTHER_ACCESS arrays.
+
+   0b0: Do the validation.
+   0b1: No validation.
+
+! [23:23]
+! ZERO
+! Framework must zero this memory _after_ this endpoint has released its
+access to it and _before_ the MEM_PARCEL is reclaimed by its CREATOR.
+
+   0b0: Zeroing is not required.
+   0b1: Zeroing is required.
+
+! [22:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+| 7
+| ADDRESS_HIGH
+| uint32
+| Higher 32bits of the address at which the framework should return the memory.
+
+Must be 0 if GPA_HINT is not `0b10`.
+
+| 8
+| ADDRESS_LOW
+| uint32
+| Lower 32bits of the address at which the framework should return the memory.
+The address needs to be 4kB aligned.
+
+Must be 0 if GPA_HINT is not `0b10`.
+
+| 9
+| MAX_PAGES
+| uint32
+| Maximum size, in number of pages, of the memory that the caller is ready to
+accept.
+
+The framework will fail this request if the total size of the memory associated
+to MEM_PARCEL exceeds this maximum size.
+
+| 10
+| OTHER_CNT
+| uint32
+| Total number (N) of other endpoints which were granted access to the memory by
+MEM_PARCEL.
+
+If the accepting endpoint requests the framework to validate them
+(CHECK_OTHER flag), this list must contain all the endpoints, other than
+ACCEPTOR, listed in the call to TEE_MEMORY_PARCEL_CREATE_ACCESS which generated
+this MEM_PARCEL, _excluding the MEM_PARCEL CREATOR_, whose identity and access
+is passed in OWNER and OWNER_ACCESS and always validated by the framework.
+
+Must be 0 if CHECK_OTHER flag is not set.
+
+| 11
+| OTHER[N]
+| uint32
+| Endpoints which were being granted access to the memory in addition to ACCEPTOR
+and CREATOR.
+
+| 11+N
+| OTHER_ACCESS[N]
+| uint32
+| Access permission for each endpoint in OTHER, encoded as in <<table_mem_access>>.
+
+|===
+
+[#table_tee_memory_parcel_accept_response_data]
+.Response Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Memory has been successfully accepted and made available by the framework.
+
+If the MEM_PARCEL described a memory donation, the MEM_PARCEL has now been
+destroyed and its identifier can be reused by the framework.
+
+! RPMI_ERR_DENIED
+! ZERO flag is set but ACCEPTOR has no write access to it.
+
+! RPMI_ERR_INVALID_PARAM
+!
+- Invalid MEM_PARCEL.
+
+- Validation error on ACCEPTOR, OTHER or their access permissions.
+
+- Validation error on NONCE.
+
+- Requested ADDRESS already in use.
+
+- Size exceeds MAX_PAGES
+
+- ZERO flag is set, but some of the memory is classified as device memory.
+
+- Invalid GPA_HINT.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| 
+
+[cols="2,5, 9a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:31]
+! MULTI_SEGMENT
+! This field is set to 1 if this is the first segment of a multi-segment
+memory management response.
+
+The following segments will be retrieved via the
+TEE_MEMORY_SEGMENT_RECEIVE service.
+
+! [30:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+| 2
+| PAGE_CNT
+| uint32
+| Total size of the memory, in number of 4kB pages.
+
+| 3
+| BLOCK_CNT
+| uint32
+| Total number (M) of contiguous memory blocks. On success, will never be 0.
+
+| 4
+| BLOCK_HIGH[M]
+| uint32
+| See <<table_mem_blocks>>.
+
+| 4+M
+| BLOCK_LOW[M]
+| uint32
+| See <<table_mem_blocks>>.
+
+|===
+
+[#srvgrp_tee_memory_parcel_release]
+==== Service: TEE_MEMORY_PARCEL_RELEASE (SERVICE_ID: 0x0B)
+This service is called by an endpoint which was granted access (but not
+ownership) to some memory via a memory parcel, to release it back to the
+MEM_PARCEL creator, who can reclaim it back by using the
+TEE_MEMORY_PARCEL_RECLAIM service.
+
+If multiple endpoints proxied by the same physical endpoint were granted access
+to memory via the same MEM_PARCEL, a single invocation of this service, listing
+all of them in the ENDPOINT array, can be performed by the physical endpoint
+which proxies them.
+
+This service can also be used by an endpoint which is in the process of
+accepting a multi-segment memory parcel (i.e. it hasn't yet received a response
+to the TEE_MEMORY_SEGMENT_RECEIVE service with the LAST_SEGMENT bit set) to
+abort the operation. The parcel is thereby returned to the state it had before
+the multi-segment acceptance sequence by this endpoint had started.
+
+[NOTE]
+====
+
+The ZERO flag in TEE_MEMORY_PARCEL_RELEASE has the same effect as the ZERO flag
+in TEE_MEMORY_PARCEL_ACCEPT, but they serve a different purpose. In
+TEE_MEMORY_PARCEL_ACCEPT, it provides the guarantee that if the endpoint were to
+terminate without the opportunity to release the memory, no data would be
+leaked. In TEE_MEMORY_PARCEL_RELEASE, it serves mostly an optimization purpose,
+so that if multiple endpoints are releasing memory at the end of a use case,
+instead of them all zeroing the memory, the framework would be able to operate
+on it a single time.
+
+This flag should be used for this second purpose only after careful
+consideration, since zeroing large amount of memory from within the framework
+might have an impact on the overall system responsivity (e.g. it is
+implementation dependent if and which portions of the framework are capable of
+running with interrupts masked).
+
+====
+
+[#table_tee_memory_release_request_data]
+.Request Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| MEM_PARCEL
+| uint32
+| Device-unique identifier representing the memory parcel being released.
+
+| 1
+| FLAGS
+| uint32
+| 
+
+[cols="2,3, 10a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:31]
+! ZERO
+! Request the framework to zero the memory before it is returned to the
+MEM_PARCEL creator.
+
+   0b0: Zeroing is not required.
+   0b1: Zeroing is required.
+
+! [30:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+| 2
+| ENDPOINT_CNT
+| uint32
+| Number (N) of endpoints on behalf of which the sender REE/TEE is releasing
+access to the memory referred to by MEM_PARCEL. This number cannot be 0.
+
+| 3
+| ENDPOINT[N]
+| uint32
+| Array of IDs of the endpoints which are releasing access to the memory region represented by MEM_PARCEL.
+
+|===
+
+[#table_tee_memory_parcel_release_response_data]
+.Response Data
+[cols="2, 3, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! MEM_PARCEL has been successfully released.
+
+The framework has removed access to its underlying memory from all ENDPOINTs.
+
+! RPMI_ERR_DENIED
+!
+- ZERO flag is set but none of the ENDPOINTs has write access to it.
+
+- At least one of the listed endpoints is not proxied by the calling REE/TEE.
+
+! RPMI_ERR_INVALID_PARAM
+!
+
+- Invalid/unknown MEM_PARCEL.
+
+- ZERO flag is set, but some of the memory is classified as device memory.
+
+- Invalid FLAG.
+
+- Not all listed endpoints had been granted access to the memory represented by
+MEM_PARCEL (or they have already released their claim to it).
+
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+[#srvgrp_tee_memory_parcel_reclaim]
+==== Service: TEE_MEMORY_PARCEL_RECLAIM (SERVICE_ID: 0x0C)
+This service is called by an endpoint which had previously created a memory
+parcel to reclaim access to the memory and access right it had before its creation.
+A successful completion of this service destroys the memory parcel, whose
+identifier can then be reused by the framework for a new parcel.
+
+When this service is called, no other endpoint must have a claim on the
+MEM_PARCEL, so each of them must either have accepted and then released it, or
+never accepted it.
+
+This service cannot be called on a MEM_PARCEL which describes memory ownership
+transfer after it has been accepted, since acceptance of such a parcel destroys
+it and hence makes the identifier invalid.
+
+This service can also be used by an endpoint which is in the process of creating
+a multi-segment memory parcel (i.e. it hasn't yet invoked the
+TEE_MEMORY_SEGMENT_SEND service with the LAST_SEGMENT bit set) to abort the
+operation. The parcel is thereby destroyed and its identifier can be reused by
+the framework.
+
+[NOTE]
+====
+In case of a REE/TEE hosting multiple endpoints, it is not necessary to specify
+on behalf of which the memory is being reclaimed, since the knowledge of the
+creator of the parcel is implicit in the MEM_HANDLE itself.
+====
+
+[#table_tee_memory_parcel_reclaim_request_data]
+.Request Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| MEM_PARCEL
+| uint32
+| Unique identifier of the memory parcel which is being reclaimed.
+
+|===
+
+[#table_tee_memory_parcel_reclaim_response_data]
+.Response Data
+[cols="2, 3, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,5a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Memory has been successfully reclaimed.
+
+! RPMI_ERR_DENIED
+!
+- Not all endpoints which accepted MEM_PARCEL have released it.
+
+! RPMI_ERR_INVALID_PARAM
+!
+- Invalid/unknown MEM_PARCEL.
+
+- MEM_PARCEL doesn't refer to memory owned by any of the endpoints hosted by the
+caller.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| 
+
+[cols="2,2, 9a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:31]
+! ZEROED
+! The memory was zeroed by the framework before the original access was
+restored.
+
+   0b0: The framework did not zero the memory.
+   0b1: The framework zeroed the memory.
+
+! [30:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+|===
+
+[#srvgrp_tee_memory_segment_send]
+==== Service: TEE_MEMORY_SEGMENT_SEND (SERVICE_ID: 0x0D)
+This service is used to complete the creation of a memory parcel whose memory
+description doesn't fit in the RPMI transport buffer used for the
+TEE_MEMORY_PARCEL_CREATE service.
+
+In such a case the endpoint sets the MULTI_SEGMENT bit to 1 in the
+TEE_MEMORY_PARCEL_CREATE service, and completes the creation by invoking one or
+more time the TEE_MEMORY_SEGMENT_SEND service until all the memory has been
+completely described. The parcel is considered created (and no more segments can
+be added) when a segment with the LAST_SEGMENT flag bit set is sent.
+
+[NOTE]
+====
+In the case of a multi-segment parcel, the new access permissions for the
+creator are applied only when the last segment for the parcel is sent and the
+TEE_MEMORY_SEGMENT_SEND completes with success.
+====
+
+It is implementation specific (and discoverable via TEE_FEATURES_PROBE) if
+multiple concurrent multi-segment TEE_MEMORY_PARCEL_CREATE services are supported by
+the framework.
+
+[NOTE]
+====
+This service doesn't require the calling REE/TEE to specify the endpoint which
+is continuing the creation of the MEM_PARCEL, since its identity has already
+been assigned during the initial TEE_MEMORY_PARCEL_CREATE (CREATOR field). This
+service will only verify that CREATOR is the calling REE/TEE or an endpoint it
+proxies.
+====
+
+[#table_tee_memory_segment_send_request_data]
+.Request Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| MEM_PARCEL
+| uint32
+| Identifier obtained from a TEE_MEMORY_PARCEL_CREATE multi-segment service, which this
+service is now continuing.
+
+| 1
+| FLAGS
+| uint32
+| 
+
+[cols="2,4, 9a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:31]
+! LAST_SEGMENT
+! 
+   0b0: More segments to be sent.
+   0b1: This is the last segment.
+
+! [30:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+| 2
+| BLOCK_CNT
+| uint32
+| Total number (M) of contiguous memory blocks. Cannot be 0.
+
+| 3
+| BLOCK_HIGH[M]
+| uint32
+| See <<table_mem_blocks>>.
+
+| 3+M
+| BLOCK_LOW[M]
+| uint32
+| See <<table_mem_blocks>>.
+
+|===
+
+[#table_tee_memory_segment_send_response_data]
+.Response Data
+[cols="2, 3, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Memory added to the MEM_PARCEL.
+
+! RPMI_ERR_DENIED
+! CREATOR does not have access to the memory or has less access than it is
+trying to grant with the parcel to other endpoints.
+
+! RPMI_ERR_HW_FAULT
+! Hardware limitations (e.g. memory firewalling technology) don’t allow access
+to the memory to be granted to one or more of the receivers.
+
+! RPMI_ERR_INVALID_PARAM
+!
+- The calling REE/TEE does not proxies the original CREATOR of the parcel.
+
+!===
+- Other errors <<table_error_codes>>.
+
+|===
+
+[#srvgrp_tee_memory_segment_receive]
+==== Service: TEE_MEMORY_SEGMENT_RECEIVE (SERVICE_ID: 0x0E)
+This service is used by an endpoint following an invocation of TEE_MEMORY_ACCEPT
+with the MULTI_SEGMENT flag set in the response data, i.e. when the memory
+description did not fit in the maximum message size supported by the transport.
+
+The acceptance of the memory is not considered complete (and the memory is not
+accessible to the caller) until the last segment describing it has been
+received.
+
+It is implementation specific (and discoverable via TEE_FEATURES_PROBE) if
+multiple concurrent multi-segment TEE_MEMORY_ACCEPT services are supported by
+the framework.
+
+[#table_tee_memory_segment_receive_request_data]
+.Request Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| ACCEPTOR
+| uint32
+| Identifier of the endpoint which is continuing a TEE_MEMORY_ACCEPT operation.
+
+It must match the ACCEPTOR of the TEE_MEMORY_PARCEL_ACCEPT service call which
+initiated the accept operation.
+
+| 1
+| MEM_PARCEL
+| uint32
+| Identifier representing the memory parcel being accepted.
+
+|===
+
+[#table_tee_memory_segment_receive_response_data]
+.Response Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! The service completed successfully.
+
+If this was the last segment:
+
+- the new access permissions for the ACCEPTOR have been applied by the framework,
+
+- no further call of TEE_MEMORY_PARCEL_ACCEPT on this MEM_PARCEL can be issued by this ACCEPTOR.
+
+! RPMI_ERR_INVALID_PARAM
+! 
+- Unknown MEM_PARCEL, or not part of an in-progress multi-segment memory
+acceptance operation.
+
+- ACCEPTOR does not belong to the calling REE/TEE.
+
+- ACCEPTOR does not correspond to the acceptor which initiated the operation.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| 
+
+[cols="2,4, 9a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:31]
+! LAST_SEGMENT
+! 
+   0b0: More segments to be received.
+   0b1: This is the last segment.
+
+! [30:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+| 2
+| BLOCK_CNT
+| uint32
+| Total number (M) of contiguous memory blocks. On success, it will be 0.
+
+| 3
+| BLOCK_HIGH[M]
+| uint32
+| See <<table_mem_blocks>>.
+
+| 3+M
+| BLOCK_LOW[M]
+| uint32
+| See <<table_mem_blocks>>.
+
+|===
+
+[#srvgrp_tee_register_for_lifecycle_services]
+==== Service: TEE_REGISTER_FOR_LIFECYCLE_SERVICES (SERVICE_ID: 0x0F)
+When a hypervisor is present in a domain, EEs, as VMs, can be created and
+destroyed at runtime. The lifecycle services are meant to allow other REEs and
+TEEs to be made aware of information about the instantiation of a new physical
+endpoint (usually REEs, but potentially also TEEs) when they are created, their
+destruction or a change in their identity, for example as an effect of
+progressing in a chain of bootloaders.
+
+They complement the TEE_PROBE_SYSTEM service, which provides information on the
+whole system at the moment it is invoked, by allowing REEs and TEEs to stay up
+to date with the state of whole system as it changes over time.
+
+The TEE_ON_START_INFO, TEE_ON_SHUTDOWN_INFO and TEE_ON_CHANGED_INFO differ from
+other services in this service group by being invoked by the framework itself
+and delivered to the endpoints which have recorded their interest in receiving
+REE/TEE lifecycle information (via the TEE_REGISTER_FOR_LIFECYCLE_SERVICES
+service). They then differ from RPMI notifications by being _synchronous_
+invocations from the framework, which requires them to be processed by endpoints
+before subsequent operations can take place.
+
+These services are invoked by the framework in a synchronous manner, and for all
+endpoints which have registered to receive the REE/TEE lifecycle data, the
+framework will guarantee that:
+
+* No message from a newly created or changed REE/TEE is delivered to the
+receiving endpoint until it has completed the processing of the
+TEE_ON_START_INFO service.
+
+* No message from a destroyed EE is delivered to the receiving endpoint after
+the framework initiate the delivery the TEE_ON_SHUTDOWN_INFO (or until a
+REE/TEE with the same identifier is created again at a later time).
+
+* Lifecycle services are strictly serialized, specifically:
+
+** They are delivered in the same order for all receivers.
+
+** In case of a receiver gracefully yielding to the framework during the
+processing of a message (by returning the RPMI_ERR_IO error code), no further
+message will be presented to it except the message which was yielded, until its
+processing is completed with a non-yielding response.
+
+[#table_tee_register_for_lifecycle_services_request_data]
+.Request Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SYSINFO_FORMAT
+| uint32
+| The format in which the data shall be returned by the framework when a new
+endpoint is created or changed. Needs to be one of the formats (i.e. a single
+bit) returned by the TEE_PROBE_FEATURES service.
+
+| 1
+| FLAGS
+| uint32
+| 
+
+[cols="2,3, 11a", options="header"]
+!===
+! Bits
+! Field
+! Description
+
+! [31:31]
+! REGISTER
+! 
+   0b0: Deregister from lifecycle services.
+   0b1: Register to lifecycle services.
+
+! [30:0]
+! _Reserved_
+! Must be 0.
+
+!===
+
+|===
+
+[#table_tee_register_for_lifecycle_services_response_data]
+.Response Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Framework has successfully recorded the new registration status for the
+calling endpoint.
+
+! RPMI_ERR_INVALID_PARAM
+!
+- Caller already registered or deregistered.
+
+- Unsupported format.
+
+!===
+- Other errors <<table_error_codes>>.
+
+|===
+
+[#srvgrp_tee_on_start_info]
+==== Service: TEE_ON_START_INFO (SERVICE_ID: 0x10)
+The framework will send this message to an endpoint which has previously
+registered to receive information about lifecycle events when a new REE or TEE
+is started (by an impdef mechanism) and is registered upon the framework (by an
+impdef mechanism).
+
+The framework guarantees that this message can only come from the framework
+itself, and will reject any attempt by an endpoint to send it.
+
+[#table_tee_on_start_info_request_data]
+.Request Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| ID
+| uint32
+| Unique identifier of the REE/TEE.
+
+| 1
+| DATA_LEN
+| uint32
+| Length (N) in bytes of the returned data containing the description of the
+newly created REE/TEE.
+
+| 2
+| DATA[N]
+| uint8
+| Data describing the newly created REE/TEE, in the requested format.
+
+|===
+
+[#table_tee_on_start_info_response_data]
+.Response Data
+[cols="2, 3, 2, 20a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="2,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Data for newly created REE/TEE has been processed.
+
+
+! RPMI_ERR_IO
+!
+This error can only be returned by a TEE.
+
+The TEE received a foreign interrupt and could not complete the processing of
+the data.
+
+The Framework is expected to resend the message after the interrupt has been
+delivered to its target.
+
+!===
+
+The endpoint is not allowed to return any other error.
+
+Any error returned other then the above will be interpreted by the framework as
+the endpoint malfunctioning and will be dealt with by the framework in an
+implementation defined manner.
+
+|===
+
+[#srvgrp_tee_on_shutdown_info]
+==== Service: TEE_ON_SHUTDOWN_INFO (SERVICE_ID: 0x11)
+The framework will send this message to an endpoint which has previously
+registered to receive information about lifecycle events when an REE or TEE is
+shutdown (by an impdef mechanism). It is also called when an endpoint decided to
+programmatically exit the framework by invoking the TEE_EXIT service, or when
+the framework detects the endpoint is malfunctioning and disconnects it from the
+framework itself.
+
+The framework guarantees that this message can only come from the framework
+itself, and will reject any attempt by an endpoint to send it.
+
+[#table_tee_on_shutdown_info_request_data]
+.Request Data
+[cols="2, 5, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| ID
+| uint32
+| Unique identifier of the REE/TEE.
+|===
+
+[#table_tee_on_shutdown_info_response_data]
+.Response Data
+[cols="2, 3, 2, 20a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="2,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! The endpoint has processed the information.
+
+
+! RPMI_ERR_IO
+!
+This error can only be returned by a TEE.
+
+The TEE was interrupted by an interrupt and could not complete the processing of
+the data.
+
+The Framework is expected to resend the message after the interrupt has been
+delivered to its target.
+
+!===
+
+The endpoint is not allowed to return any other error.
+
+Any error returned other then the above will be interpreted by the framework as
+an endpoint malfunctioning and will be dealt with by the framework in an
+implementation defined manner.
+
+|===
+
+[#srvgrp_tee_on_changed_info]
+==== Service: TEE_ON_CHANGED_INFO (SERVICE_ID: 0x12)
+The framework will send this message to an endpoint which has previously
+registered to receive information about lifecycle events when an existing
+REE/TEE changes its own internal configuration/runtime (typically as a result of
+progressing through the bootloader chain).
+
+The framework guarantees that this message can only come from the framework
+itself, and will reject any attempt by an endpoint to send it.
+
+
+[#table_tee_on_changed_info_request_data]
+.Request Data
+Same as <<table_tee_on_start_info_request_data>>.
+
+[#table_tee_on_changed_info_response_data]
+.Response Data
+Same as <<table_tee_on_start_info_response_data>>.
+
+[#srvgrp_tee_send_data]
+==== Service: TEE_SEND_DATA (SERVICE_ID: 0x13)
+This service is used to send data synchronously from an endpoint (in a REE or
+TEE) to a TEE.
+
+The target TEE will execute on the same hart as the originator of the request
+until a response is returned.
+
+The framework will validate the passed fields, route the message to the target
+endpoint and return the response to the caller.
+
+[NOTE]
+====
+
+The RPMI TEE Service Group does not define any synchronous mechanism for a TEE to
+send data to an REE, because of the scheduling constraints in the REE/TEE
+relationship.
+
+====
+
+[#table_tee_send_data_request_data]
+.Request Data
+[cols="2, 6, 3, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SENDER
+| uint32
+| Identifier of the endpoint which is sending the request.
+
+The framework will verify that this endpoint is associated with the REE/TEE
+which this service is being called from.
+
+| 1
+| TARGET
+| uint32
+| Unique identifier of the endpoint that implements the requested service.
+
+| 2:5
+| SERVICE
+| uint8[16]
+| Bytes[0..15] of the UUID identifying the requested service.
+
+| 6
+| SERVICE_DATA_LEN
+| uint32
+| Length (N) in bytes of the service data
+
+| 7
+| SERVICE_DATA[N]
+| uint8
+| Service data.
+
+|===
+
+[#table_tee_send_data_response_data]
+.Response Data
+[cols="2, 6, 2, 18a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code. All error codes returned in the TEE_SEND_DATA Response Data
+are set by the framework.
+
+[cols="5,6a", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Data successfully delivered and response data returned.
+
+! RPMI_ERR_INVALID_PARAM
+! Invalid SENDER, TARGET or SERVICE.
+
+! RPMI_ERR_BUSY
+! TARGET internal state is busy and cannot handle the request.
+
+! RPMI_ERR_IO
+! TARGET aborted while processing the request.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| SERVICE_RSP_LEN
+| uint32
+| Length (N) in bytes of the service response.
+
+| 2
+| SERVICE_RSP[N]
+| uint8
+| Service response.
+
+|===
