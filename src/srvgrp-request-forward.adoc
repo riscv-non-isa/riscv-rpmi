@@ -27,23 +27,27 @@ service group:
 
 [#table_reqfwd_services]
 .Request Forward Services
-[cols="1, 4, 2", width=100%, align="center", options="header"]
+[cols="1, 4, 2, 1", width=100%, align="center", options="header"]
 |===
 | Service ID
 | Service Name
 | Request Type
+| RPMI Version
 
 | 0x01
 | REQFWD_ENABLE_NOTIFICATION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x02
 | REQFWD_RETRIEVE_CURRENT_MESSAGE
 | NORMAL_REQUEST
+| 1.0
 
 | 0x03
 | REQFWD_COMPLETE_CURRENT_MESSAGE
 | NORMAL_REQUEST
+| 1.0
 |===
 
 [#reqfwd-notifications]

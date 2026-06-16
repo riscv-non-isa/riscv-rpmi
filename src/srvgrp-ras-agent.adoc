@@ -20,27 +20,32 @@ The following table lists the services in the RAS_AGENT service group:
 
 [#table_ras_agent_services]
 .RAS Agent Services
-[cols="1, 3, 2", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 1", width=100%, align="center", options="header"]
 |===
 | Service ID
 | Service Name
 | Request Type
+| RPMI Version
 
 | 0x01
 | RAS_ENABLE_NOTIFICATION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x02
 | RAS_GET_NUM_ERR_SRCS
 | NORMAL_REQUEST
+| 1.0
 
 | 0x03
 | RAS_GET_ERR_SRCS_ID_LIST
 | NORMAL_REQUEST
+| 1.0
 
 | 0x04
 | RAS_GET_ERR_SRC_DESC
 | NORMAL_REQUEST
+| 1.0
 |===
 
 ==== Error Source Descriptor Format
