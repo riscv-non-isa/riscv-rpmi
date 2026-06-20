@@ -101,6 +101,8 @@ include::src/srvgrp-logging.adoc[]
 
 include::src/srvgrp-system-irq.adoc[]
 
+include::src/srvgrp-tee.adoc[]
+
 include::src/rpmi-mpxy.adoc[]
 
 // The index must precede the bibliography
