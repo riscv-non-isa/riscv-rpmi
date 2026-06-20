@@ -4,8 +4,8 @@
 :description: RISC-V Platform Management Interface Specification Document (RPMI)
 :company: RISC-V.org
 :revdate: 1/2023
-:revnumber: 1.0
-:revremark: Ratified
+:revnumber: 2.0
+:revremark: Draft
 :revinfo:
 :url-riscv: http://riscv.org
 :doctype: book
@@ -39,10 +39,11 @@ endif::[]
 :xrefstyle: short
 
 [WARNING]
-.This document is in the link:http://riscv.org/spec-state[Ratified state]
+.This document is in the link:http://riscv.org/spec-state[Draft state]
 ====
-No changes are allowed. Any necessary or desired modifications must be addressed
-through a follow-on extension. Ratified extensions are never revised.
+Assume everything is subject to change. At this stage, ideas, structures,
+and content are still evolving. Feedback and iteration are encouraged as nothing
+is final, and adjustments may be frequent.
 ====
 
 [preface]
