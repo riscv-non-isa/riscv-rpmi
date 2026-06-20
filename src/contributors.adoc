@@ -4,11 +4,6 @@ This RISC-V specification has been contributed to directly or indirectly by:
 
 [%hardbreaks]
 
-Anup Patel <apatel@ventanamicro.com>
-Himanshu Chauhan <hchauhan@ventanamicro.com>
-Joshua Yeong <joshua.yeong@starfivetech.com>
-Ley Foon Tan <leyfoon.tan@starfivetech.com>
-Rahul Pathak <rpathak@ventanamicro.com>
-Samuel Holland <samuel.holland@sifive.com>
-Subrahmanya Lingappa <slingappa@ventanamicro.com>
-Yong Li <yong.li@intel.com>
+
+Anup Patel, Christian Bolis, Himanshu Chauhan, Joshua Yeong, Ley Foon Tan, Rahul Pathak, Samuel Holland, Subrahmanya Lingappa, Yong Li
+
