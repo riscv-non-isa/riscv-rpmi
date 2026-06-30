@@ -10,8 +10,22 @@ ifndef::rootpath[]
 endif::rootpath[]
 
 ===  Service Group - RAS_AGENT (SERVICEGROUP_ID: 0x000C)
-The RAS_AGENT service group provides services to enumerate various error
-sources in a system and to retrieve their descriptors.
+The RAS_AGENT service group provides services to enumerate various hardware error
+sources in a system, to retrieve their descriptors and report the errors to an
+application processor when the errors occur. It can also inject errors on the
+error sources that support error injection.
+
+When an error occurs, the `RAS_AGENT` converts the RERI or the platform specific
+error record(s) into CPER format error record(s) cite:[CPER_FORMAT] and writes them
+into a shared memory accessible by the application processor. For ACPI systems,
+the shared memory location is discovered via GHESv2 entries.cite:[ACPI] For non-ACPI
+systems, it can be discovered via platform device tree.
+
+After writing the CPER record(s) to the shared memory, the `RAS_AGENT` must signal the
+application processor, for further processing. The `RAS_AGENT` could be running on an
+application processor or on a platform microcontroller. In case of former, the signal
+must be an SSE event. In case of the latter, the `RAS_AGENT` must have a platform specific
+way to signal the application processor through system MSI or an external interrupt.
 
 Each error source in a system is assigned a unique 32-bit identification number,
 referred to as `RAS_ERR_SRC_ID`.
@@ -46,10 +60,30 @@ The following table lists the services in the RAS_AGENT service group:
 | RAS_GET_ERR_SRC_DESC
 | NORMAL_REQUEST
 | 1.0
+
+| 0x05
+| RAS_GET_EINJ_INFO
+| NORMAL_REQUEST
+| 2.0
+
+| 0x06
+| RAS_GET_EINJ_INST
+| NORMAL_REQUEST
+| 2.0
+
+| 0x07
+| RAS_EINJ_READ_REG
+| NORMAL_REQUEST
+| 2.0
+
+| 0x08
+| RAS_EINJ_WRITE_REG
+| NORMAL_REQUEST
+| 2.0
 |===
 
-==== Error Source Descriptor Format
-===== ACPI Systems
+==== Error Source Reporting and Error Injection in ACPI Systems
+===== Error Source Descriptor Format
 For systems that support ACPI/APEI, the format of the error source descriptor
 is as defined in ACPI specification v6.4 or above, (GHESv2) cite:[ACPI].
 If the value of `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]` is `0`, it indicates that the
@@ -68,7 +102,17 @@ dependent and is done by the RAS agent. The physical address of
 `error_status_block` is stored in the `error_status_structure` field of the
 error source descriptor being returned.
 
-===== Non-ACPI Systems
+===== Error Injection Instruction Format
+On systems that support ACPI/APEI, the EINJ mechanism, as defined in the
+ACPI v6.4 (EINJ) or above cite:[ACPI], is used. The error is injected by
+executing the instructions present in the instruction entries in the EINJ table.
+
+The caller must first fetch the number of EINJ instruction entries supported.
+`0` - `N-1` are the indices of the instruction entries where `N` is the number
+of EINJ instruction entries supported. The instruction entries should be fetched
+one at a time by specifying the index of the instruction entry.
+
+==== Non-ACPI Systems
 RAS is not standardized for non-ACPI systems. Such systems may define custom
 format for an error source descriptor. The type of custom error source
 descriptor format can be read from `RAS_GET_ERR_SRC_DESC.FLAGS[3:0]`.
@@ -293,4 +337,238 @@ returned.
 | ERR_SRC_DESC[N]
 | uint8
 | Full or partial descriptor N is equal to the `RETURNED` bytes in this request.
+|===
+
+==== Service: RAS_GET_EINJ_INFO (SERVICE_ID: 0x05)
+This service request queries various information related to EINJ mechanism; including
+but not limiting to check the support for EINJ mechanism and to fetch number of EINJ
+instruction entries available.
+
+[#table_ras_agent_get_einj_info_request_data]
+.Request Data
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
+
+[#table_ras_agent_get_einj_info_response_data]
+.Response Data
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="2,5", options="header"]
+!===
+
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_NOT_SUPPORTED
+! EINJ mechanism is not supported.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| NUM_EINJ_INST
+| uint32
+| Number of EINJ instructions. If the number of EINJ instructions
+returned is zero, it means that EINJ is not supported.
+
+| 2
+| FLAGS
+| uint32
+| _Reserved_ and must be `0`.
+|===
+
+==== Service: RAS_GET_EINJ_INST (SERVICE_ID: 0x06)
+This service retrieves EINJ instruction at a given index.
+
+[#table_ras_agent_get_einj_inst_request_data]
+[cols="1, 4, 1, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| EINJ_INST_INDEX
+| uint32
+| Index of an EINJ instruction. It must be between `0`-`N-1` where N is number
+of instructions returned in `RAS_GET_EINJ_INFO.NUM_EINJ_INST`.
+
+| 1
+| EINJ_INST_BYTE_OFFSET
+| uint32
+| Byte offset from which the instruction is to be read. Byte offset `0` for
+the first call, subsequent byte offset of the remaining bytes.
+|===
+
+[#table_ras_agent_get_einj_inst_response_data]
+.Response Data
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="7,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully and partial/complete instruction entry is returned.
+
+! RPMI_ERR_INVALID_PARAM
+! `EINJ_INST_INDEX` or `EINJ_INST_BYTE_OFFSET` is invalid.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 2
+| REMAINING
+| uint32
+| Remaining number of bytes to be read.
+
+| 3
+| RETURNED
+| uint32
+| Number of bytes read in this request.
+
+| 4
+| EINJ_INST[N]
+| uint8
+| Full or partial instruction. N is equal to the `RETURNED` bytes in this request.
+|===
+
+==== Service: RAS_EINJ_READ_REG (SERVICE_ID: 0x07)
+This service request read a 64-bit value from a specified register address.
+
+[#table_ras_agent_einj_read_reg_request_data]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| REGISTER_ID
+| uint32
+| A platform specific register identification number from which data is to be read.
+|===
+
+[#table_ras_agent_einj_read_reg_response_data]
+.Response Data
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="7,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully and register value is returned.
+
+! RPMI_ERR_INVALID_PARAM
+! `REGISTER_ID` is invalid.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| REGISTER_VALUE_LOW
+| uint32
+| Lower 32-bit of the register value
+
+| 2
+| REGISTER_VALUE_HIGH
+| uint32
+| Higher 32-bit of the register value
+|===
+
+==== Service: RAS_EINJ_WRITE_REG (SERVICE_ID: 0x08)
+This service request write a 64-bit value to a specified address.
+
+[#table_ras_agent_einj_write_reg_request_data]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| REGISTER_ID
+| uint32
+| A platform specific register identification number to which data is to be written.
+
+| 1
+| REGISTER_VALUE_LOW
+| uint32
+| Lower 32-bits of the value to be written.
+
+| 2
+| REGISTER_VALUE_HIGH
+| uint32
+| Higher 32-bits of the value to written.
+|===
+
+[#table_ras_agent_einj_write_reg_response_data]
+.Response Data
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="7,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `REGISTER_ID` is invalid.
+
+!===
+- Other errors <<table_error_codes>>.
+
 |===
