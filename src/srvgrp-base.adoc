@@ -25,39 +25,47 @@ The following table lists the services in the BASE service group:
 
 [#table_base_services]
 .BASE Services
-[cols="1, 3, 2", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 1", width=100%, align="center", options="header"]
 |===
 | Service ID
 | Service Name
 | Request Type
+| RPMI Version
 
 | 0x01
 | BASE_ENABLE_NOTIFICATION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x02
 | BASE_GET_IMPLEMENTATION_VERSION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x03
 | BASE_GET_IMPLEMENTATION_ID
 | NORMAL_REQUEST
+| 1.0
 
 | 0x04
 | BASE_GET_SPEC_VERSION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x05
 | BASE_GET_PLATFORM_INFO
 | NORMAL_REQUEST
+| 1.0
 
 | 0x06
 | BASE_PROBE_SERVICE_GROUP
 | NORMAL_REQUEST
+| 1.0
 
 | 0x07
 | BASE_GET_ATTRIBUTES
 | NORMAL_REQUEST
+| 1.0
 |===
 
 ==== RPMI Implementation IDs

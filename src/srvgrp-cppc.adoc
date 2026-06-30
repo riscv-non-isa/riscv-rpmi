@@ -40,39 +40,47 @@ The following table lists the services in the CPPC service group:
 
 [#table_cppc_services]
 .CPPC Services
-[cols="1, 3, 2", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 1", width=100%, align="center", options="header"]
 |===
 | Service ID
 | Service Name
 | Request Type
+| RPMI Version
 
 | 0x01
 | CPPC_ENABLE_NOTIFICATION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x02
 | CPPC_PROBE_REG
 | NORMAL_REQUEST
+| 1.0
 
 | 0x03
 | CPPC_READ_REG
 | NORMAL_REQUEST
+| 1.0
 
 | 0x04
 | CPPC_WRITE_REG
 | NORMAL_REQUEST
+| 1.0
 
 | 0x05
 | CPPC_GET_FAST_CHANNEL_REGION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x06
 | CPPC_GET_FAST_CHANNEL_OFFSET
 | NORMAL_REQUEST
+| 1.0
 
 | 0x07
 | CPPC_GET_HART_LIST
 | NORMAL_REQUEST
+| 1.0
 |===
 
 ==== CPPC Fast-channel

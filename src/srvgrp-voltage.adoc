@@ -20,43 +20,52 @@ voltage levels of these voltage domains. Each voltage domain is identified by
 The following table lists the services in the VOLTAGE service group:
 [#table_voltage_services]
 .VOLTAGE Services
-[cols="1, 3, 2", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 1", width=100%, align="center", options="header"]
 |===
 | Service ID
 | Service Name
 | Request Type
+| RPMI Version
 
 | 0x01
 | VOLT_ENABLE_NOTIFICATION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x02
 | VOLT_GET_NUM_DOMAINS
 | NORMAL_REQUEST
+| 1.0
 
 | 0x03
 | VOLT_GET_ATTRIBUTES
 | NORMAL_REQUEST
+| 1.0
 
 | 0x04
 | VOLT_GET_SUPPORTED_LEVELS
 | NORMAL_REQUEST
+| 1.0
 
 | 0x05
 | VOLT_SET_CONFIG
 | NORMAL_REQUEST
+| 1.0
 
 | 0x06
 | VOLT_GET_CONFIG
 | NORMAL_REQUEST
+| 1.0
 
 | 0x07
 | VOLT_SET_LEVEL
 | NORMAL_REQUEST
+| 1.0
 
 | 0x08
 | VOLT_GET_LEVEL
 | NORMAL_REQUEST
+| 1.0
 
 |===
 

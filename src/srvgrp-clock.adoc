@@ -30,43 +30,52 @@ The following table lists the services in the CLOCK service group:
 
 [#table_clock_services]
 .CLOCK Services
-[cols="1, 3, 2", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 1", width=100%, align="center", options="header"]
 |===
 | Service ID
 | Service Name
 | Request Type
+| RPMI Version
 
 | 0x01
 | CLK_ENABLE_NOTIFICATION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x02
 | CLK_GET_NUM_CLOCKS
 | NORMAL_REQUEST
+| 1.0
 
 | 0x03
 | CLK_GET_ATTRIBUTES
 | NORMAL_REQUEST
+| 1.0
 
 | 0x04
 | CLK_GET_SUPPORTED_RATES
 | NORMAL_REQUEST
+| 1.0
 
 | 0x05
 | CLK_SET_CONFIG
 | NORMAL_REQUEST
+| 1.0
 
 | 0x06
 | CLK_GET_CONFIG
 | NORMAL_REQUEST
+| 1.0
 
 | 0x07
 | CLK_SET_RATE
 | NORMAL_REQUEST
+| 1.0
 
 | 0x08
 | CLK_GET_RATE
 | NORMAL_REQUEST
+| 1.0
 |===
 
 [#clock-rate-format-section]

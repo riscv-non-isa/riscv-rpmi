@@ -25,44 +25,52 @@ The following table lists the services in the HART_STATE_MANAGEMENT service grou
 
 [#table_hsm_services]
 .HART_STATE_MANAGEMENT Services
-[cols="1, 3, 2", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 1", width=100%, align="center", options="header"]
 |===
 | Service ID
 | Service Name
 | Request Type
+| RPMI Version
 
 | 0x01
 | HSM_ENABLE_NOTIFICATION
 | NORMAL_REQUEST
+| 1.0
 
 | 0x02
 | HSM_GET_HART_STATUS
 | NORMAL_REQUEST
+| 1.0
 
 | 0x03
 | HSM_GET_HART_LIST
 | NORMAL_REQUEST
+| 1.0
 
 | 0x04
 | HSM_GET_SUSPEND_TYPES
 | NORMAL_REQUEST
+| 1.0
 
 | 0x05
 | HSM_GET_SUSPEND_INFO
 | NORMAL_REQUEST
+| 1.0
 
 | 0x06
 | HSM_HART_START
 | NORMAL_REQUEST
+| 1.0
 
 | 0x07
 | HSM_HART_STOP
 | NORMAL_REQUEST
+| 1.0
 
 | 0x08
 | HSM_HART_SUSPEND
 | NORMAL_REQUEST
-
+| 1.0
 |===
 
 [#section-hart-states]
