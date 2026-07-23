@@ -77,9 +77,9 @@ Refer to <<table_common_ennotification_request_data>> for Request Data and
 
 ==== Service: SYSRST_GET_ATTRIBUTES (SERVICE_ID: 0x02)
 This service is used to discover the attributes of a reset type. The attribute
-flags indicates if a `RESET_TYPE` is supported or not apart from the
-System Shutdown and System Cold Reset which are mandatory and supported by
-default. System Warm Reset support can be discovered with this service.
+flags indicate if a `RESET_TYPE` is supported, except for System Shutdown and
+System Cold Reset, which are mandatory and supported by default. System Warm
+Reset support can be discovered with this service.
 
 [#table_sysreset_getsysresetattrs_request_data]
 .Request Data
@@ -127,7 +127,7 @@ Refer <<section-reset-types>> for more details.
 | uint32
 | Reset type attributes.
 
-[cols="2,5a", options="header"]
+[cols="1,5a", options="header"]
 !===
 ! Bits
 ! Description
@@ -145,9 +145,9 @@ Refer <<section-reset-types>> for more details.
 
 ==== Service: SYSRST_RESET (SERVICE_ID: 0x03)
 This service is used to initiate the system reset or system shutdown.
-The application processor must only request supported reset types, discovered
-using the `SYSRST_GET_ATTRIBUTES` service except for System Shutdown and System
-Cold Reset which are supported by default. This service does not return a response.
+The application processor must request only supported reset types discovered
+using the `SYSRST_GET_ATTRIBUTES` service, except for System Shutdown and System
+Cold Reset, which are supported by default. This service does not return a response.
 If an invalid reset type is provided, the reset request is ignored. If the
 system reset fails, the resulting system state is unspecified.
 

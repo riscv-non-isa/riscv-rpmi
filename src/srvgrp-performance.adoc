@@ -13,16 +13,16 @@ endif::rootpath[]
 This PERFORMANCE service group is used to manage the performance of a
 group of devices or application processors that operate in the same performance
 domain. Unlike traditional performance control mechanisms, where the OS is
-responsible for directly controlling voltages and clocks, this mechanism instead
-operates on an metric less integer performance scale. Each integer value on this
+responsible for directly controlling voltages and clocks, this mechanism
+operates on a metric less integer performance scale. Each integer value on this
 scale represents a performance operating point. What this scale represents and
 the metric is entirely platform-dependent. Values on this scale are represented
 with `performance level index`, and the platform has complete control over
 mapping these performance operating points to performance states, which are
 eventually converted into hardware parameters such as voltage and frequency. The
-level index does not need to be contiguous or to be on a linear scale. For
-example, the mapping between levels index and frequencies can be as
-straightforward as using a multiplication factor of `1000` or ascending index
+level index does not need to be contiguous or on a linear scale. For
+example, the mapping between levels index and frequency can be as
+straightforward as using a multiplication factor of `1000` or an ascending index
 number starting from `0`.
 
 The CPPC service group is designed for performance control, but it is only
@@ -152,9 +152,9 @@ The fast-channel currently supports only the following PERFORMANCE services:
   memory block.
 * The shared memory region designated for fast-channels across performance
   service group must be a `power-of-two` in size. The base address and size (in
-  bytes) of this shared memory region can be obtained through the service
-  `PERF_GET_FAST_CHANNEL_REGION`. The base address of the shared memory region
-  must be aligned to 8 bytes.
+  bytes) of this shared memory region can be obtained through the
+  `PERF_GET_FAST_CHANNEL_REGION` service. The base address of the shared memory
+  region must be aligned to 8 bytes.
 
 
 *Discovering Fast-channel*::
@@ -165,9 +165,9 @@ The fast-channel currently supports only the following PERFORMANCE services:
   specific PERFORMANCE service call using the `PERF_GET_FAST_CHANNEL_ATTRIBUTES`
   service call.
 * The `PERF_GET_FAST_CHANNEL_REGION` provides physical memory for Performance
-  Service Group. The offset of the physical address retrieve in
-  `PERF_GET_FAST_CHANNEL_ATTRIBUTES` of the 'Performance Domain /
-  Service ID' paired is based on the starting address in
+  Service Group. The offset of the physical address retrieved in
+  `PERF_GET_FAST_CHANNEL_ATTRIBUTES` of the 'Performance Domain ID and
+  Service ID' pair is based on the starting address in
   `PERF_GET_FAST_CHANNEL_REGION` service.
 
 
@@ -181,7 +181,8 @@ The fast-channel currently supports only the following PERFORMANCE services:
   to trigger the doorbell interrupt. The width of the doorbell write value must
   be equal to the doorbell register width.
 
-  NOTE: The write value may also contains other set bits which must persist on every write to the doorbell register.
+  NOTE: The write value may also contain other set bits which must persist
+        on every write to the doorbell register.
 
 * Doorbell support is not available for `PERF_GET_LEVEL` and `PERF_GET_LIMIT`
   service calls.
@@ -204,7 +205,7 @@ The fast-channel currently supports only the following PERFORMANCE services:
 [#performance-notifications]
 ==== Notifications
 When a client registers for performance change notifications, the platform will
-send notification to the client whenever there is a change in the performance
+send a notification to the client whenever there is a change in the performance
 level, performance limit or the performance power of a specific performance
 domain. This notification is typically sent by the platform microcontroller to
 inform clients in the system about changes in the performance domain.
@@ -350,7 +351,7 @@ level.
 
 [#table_perf_getattrs_request_data]
 .Request Data
-[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -377,7 +378,7 @@ level.
 | int32
 | Return error code.
 
-[cols="5,5", options="header"]
+[cols="6,5", options="header"]
 !===
 ! Error Code
 ! Description
@@ -395,7 +396,7 @@ level.
 | FLAGS
 | uint32
 |
-[cols="2,5a", options="header"]
+[cols="1,5a", options="header"]
 !===
 ! Bits
 ! Description
@@ -449,13 +450,13 @@ in microseconds (us).
 |===
 
 ==== Service: PERF_GET_SUPPORTED_LEVELS (SERVICE_ID: 0x04)
-This service provides a list of the available performance levels or also called
-operating performance points (OPPs) for a specific performance domain. These
+This service provides a list of available performance levels, also called
+operating performance points (OPPs), for a specific performance domain. These
 represent different performance levels that can be set for the components in the
 domain, and are defined by a combination of frequency, power cost and other
 parameters. By using this information, the OS can select the optimal
 performance level based on the system's workload and power constraints using
-`performance level index` returned in this service.
+`performance level index` returned by this service.
 
 ```c
 /* Pseudocode to retrieve the list of the supported performance levels. */
@@ -562,11 +563,11 @@ levels.
 | Number of levels returned (number of arrays).
 
 | 4
-| LEVEL[]
+| LEVEL[ ]
 | uint32[4]
 | List of performance levels attributes. +
-Refer to <<section-perf-attribute>> for the complete structure of performance
-level attributes.
+Refer to <<section-perf-level-attribute>> for the complete structure of
+performance level attributes.
 |===
 
 
@@ -650,7 +651,7 @@ performance domain in the system.
 
 [#table_perf_setlevel_response_data]
 .Response Data
-[cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -798,7 +799,7 @@ application processor.
 
 [#table_perf_setlimit_response_data]
 .Response Data
-[cols="1, 1, 1, 5a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 5a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -861,7 +862,7 @@ block of memory to ease the configuration of memory region protection.
 | int32
 | Return error code
 
-[cols="6,5", options="header"]
+[cols="2,1", options="header"]
 !===
 ! Error Code
 ! Description
@@ -904,7 +905,7 @@ specific performance domain and performance service.
 
 [#table_perf_getfastchanaddr_request_data]
 .Request Data
-[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 6", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -924,7 +925,7 @@ specific performance domain and performance service.
 
 [#table_perf_getfastchanaddr_response_data]
 .Response Data
-[cols="1, 4, 1, 6a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 6a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -936,7 +937,7 @@ specific performance domain and performance service.
 | int32
 | Return error code.
 
-[cols="7,5", options="header"]
+[cols="2,1", options="header"]
 !===
 ! Error Code
 ! Description
@@ -957,7 +958,7 @@ specific performance domain and performance service.
 | FLAGS
 | uint32
 |
-[cols="2,5a", options="header"]
+[cols="1,5a", options="header"]
 !===
 ! Bits
 ! Description

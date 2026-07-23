@@ -14,16 +14,16 @@ The SYSTEM_MSI service group defines services to allow application processors
 to receive MSIs upon system events such as P2A doorbell, graceful shutdown/reboot
 request, CPU hotplug event, memory hotplug event, etc.
 
-The number of system MSIs supported by this service group is fixed and referred
-to as `SYS_NUM_MSI`. Each system MSI is associated with a unique index which is
-also referred to as `SYS_MSI_INDEX` where `0 <&#8203;= SYS_MSI_INDEX < SYS_NUM_MSI`.
+The number of system MSIs supported by this service group is fixed and is
+referred to as `SYS_NUM_MSI`. Each system MSI is associated with a unique index,
+referred to as `SYS_MSI_INDEX`, where `0 <&#8203;= SYS_MSI_INDEX < SYS_NUM_MSI`.
 
 The association between system events and system MSI index (aka `SYS_MSI_INDEX`)
 is platform specific and must be discovered using hardware description mechanisms
 such as device tree or ACPI.
 
-The system MSI state is 32-bit word also referred to as `SYS_MSI_STATE` which
-includes whether the system MSI is enabled/disabled and whether system MSI is
+The system MSI state is 32-bit word, referred to as `SYS_MSI_STATE`, which
+includes whether the system MSI is enabled or disabled and whether it is
 currently pending at the platform microcontroller. The <<table_sysmsi_state>>
 below shows the encoding of `SYS_MSI_STATE`.
 
@@ -56,16 +56,16 @@ address is not valid.
   0b0: MSI disabled.
 |===
 
-The platform microcontroller can only send a pending system MSI if it is
-enabled and the configured with a valid MSI target address. The system MSI
-can be enabled/disabled using the `SYSMSI_SET_MSI_STATE` service whereas the
+The platform microcontroller can send a pending system MSI only if it is
+enabled and configured with a valid MSI target address. The system MSI can be
+enabled or disabled using the `SYSMSI_SET_MSI_STATE` service, whereas the
 system MSI target configuration can be done using the `SYSMSI_SET_MSI_TARGET`
 service.
 
 NOTE: If the system MSI target address is IMSIC, then the application
-processors will directly receive the system MSI whereas if the system
-MSI target address is `setipnum` register of a APLIC domain then the
-application processors receive it as wired interrupt.
+processors will directly receive the system MSI, whereas if the system
+MSI target address is `setipnum` register of an APLIC domain, then the
+application processors receive it as a wired interrupt.
 
 The <<table_sysmsi_services>> below lists the services in the SYSTEM_MSI
 service group:
@@ -416,7 +416,7 @@ This service is used to configure the target address and data of a system MSI.
 | int32
 | Return error code.
 
-[cols="5,5a", options="header"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code
 ! Description
@@ -467,7 +467,7 @@ This service is used to get the current target address and data of a system MSI.
 | int32
 | Return error code.
 
-[cols="5,5a", options="header"]
+[cols="6,5a", options="header"]
 !===
 ! Error Code
 ! Description

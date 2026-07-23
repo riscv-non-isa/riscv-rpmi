@@ -32,7 +32,7 @@ implementation specific way to set and clear interrupt for all supported
 targets.
 
 The number of system interrupts (IRQs) supported by this service group
-is fixed and referred to as `SYS_NUM_IRQ`. Each system IRQ is assigned
+is fixed and is referred to as `SYS_NUM_IRQ`. Each system IRQ is assigned
 a unique index which is also referred to as `SYS_IRQ_INDEX` where
 `0 <&#8203;= SYS_IRQ_INDEX < SYS_NUM_IRQ`.
 
@@ -45,9 +45,9 @@ and this can be configured by the application processors using the
 `SYSIRQ_SET_IRQ_TARGET` service. By default, the platform microcontroller
 will associate any target with a system IRQ.
 
-The system IRQ state is a 32-bit word also referred to as `SYS_IRQ_STATE`
-which includes whether the system IRQ is enabled/disabled and whether
-system IRQ is currently pending at the platform microcontroller. The
+The system IRQ state is a 32-bit word, also referred to as `SYS_IRQ_STATE`,
+which includes whether the system IRQ is enabled or disabled and whether
+the system IRQ is currently pending at the platform microcontroller. The
 <<table_sysirq_state>> below shows the encoding of `SYS_IRQ_STATE`.
 
 [#table_sysirq_state]
@@ -75,14 +75,14 @@ system IRQ is currently pending at the platform microcontroller. The
   0b0: IRQ disabled.
 |===
 
-The platform microcontroller must set interrupt for a particular target when
-at least one system IRQ associated with the target is pending and enabled.
+The platform microcontroller must set an interrupt for a particular target when
+at least one system IRQ associated with that target is pending and enabled.
 
-The platform microcontroller must clear interrupt for a particular target when
-none of the system IRQs associated with the target are pending and enabled.
+The platform microcontroller must clear interrupts for a particular target when
+none of the system IRQs associated with that target are pending and enabled.
 
 Upon receiving external interrupt, an application processor must claim pending
-and enabled interrupts the `SYSIRQ_CLAIM` service.
+and enabled interrupts using the `SYSIRQ_CLAIM` service.
 
 Upon successful claim of a system IRQ by an application processor, the platform
 microcontroller must clear the pending state of the system IRQ.
@@ -174,7 +174,7 @@ This service is used to discover attributes of the system IRQ service group.
 
 [#table_sysirq_getattrs_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -219,7 +219,7 @@ This service is used to discover attributes of a particular target.
 
 [#table_sysirq_gettargetattrs_request_data]
 .Request Data
-[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+[cols="1, 4, 2, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -234,7 +234,7 @@ This service is used to discover attributes of a particular target.
 
 [#table_sysirq_gettargetattrs_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 4, 2, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -246,7 +246,7 @@ This service is used to discover attributes of a particular target.
 | int32
 | Return error code.
 
-[cols="5,5", options="header"]
+[cols="7,5", options="header"]
 !===
 ! Error Code
 ! Description
@@ -255,7 +255,7 @@ This service is used to discover attributes of a particular target.
 ! Service completed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_TARGET_INDEX` value is greater than `SYS_NUM_TARGET`.
+! `SYS_TARGET_INDEX` value is greater than or equal to `SYS_NUM_TARGET`.
 !===
 - Other errors <<table_error_codes>>.
 
@@ -295,7 +295,7 @@ This service is used to discover attributes of a particular system IRQ.
 
 [#table_sysirq_getirqattrs_request_data]
 .Request Data
-[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -310,7 +310,7 @@ This service is used to discover attributes of a particular system IRQ.
 
 [#table_sysirq_getirqattrs_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -322,7 +322,7 @@ This service is used to discover attributes of a particular system IRQ.
 | int32
 | Return error code.
 
-[cols="5,5", options="header"]
+[cols="6,5", options="header"]
 !===
 ! Error Code
 ! Description
@@ -331,7 +331,7 @@ This service is used to discover attributes of a particular system IRQ.
 ! Service completed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ`.
+! `SYS_IRQ_INDEX` value is greater than or equal to `SYS_NUM_IRQ`.
 !===
 - Other errors <<table_error_codes>>.
 
@@ -355,7 +355,7 @@ read-only bits of the system IRQ state are not updated by this service.
 
 [#table_sysirq_setirqstate_request_data]
 .Request Data
-[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -375,7 +375,7 @@ read-only bits of the system IRQ state are not updated by this service.
 
 [#table_sysirq_setirqstate_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -396,7 +396,7 @@ read-only bits of the system IRQ state are not updated by this service.
 ! IRQ is enabled or disabled successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ` or
+! `SYS_IRQ_INDEX` value is greater than or equal to `SYS_NUM_IRQ` or
  `SYS_IRQ_STATE` value is reserved or invalid.
 
 !===
@@ -410,7 +410,7 @@ This service is used to get the current state of a system IRQ.
 
 [#table_sysirq_getirqstate_request_data]
 .Request Data
-[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -425,7 +425,7 @@ This service is used to get the current state of a system IRQ.
 
 [#table_sysirq_getirqstate_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -446,7 +446,7 @@ This service is used to get the current state of a system IRQ.
 ! IRQ state is returned successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ`.
+! `SYS_IRQ_INDEX` value is greater than or equal to `SYS_NUM_IRQ`.
 !===
 - Other errors <<table_error_codes>>.
 
@@ -463,7 +463,7 @@ This service is used to associate a system IRQ with a target.
 
 [#table_sysirq_setirqtarget_request_data]
 .Request Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -485,7 +485,7 @@ imply `SYS_TARGET_INDEX` of a specific target.
 
 [#table_sysirq_setirqtarget_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -506,8 +506,9 @@ imply `SYS_TARGET_INDEX` of a specific target.
 ! Target configured successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ` +
-or `SYS_IRQ_TARGET` value is greater than `SYS_NUM_TARGET` and less than `0xffffffff`.
+! `SYS_IRQ_INDEX` value is greater than or equal to `SYS_NUM_IRQ` +
+  or `SYS_IRQ_TARGET` value is greater than or equal to `SYS_NUM_TARGET` and
+  less than `0xffffffff`.
 !===
 - Other errors <<table_error_codes>>.
 |===
@@ -519,7 +520,7 @@ This service is used to get the target associated with a system IRQ.
 
 [#table_sysirq_getirqtarget_request_data]
 .Request Data
-[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -534,7 +535,7 @@ This service is used to get the target associated with a system IRQ.
 
 [#table_sysirq_getirqtarget_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -555,7 +556,7 @@ This service is used to get the target associated with a system IRQ.
 ! Target details returned successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_IRQ_INDEX` value is greater than `SYS_NUM_IRQ`.
+! `SYS_IRQ_INDEX` value is greater than or equal to `SYS_NUM_IRQ`.
 !===
 - Other errors <<table_error_codes>>.
 
@@ -578,7 +579,7 @@ handled for a particular target.
 
 [#table_sysirq_claim_request_data]
 .Request Data
-[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -593,7 +594,7 @@ handled for a particular target.
 
 [#table_sysirq_claim_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -624,7 +625,7 @@ handled for a particular target.
 | Number of claimed IRQs returned.
 
 | 2
-| SYS_IRQ_INDEX[]
+| SYS_IRQ_INDEX[ ]
 | uint32
-| System IRQ indexes of claimed IRQs.
+| System IRQ indices of claimed IRQs.
 |===

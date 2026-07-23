@@ -19,7 +19,7 @@ RISC-V privilege-level of application processors and a platform microcontroller.
 The application processors can have multiple RPMI transport instances with a
 platform microcontroller. Also, a platform can also have multiple microcontrollers
 each with its own RPMI transport instance as shown in the <<fig_intro_trans_topology>>
-below.
+above.
 
 An RPMI transport instance consists of two logical bi-directional channels for
 message delivery as shown in the <<transport_bidir_comm>> below. Each channel is
@@ -66,7 +66,7 @@ All data sent or received through the RPMI shared memory transport must follow
 little-endian byte-order.
 
 The <<transport_shared_memory_arch>> below shows the high-level architecture
-of the RPMI shared memory transport. The layout and attributes of a RPMI shared
+of the RPMI shared memory transport. The layout and attributes of an RPMI shared
 memory transport may be static for the platform microcontroller but must be
 discoverable by the application processors through hardware description mechanisms
 such as device tree or ACPI.
@@ -114,7 +114,7 @@ The A2P REQ queue is paired with P2A ACK queue to form the A2P channel of the
 RPMI shared memory transport. Similarly, the P2A REQ queue is paired with the
 A2P ACK queue to form the P2A channel of the RPMI shared memory transport. The
 <<transport_shared_memory_msgflow>> below shows the high-level flow of messages
-in a RPMI shared memory transport.
+in an RPMI shared memory transport.
 
 [#transport_shared_memory_msgflow]
 .Shared Memory Transport Message Flow
@@ -144,8 +144,8 @@ pointing to the message slot from where the next message is enqueued. The
 pictorial view of the RPMI shared memory queue internals is shown in the
 <<transport_shared_memory_qint>> below.
 
-NOTE: In the total `M` slots only the `(M - 2)` slots are used as an queue
-having RPMI messages stored as data. The `(slot index - 2)` index value
+NOTE: Out of the total `M` slots, `(M - 2)` slots are used as message queue
+slots to store RPMI messages. The `(slot index - 2)` index value
 represents that from all slots perspective in a queue shared memory which also
 includes the `head` and `tail` slots, the `head` and `tail` stores the indices
 of the message slots which effectively starts from `slot index - 2`.
@@ -162,9 +162,9 @@ image::queue-internals.png[500,500, align="center"]
 A message consumer dequeues pending message from the message slot pointed
 by the `head` of the RPMI shared memory queue whereas a message producer
 enqueues new message at the message slot pointed by the `tail` of the RPMI
-shared memory queue. If there are no messages in the RPMI shared memory queue
-then message consumer must wait for messages to be available. If all message
-slots in the RPMI shared memory queue are occupied then message producer must
+shared memory queue. If there are no messages in the RPMI shared memory queue,
+then the message consumer must wait for messages to be available. If all message
+slots in the RPMI shared memory queue are occupied, then the message producer must
 wait for messages to be consumed. The ownership of `head` and `tail` is mutually
 exclusive where only the message consumer should update the `head` and only the
 message producer should update `tail` of the RPMI shared memory queue.
@@ -178,17 +178,18 @@ The RPMI shared memory transport divides the underlying shared memory region
 into two parts where one part belongs to the A2P channel and other belongs
 to the P2A channel. The shared memory region sizes of the A2P and P2A channel
 can be different. For each channel (A2P or P2A), the corresponding REQ and ACK
-queues must be of the same size hence equal number of slots (or queue capacity).
-The size of each RPMI shared queue must be a multiple of the slot size.
+queues must be of the same size, and hence have an equal number of slots (or
+queue capacity). The size of each RPMI shared memory queue must be a multiple
+of the slot size.
 
 NOTE: A platform should provide sufficient shared memory for all RPMI shared
 memory queues so that the number of slots (queue capacity) does not become
-a bottleneck in message communication. It is recommended that the number of
+a bottleneck for message communication. It is recommended that the number of
 slots in queues belonging to A2P channel should be proportional to the number
 of application processors accessing the A2P channel.
 
 The RPMI shared memory queues can be placed anywhere in the underlying
-shared memory region but there must be no overlap among the queues. The
+shared memory region, but there must be no overlap among the queues. The
 <<transport_shared_memory_qplace>> below shows a recommended way of placing
 RPMI queues in shared memory.
 
@@ -210,11 +211,11 @@ initialized by the platform microcontroller and the details of the shared memory
 queues are provided to the application processors.
 
 The physical base address and size of each RPMI shared memory queue may be fixed
-for the platform microcontroller but the application processors must discover it
+for the platform microcontroller, but the application processors must discover it
 through hardware description mechanisms such as device tree or ACPI.
 
 The slot size of the RPMI shared memory queues may be fixed for the platform
-microcontroller but the application processors must discover it through hardware
+microcontroller, but the application processors must discover it through hardware
 description mechanisms such as device tree or ACPI.
 
 The total number of slots in each RPMI shared memory queue can be easily calculated
@@ -266,22 +267,22 @@ such as device tree or ACPI.
 The P2A doorbell is a signal for new messages from the platform microcontroller
 (PuC) to the application processors (APs).
 
-If the P2A doorbell is a wired interrupt then the platform must provide a
+If the P2A doorbell is a wired interrupt, then the platform must provide a
 way to the platform microcontroller to trigger the interrupt and application
 processors must discover it using standard hardware description mechanisms
 such as device tree or ACPI.
 
-If the P2A doorbell is a MSI then the application processors must configure
+If the P2A doorbell is a MSI, then the application processors must configure
 the P2A doorbell MSI on the platform microcontroller side using RPMI services
 defined by the `SYSTEM_MSI` service group.
 
-NOTE: If the platform supports PLIC, the platform need to provide a MMIO
-register to inject an edge-triggered interrupt.
+NOTE: If the platform supports PLIC, it needs to provide an MMIO register to
+inject an edge-triggered interrupt.
 
 NOTE: The doorbell attribute contains a doorbell write value which must be written
 to the doorbell memory mapped register to trigger the interrupt. The write value
-may also contains other set bits which must persist on every write to the
-doorbell register.
+may also contain other set bits that must persist on every write to the doorbell
+register.
 
 ==== Integration with RPMI Message Protocol
 If the doorbell interrupts are supported and enabled, the shared memory transport
@@ -328,7 +329,7 @@ A service group that supports fast-channels for services:
 
 * May only enable some services to be used over fast-channels.
 * Must provide physical address and other attributes (such as optional
-  fast-channel doorbell) of the fast-channels via a services defined by
+  fast-channel doorbell) of the fast-channels via a service defined by
   the service group.
 
 The layout and data format of a fast-channel are RPMI service specific in a

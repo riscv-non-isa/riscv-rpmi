@@ -14,9 +14,9 @@ An RPMI service group is a collection of RPMI services that are logically
 grouped based on functionality. For example, all the voltage related services
 are grouped into a voltage service group. The functionality implemented by
 certain RPMI service groups may impact the architectural state of application
-processors due to this each RPMI service group specifies the RISC-V privilege
-levels of the application processor which can be access it. For example, the
-clock service groups can be accessed from M-mode and S-mode but the HSM service
+processors; therefore, each RPMI service group specifies the RISC-V privilege
+levels of application processors that can access it. For example, the
+clock service group can be accessed from M-mode and S-mode, but the HSM service
 group can be only accessed from M-mode.
 
 All RPMI service groups except the BASE service group are optional. If
@@ -29,7 +29,7 @@ All implemented RPMI service groups must satisfy the following requirements:
 level associated with the RPMI context which includes it.
 . All RPMI services of the RPMI service groups must be supported except
 the dedicated notification service (`SERVICE_ID = 0x00`) which is reserved
-for RPMI notification messages. A RPMI service group may implement its RPMI
+for RPMI notification messages. An RPMI service group may implement its RPMI
 services partially only if it also defines a mechanism to discover supported
 RPMI services.
 . The RPMI service group must implement a dedicated RPMI service with

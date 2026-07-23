@@ -332,8 +332,8 @@ This service is used to probe the implementation of a service group and to
 obtain the implemented service group version. The service group version is a
 32-bit composite number containing the `MAJOR` and `MINOR` numbers.
 
-If the service group is successfully probed then the implemented service group
-version is returned in the `SERVICE_GROUP_VERSION` field. Otherwise it returns
+If the service group is successfully probed, then the implemented service group
+version is returned in the `SERVICE_GROUP_VERSION` field. Otherwise, it returns
 `0`.
 
 [#table_base_probesrvgrp_request_data]

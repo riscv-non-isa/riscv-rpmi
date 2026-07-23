@@ -16,5 +16,7 @@
 | PMP   | Physical Memory Protection
 | PuC   | Platform Microcontroller
 | RAS   | Reliability, Availability, and Serviceability
+| REE   | Rich Execution Environment
 | SBI   | Supervisor Binary Interface
+| TEE   | Trusted Execution Environment
 |===

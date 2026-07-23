@@ -66,7 +66,7 @@ This service is used to set the log data.
 
 | 0x00000000
 | UEFI status code defined by UEFI PI Spec cite:[PI]. +
-For this category the LOG_DATA service must provide at-least two data words: +
+For this category the LOG_DATA service must provide at least two data words: +
 WORD[0]: UEFI status type (as-defined by UEFI PI spec cite:[PI]). +
 WORD[1]: UEFI status code (as-defined by UEFI PI spec cite:[PI]). +
 WORD[2]: UEFI status code (as-defined by UEFI PI spec cite:[PI]). +
@@ -85,7 +85,7 @@ WORD[N-1]: UEFI status code (as-defined by UEFI PI spec cite:[PI]). +
 
 [#table_log_data_request_data]
 .Request Data
-[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | WORD
 | Name
@@ -104,8 +104,8 @@ Refer <<table_log_type>> for more details.
 | Number of WORDs of data sent.
 
 | 2
-| WORDS[]
-| uint32[]
+| WORDS[ ]
+| uint32
 | Data to be logged.
 
 |===
@@ -201,19 +201,19 @@ Examples: +
 
 | 5
 | 0xDDDDDDDD
-| first 32 bits of GUID.
+| First 32 bits of a GUID.
 
 | 6
 | 0xDDDDDDDD
-| second 32 bits of GUID.
+| Second 32 bits of a GUID.
 
 | 7
 | 0xDDDDDDDD
-| third 32 bits of GUID.
+| Third 32 bits of a GUID.
 
 | 8
 | 0xDDDDDDDD
-| fourth 32 bits of GUID.
+| Fourth 32 bits of a GUID.
 
 | 9
 | 0xDEADBEAF
