@@ -223,7 +223,7 @@ This service is used to discover attributes of a particular system MSI.
 ! Service completed successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_MSI_INDEX` value is greater than `SYS_NUM_MSI`.
+! `SYS_MSI_INDEX` value is greater than or equal to `SYS_NUM_MSI`.
 !===
 - Other errors <<table_error_codes>>.
 
@@ -307,7 +307,7 @@ read-only bits of the system MSI state are not updated by this service.
 ! MSI is enabled or disabled successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_MSI_INDEX` value is greater than `SYS_NUM_MSI` or
+! `SYS_MSI_INDEX` value is greater than or equal to `SYS_NUM_MSI` or
  `SYS_MSI_STATE` value is reserved or invalid.
 
 !===
@@ -357,7 +357,7 @@ This service is used to get the current state of a system MSI.
 ! MSI state is returned successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_MSI_INDEX` value is greater than `SYS_NUM_MSI`.
+! `SYS_MSI_INDEX` value is greater than or equal to `SYS_NUM_MSI`.
 !===
 - Other errors <<table_error_codes>>.
 
@@ -425,7 +425,7 @@ This service is used to configure the target address and data of a system MSI.
 ! MSI address and data are configured successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_MSI_INDEX` value is greater than `SYS_NUM_MSI`.
+! `SYS_MSI_INDEX` value is greater than or equal to `SYS_NUM_MSI`.
 
 ! RPMI_ERR_INVALID_ADDR
 ! MSI target address is invalid or it is not `4-byte` aligned.
@@ -476,7 +476,7 @@ This service is used to get the current target address and data of a system MSI.
 ! MSI target details returned successfully.
 
 ! RPMI_ERR_INVALID_PARAM
-! `SYS_MSI_INDEX` value is greater than `SYS_NUM_MSI`.
+! `SYS_MSI_INDEX` value is greater than or equal to `SYS_NUM_MSI`.
 !===
 - Other errors <<table_error_codes>>.
 

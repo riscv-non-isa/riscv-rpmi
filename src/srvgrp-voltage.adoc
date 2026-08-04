@@ -375,7 +375,8 @@ or the number of linear range tuple if the format is linear range.
 
 | 4
 | VOLTAGE_LEVEL[]
-| uint32[]
+| uint32 or
+  uint32[3]
 | Voltage levels. +
 The voltage format data structure and its packing is according to the supported format.
 Refer to <<voltage-level-format-section>> for more details.

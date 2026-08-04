@@ -418,7 +418,8 @@ the number of linear ranges returned if the format is linear range.
 
 | 4
 | CLOCK_RATE[ ]
-| uint32[2]
+| uint32[2] or
+  uint32[6]
 | Clock rates. +
 The clock rate data structure and its packing is according to the supported format.
 Refer to <<clock-rate-format-section>> for more details.
