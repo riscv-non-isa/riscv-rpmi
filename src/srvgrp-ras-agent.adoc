@@ -225,7 +225,7 @@ by `RAS_ERR_SRC_ID`.
 | BYTE_OFFSET
 | uint32
 | Offset from which the descriptor is to be read. Offset `0` for the first call,
-subsequent byte offset of the remaining bytes.
+subsequent calls to use byte offset of the remaining bytes.
 |===
 
 [#table_ras_agent_get_err_src_desc_response_data]
@@ -262,7 +262,7 @@ returned.
 | uint32
 |
 
-[cols="2,5a", options="header"]
+[cols="1,5a", options="header"]
 !===
 ! Bits
 ! Description
@@ -292,5 +292,5 @@ returned.
 | 4
 | ERR_SRC_DESC[N]
 | uint8
-| Full or partial descriptor N is equal to the `RETURNED` bytes in this request.
+| Full or partial descriptor (N is equal to the `RETURNED` bytes in this request).
 |===

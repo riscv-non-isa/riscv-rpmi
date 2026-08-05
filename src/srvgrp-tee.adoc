@@ -13,11 +13,11 @@ endif::rootpath[]
 The TEE service group defines services to allow a client in one or more REEs
 (Rich Execution Environments) to invoke services in one or more TEEs (Trusted
 Execution Environments). A TEE is a secure, hardware-isolated environment
-running a trusted OS, and provides, directly or via hosted Trusted Applications
+running a trusted OS that provides, directly or via hosted Trusted Applications
 (TAs), security-sensitive services such as key management, cryptographic
 operations, hardware-bound decoding of DRM-protected data streams, etc.
 
-Throughout this chapter we refer to REEs and TEEs as described by the Global
+Throughout this chapter, REEs and TEEs mean the same as described by the Global
 Platform TEE System Architecture cite:[GPArch13].
 
 The TEE service group defines RPMI services enabling the interaction of REEs and
@@ -30,11 +30,11 @@ is made to a system in which more than two domains exist, and the usage of the
 proposed services does not explore such a system.
 
 In line with the accepted model for REE and TEE execution, the scheduling
-assumption that a TEE and its hypervisor only run when explicitly invoked by an
+assumption that a TEE and its hypervisor run only when explicitly invoked by an
 REE (and/or its hypervisor) or in order to serve interrupts it has registered.
 
-This yields to an execution model in which the REE domain routinely controls all
-the harts in the system, and invokes the TEE domain to synchronously process
+This yields an execution model in which the REE domain routinely controls all
+the harts in the system and invokes the TEE domain to synchronously process
 individual requests. When an interrupt registered by the TEE domain fires upon
 the application processor, its servicing by the TEE domain takes priority over
 any currently running REE task on the same hart.
@@ -47,8 +47,8 @@ together (single REE with single TEE, multiple REEs with single TEE, multiple
 REEs with multiple TEEs) and interoperate with different hypervisor and firmware
 implementations as long as they all support and implement these services.
 
-We refer to the implementation of the TEE service group in hypervisors and
-M-Mode firmware as the TEE framework, or simply framework.
+The implementation of the TEE service group in hypervisors and M-Mode firmware
+is referred to as the TEE framework, or simply framework.
 
 The <<table_tee_services>> table lists the services in the TEE service group:
 
@@ -138,7 +138,7 @@ The <<table_tee_services>> table lists the services in the TEE service group:
 
 |===
 
-Of the services listed in <<table_tee_services>> only TEE_ENABLE_NOTIFICATION,
+Of the services listed in <<table_tee_services>>, only TEE_ENABLE_NOTIFICATION,
 TEE_PROBE_FEATURES and TEE_CALL are mandated to be supported by the framework
 and all connected REEs/TEEs. All remaining services should be considered optional
 both in the framework and in REEs/TEEs and their invocation can always fail with
@@ -155,20 +155,19 @@ them. Proxied endpoints can be used to represent special secure runtime modes
 for on-device accelerators, with whom memory can be shared, donated or lent at
 runtime to model and implement complex secure use cases.
 
-All endpoints, proxied or physical, are given by the framework a unique
-identity. The mechanism by which this happens is outside of the scope of the
-present document.
+All endpoints, proxied or physical, are given a unique identity by the framework.
+The mechanism by which this happens is outside of the scope of this document.
 
 All proxied endpoints exist within some physical endpoint, i.e. an REE or TEE.
 The physical endpoint where they reside is usually referred to as their proxy.
 
 Most of the services described in this document apply to all endpoints, whether
-they are physical or proxied, TEEs or REEs; in all such cases we'll use the word
-endpoint throughout the document instead of explicitly calling out whether we're
-referring to a TEE or an REE, a physical or proxied entity.
+they are physical or proxied, TEEs or REEs; in all such cases, the word
+endpoint is used throughout the document instead of explicitly calling out
+whether the reference is to a TEE or an REE, a physical or proxied entity.
 
-When instead referring to physical entities and not generic endpoints, the REE
-and TEE terms will be used explicitly.
+When referring to physical entities rather than generic endpoints, the REE and
+TEE terms will be used explicitly.
 
 [#tee-notifications]
 ==== Notifications
@@ -333,7 +332,7 @@ its parts for the TEE_PROBE_SYSTEM and lifecycle services
 
 [#table_tee_probe_features_request_data]
 .Request Data
-[cols="1, 2, 2, 7", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -349,7 +348,7 @@ its parts for the TEE_PROBE_SYSTEM and lifecycle services
 
 [#table_probe_features_response_data]
 .Response Data
-[cols="1, 2, 2, 7a", width=100%, align="center", options="header"]
+[cols="1, 2, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -430,9 +429,9 @@ whole system.
 | 3
 |
 
-This target type allows an endpoint to acquire from the framework information
-about itself. This can be used by a newly created REE or TEE to discover if the
-bootloaders which predated it in the current VM shared or lent memory for
+This target type allows an endpoint to acquire information about itself from
+the framework. This can be used by a newly created REE or TEE to discover if
+the bootloaders which predated it in the current VM shared or lent memory for
 specific use cases, so that this memory can be later reclaimed.
 
 | Memory parcel
@@ -655,7 +654,7 @@ This service is used by an REE or TEE to inform the framework that it is exiting
 the framework infrastructure.
 
 After an REE/TEE sends this message, the framework will refrain from forwarding any
-further message and, for TEEs, interrupts, to it.
+further message to it and, for TEEs, any further interrupts.
 
 [NOTE]
 ====
@@ -723,14 +722,14 @@ Signals differ from data messages in that their implementation by the
 framework is not guaranteed to be synchronous.
 
 When an endpoint running on a certain hart raises a signal to another endpoint,
-the framework does guarantee neither the hart nor the time at which the signal
+the framework does not guarantee either the hart or the time at which the signal
 will be processed by the target endpoint.
 
 Signals are modeled as bits on a logical bus, which is shared between two
 physical endpoints (REEs/TEEs, which are enough to uniquely identify it) and all
 the endpoints they proxy. The width of the bus, and thereby the number of
 concurrent signals it supports, is set when the bus is setup by the two
-physical endpoints, using the TEE_SIGNAL_BUS_SETUP service. Likewise the
+physical endpoints, using the TEE_SIGNAL_BUS_SETUP service. Likewise, the
 partitioning of the signals between the two physical endpoints is statically
 determined by the setup call, and is later enforced by the framework.
 
@@ -837,7 +836,7 @@ target endpoint is only allowed to respond with either RPMI_SUCCESS or
 RPMI_ERR_DENIED. The framework will proceed with the creation of the bus only if
 the target endpoint fills the STATUS field with the RPMI_SUCCESS value.
 
-If the target endpoint returns any other error code than RPMI_SUCCESS or
+If the target endpoint returns any error code other than RPMI_SUCCESS or
 RPMI_ERR_DENIED, the framework will interpret it as a malfunction and behave as
 if it had invoked the TEE_EXIT service.
 
@@ -866,7 +865,7 @@ retrieve its own active signals, but not raise any signals.
 
 [#table_tee_signal_bus_teardown_request_data]
 .Request Data
-[cols="2, 4, 3, 18a", width=100%, align="center", options="header"]
+[cols="2, 3, 2, 18a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -924,7 +923,7 @@ target endpoint is only allowed to respond with RPMI_SUCCESS and can interpret
 this as a synchronous notification from the framework that the signal bus is no
 longer available.
 
-If the target endpoint returns any other error code than RPMI_SUCCESS the
+If the target endpoint returns any error code other than RPMI_SUCCESS, the
 framework will interpret it as a malfunction and behave as if it had invoked the
 TEE_EXIT service.
 
@@ -940,7 +939,7 @@ change.
 
 This message does not cause the target endpoint (or any of its proxied
 endpoints) to run to process the signals: it is implementation dependent when it
-will run and will process them.
+will run and process them.
 
 [#table_tee_signal_raise_request_data]
 .Request Data
@@ -973,7 +972,7 @@ Each signal needs to be in the range reserved for the sender endpoint to raise.
 
 [#table_tee_signal_raise_response_data]
 .Response Data
-[cols="2, 3, 2, 18a", width=100%, align="center", options="header"]
+[cols="2, 6, 3, 18a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -985,7 +984,7 @@ Each signal needs to be in the range reserved for the sender endpoint to raise.
 | int32
 | Return error code.
 
-[cols="5,6a", options="header"]
+[cols="6,6a", options="header"]
 !===
 ! Error Code
 ! Description
@@ -1010,8 +1009,8 @@ Each signal needs to be in the range reserved for the sender endpoint to raise.
 
 [#srvgrp_tee_signal_retrieve]
 ==== Service: TEE_SIGNAL_RETRIEVE (SERVICE_ID: 0x08)
-This service is used by an endpoint to retrieve from the framework its pending
-signals.
+This service is used by an endpoint to retrieve its pending signals from the
+framework.
 
 Retrieving a signal causes the framework to reset its internal tracking state
 for it, so it can be set again by the endpoints who have write access on the bus
@@ -1117,8 +1116,8 @@ back at a later time.
 
 - Memory sharing, in which an endpoint which has access to one or more memory
 regions grants access rights to other endpoints, while optionally changing its
-own access rights to it. The memory, with the original access rights, can be
-later reclaimed.
+own access rights to it. The memory can be later reclaimed with the original
+access rights.
 
 - Memory lending, which is a corner case of memory sharing, in which the
 endpoint does not have any residual access to the memory, but can reclaim it
@@ -1162,7 +1161,7 @@ any given time.
 ====
 
 When referred to in service request and response data, memory is always
-represented as a scatter-gather list comprised of 3 fields, with lengths
+represented as a scatter-gather list comprising of 3 fields, with lengths
 specified in number of 4 kB pages (fixed granule size), as in the table
 <<table_mem_blocks>>. The location of the fields in each service request or
 response data is not fixed, and vary based on presence and sizes of other
@@ -1183,7 +1182,7 @@ fields.
 
 | BLOCK_HIGH[M]
 | uint32
-| Array of memory blocks. Higher 32bit, encoded as follows
+| Array of memory blocks. Upper 32-bit, encoded as follows
 [cols="1,2, 5a", options="header"]
 !===
 ! Bits
@@ -1192,13 +1191,13 @@ fields.
 
 ! [31:0]
 ! ADDRESS_HIGH
-! Higher 32bits of the physical or guest-physical address of the i-th block, in
+! Upper 32-bit of the physical or guest-physical address of the i-th block, in
 number of 4kB pages.
 !===
 
 | BLOCK_LOW[M]
 | uint32
-| Array of memory blocks. Lower 32bit, encoded as follows
+| Array of memory blocks. Lower 32-bit, encoded as follows
 [cols="1,2, 5a", options="header"]
 !===
 ! Bits
@@ -1207,7 +1206,7 @@ number of 4kB pages.
 
 ! [31:12]
 ! ADDRESS_LOW
-! Lower 20bits of the physical or guest-physical address of the i-th block, in
+! Lower 20-bit of the physical or guest-physical address of the i-th block, in
 number of 4kB pages.
 
 ! [11:0]
@@ -1446,8 +1445,8 @@ MEM_PARCEL_ID is not yet usable with any other service except TEE_MEMORY_SEGMENT
 This service is used by an endpoint to accept memory to which it has been granted
 access and/or ownership.
 
-The endpoint passes in this call the memory parcel identifier
-representing the memory it's accepting, together with associated information
+In this call, the endpoint passes the memory parcel identifier
+representing the memory it is accepting, together with associated information
 used during parcel creation (which is used for validation), i.e. 
 
 - the identifier of the endpoint which created the memory parcel and its
@@ -1525,8 +1524,8 @@ associated to it.
 | 4
 | CREATOR_ID
 | uint32
-| Identifier of the endpoint which invoked the TEE_MEMORY_PARCEL_CREATE which led
-to the creation of the memory parcel which is being accepted with this service.
+| Identifier of the endpoint which invoked the TEE_MEMORY_PARCEL_CREATE, leading
+to the creation of the memory parcel being accepted by this service.
 
 | 5
 | CREATOR_ACCESS
@@ -1552,7 +1551,7 @@ Encoding as in <<table_mem_access>>.
 !
 
 Whether the framework must use the ALIGNMENT or ADDRESS hints when selecting the
-returned address. The framework will return error if the hint, when request,
+returned address. The framework will return error if the hint, when requested,
 cannot be satisfied.
 
 
@@ -1598,14 +1597,14 @@ it.
 | 7
 | ADDRESS_HIGH
 | uint32
-| Higher 32bits of the address at which the framework must return the memory.
+| Upper 32-bit of the address at which the framework must return the memory.
 
 Must be 0 if GPA_HINT is not `0b10`.
 
 | 8
 | ADDRESS_LOW
 | uint32
-| Lower 32bits of the address at which the framework must return the memory.
+| Lower 32-bit of the address at which the framework must return the memory.
 The address needs to be 4kB aligned.
 
 Must be 0 if GPA_HINT is not `0b10`.
@@ -1613,7 +1612,7 @@ Must be 0 if GPA_HINT is not `0b10`.
 | 9
 | MAX_PAGES
 | uint32
-| Maximum size, in number of pages, of the memory that the caller is ready to
+| Maximum size of the memory (in number of pages) that the caller is ready to
 accept.
 
 The framework will fail this request if the total size of the memory associated
@@ -1626,11 +1625,11 @@ to the memory parcel exceeds this maximum size.
 the memory parcel.
 
 If the accepting endpoint requests the framework to validate them (CHECK_OTHER
-flag), this list must contain the identifiers of all the endpoints, other than the
-acceptor, listed in the call to TEE_MEMORY_PARCEL_CREATE which created this
-memory parcel, _excluding the identifier of the endpoint which created the
-parcel itself_, whose identifier and access is passed in OWNER_ID and OWNER_ACCESS
-and always validated by the framework.
+flag), this list must contain the identifiers of all endpoints, other than the
+acceptor, listed in the call to TEE_MEMORY_PARCEL_CREATE that created this
+memory parcel, excluding the identifier of the endpoint that created the
+parcel itself, whose identifier and access is passed in CREATOR_ID and
+CREATOR_ACCESS and are always validated by the framework.
 
 Must be 0 if CHECK_OTHER flag is not set.
 
@@ -1685,7 +1684,7 @@ destroyed and its identifier can be reused by the framework.
 
 - Requested ADDRESS already in use.
 
-- Size exceeds MAX_PAGES
+- Size exceeds MAX_PAGES.
 
 - ZERO flag is set, but some of the memory is classified as device memory.
 
@@ -1993,7 +1992,7 @@ This service is used to complete the creation of a memory parcel whose memory
 description doesn't fit in the RPMI transport buffer used for the
 TEE_MEMORY_PARCEL_CREATE service.
 
-In such a case the endpoint sets the MULTI_SEGMENT bit to 1 in the
+In such a case, the endpoint sets the MULTI_SEGMENT bit to 1 in the
 TEE_MEMORY_PARCEL_CREATE service, and completes the creation by invoking one or
 more time the TEE_MEMORY_SEGMENT_SEND service until all the memory has been
 completely described. The parcel is considered created (and no more segments can
@@ -2237,7 +2236,7 @@ operation.
 
 [#srvgrp_tee_register_for_lifecycle_info]
 ==== Service: TEE_REGISTER_FOR_LIFECYCLE_INFO (SERVICE_ID: 0x0F)
-When a hypervisor is present in a domain, EEs, as VMs, can be created and
+When a hypervisor is present in a domain, EEs (as VMs), can be created and
 destroyed at runtime. The lifecycle services are meant to allow other REEs and
 TEEs to be made aware of information about the instantiation of a new physical
 endpoint (usually REEs, but potentially also TEEs) when they are created, their
@@ -2426,14 +2425,14 @@ This error can only be returned by a TEE.
 The TEE received a foreign interrupt and could not complete the processing of
 the data.
 
-The Framework is expected to resend the message after the interrupt has been
+The framework is expected to resend the message after the interrupt has been
 delivered to its target.
 
 !===
 
 The endpoint is not allowed to return any other error.
 
-Any error returned other then the above will be interpreted by the framework as
+Any error returned other than the above will be interpreted by the framework as
 the endpoint malfunctioning and will be dealt with by the framework in an
 implementation defined manner.
 
@@ -2496,14 +2495,14 @@ This error can only be returned by a TEE.
 The TEE was interrupted by an interrupt and could not complete the processing of
 the data.
 
-The Framework is expected to resend the message after the interrupt has been
+The framework is expected to resend the message after the interrupt has been
 delivered to its target.
 
 !===
 
 The endpoint is not allowed to return any other error.
 
-Any error returned other then the above will be interpreted by the framework as
+Any error returned other than the above will be interpreted by the framework as
 an endpoint malfunctioning and will be dealt with by the framework in an
 implementation defined manner.
 
@@ -2530,7 +2529,7 @@ Same as <<table_tee_on_start_info_response_data>>.
 
 [#srvgrp_tee_call]
 ==== Service: TEE_CALL (SERVICE_ID: 0x13)
-This service is used to send data synchronously from an endpoint (in a REE or
+This service is used to send data synchronously from an endpoint (in an REE or
 TEE) to a TEE.
 
 The target TEE will execute on the same hart as the originator of the request

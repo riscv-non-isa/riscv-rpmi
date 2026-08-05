@@ -11,29 +11,29 @@ endif::rootpath[]
 
 == Messaging Protocol
 The RPMI messaging protocol includes all the RPMI messages exchanged over
-a RPMI transport channel.
+an RPMI transport channel.
 
 === Message Types
 The RPMI messaging protocol defines three types of RPMI messages namely:
 *REQUEST*, *ACKNOWLEDGEMENT* and *NOTIFICATION*. The <<messaging_message_types_table>>
-below summarize all RPMI message types.
+below summarizes all RPMI message types.
 
 An *RPMI request message* represents a specific control and management task
 which needs to be performed and it is also referred to as an *RPMI service*.
 Multiple related RPMI services are grouped logically into an *RPMI service
 group* such as Clock, Voltage, Performance, etc. Depending on the RPMI service,
-a RPMI request message may carry data required to perform the control and
+an RPMI request message may carry data required to perform the control and
 management task. An RPMI request message may have an associated response which
 is sent back as an *RPMI acknowledgement message* on the same RPMI transport
 channel. The RPMI acknowledgement message carries the status and optional
 response data from an RPMI request after it has been processed.
 
 An RPMI request message which has an associated RPMI acknowledgement message
-is referred to as a *NORMAL REQUEST* otherwise it is referred to as a *POSTED
+is referred to as a *NORMAL REQUEST*; otherwise, it is referred to as a *POSTED
 REQUEST*.
 
 An *RPMI notification message* is an asynchronous message from the platform
-microcontroller to the application processors which is used to inform the later
+microcontroller to the application processors which is used to inform the latter
 about certain events that have occurred in the system. There is no response
 required for an RPMI notification message from the application processors.
 
@@ -100,8 +100,8 @@ or message data.
 
 ==== Message Header
 The layout of the `8-byte` wide RPMI message header is shown in the
-<<table_message_header>> below. The RPMI message header provide a
-unique identity to the corresponding RPMI message withing an RPMI
+<<table_message_header>> below. The RPMI message header provides a
+unique identity to the corresponding RPMI message within an RPMI
 context.
 
 [#table_message_header]
@@ -141,13 +141,13 @@ FLAGS[2:0]: Message Type.
 ! [23:16]
 ! SERVICE_ID
 ! Service ID. +
-8-bit wide identifier representing a RPMI service. This identifier
+8-bit wide identifier representing an RPMI service. This identifier
 is unique within a given RPMI service group.
 
 ! [15:0]
 ! SERVICEGROUP_ID
 ! Service group ID. +
-16-bit wide unique identifier representing a RPMI service group.
+16-bit wide unique identifier representing an RPMI service group.
 !===
 
 | 1
@@ -160,7 +160,7 @@ is unique within a given RPMI service group.
 ! [31:16]
 ! TOKEN
 ! Message token. +
-16-bit number for a RPMI message.
+16-bit number for an RPMI message.
 
 ! [15:0]
 ! DATALEN
@@ -205,14 +205,14 @@ management task.
 * An RPMI acknowledgement message carries the status and optional response data.
 * An RPMI notification message carries an array of RPMI events.
 
-The message data format for RPMI request message and RPMI acknowledgement
+The message data format for an RPMI request message and an RPMI acknowledgement
 message is defined separately for each RPMI service. The message data format
-for RPMI notification message is defined in the <<Notifications>>.
+for an RPMI notification message is defined in the <<Notifications>>.
 
 An RPMI acknowledgement message must have a signed `STATUS` field as the
 first 4-byte word of the message data containing an error code defined in
 the <<Possible Error Codes>>. An RPMI service where the response data exceeds
-the maximum message data size can use multipart RPMI acknowledgement messages.
+the maximum message data size can use multi-part RPMI acknowledgement messages.
 
 If a physical address is passed in the message data of any message type, then it
 refers to the physical address space of the application processor.
@@ -224,20 +224,20 @@ application processors about system events which are also referred to as
 acknowledgement from application processors. Multiple RPMI events can be
 packed into a single RPMI notification message depending on the space
 available in the message data. Each RPMI event may have additional data
-associated with it based on the type of RPMI event. Any action required
+associated with it based on the type of an RPMI event. Any action required
 for handling an RPMI event depends on the application processors. The
 format of an RPMI notification message in shown in the <<messaging_notif_format>>
 below.
 
 The RPMI events are defined separately for each RPMI service group. An
-RPMI service group must have a `ENABLE_NOTIFICATION` service with a fixed
-`SERVICE_ID=0x01` which can be used by the application processors to enable or
-disable notification messages for a particular RPMI event defined by the RPMI
-service groups. By default, notifications are disabled for all RPMI events of
-an RPMI service group. The platform microcontroller only sends RPMI notification
-messages for RPMI events which are enabled by the application processors.
-If multiple RPMI events are supported by an RPMI service group then the
-application processors must enable to each RPMI event individually.
+RPMI service group must provide an `ENABLE_NOTIFICATION` service with fixed
+`SERVICE_ID=0x01`, which application processors can use to enable or disable
+notification messages for a particular RPMI event. By default, notifications
+are disabled for all RPMI events of an RPMI service group. The platform
+microcontroller sends RPMI notification messages only for RPMI events which are
+enabled by the application processors. If multiple RPMI events are supported by
+an RPMI service group, then the application processors must enable each RPMI
+event individually.
 
 [#messaging_notif_format]
 .RPMI Notification Message Format
@@ -252,13 +252,13 @@ must be a multiple of `4-byte`.
 The number of RPMI events that can be stored in a single RPMI notification
 message depends on the maximum RPMI message data size. The `DATALEN` field
 in the RPMI message header represents the aggregate size of all RPMI events
-included in RPMI message data.
+included in the RPMI message data.
 
 The <<table_notification_message_format>> below defines the format of an
 RPMI event whereas the <<messaging_event_format>> below shows a pictorial
 view of an RPMI event. The format of the event data for each RPMI event is
 defined separately by an RPMI service group. If multiple RPMI events are
-packed into a single RPMI notification message then the ordering of RPMI
+packed into a single RPMI notification message, then the ordering of RPMI
 events within the RPMI notification message is implementation defined. 
 
 The platform microcontroller is not required to include every occurrence of an
@@ -344,8 +344,8 @@ dependency check.
 
 | RPMI_ERR_ALREADY
 | -6
-| Operation already in progress or state changed already for which
-the operation was performed.
+| Operation already in progress, or state already changed for the intended
+operation.
 
 | RPMI_ERR_EXTENSION
 | -7

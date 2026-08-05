@@ -12,15 +12,15 @@ endif::rootpath[]
 ===  Service Group - DEVICE_POWER (SERVICEGROUP_ID: 0x0009)
 This DEVICE_POWER service group provides messages to manage the power states of
 a device power domain. This service group is used only for device power
-management since system and CPU power management is handled by already defined
+management, since system and CPU power management are handled by already defined
 service groups such as SYSTEM_RESET, SYSTEM_SUSPEND and HART_STATE_MANAGEMENT.
 
-A domain can consist of one device if its power states can be controlled
-independently or it may also have multiple devices if they all share the same
-power control lines and power states can only be changed collectively.
+A domain can have a single device if its power states can be controlled
+independently, or it can have multiple devices if they share the same
+power control lines and their power states can only be changed collectively.
 Each domain must support ON and OFF states along with custom power states which
 are discoverable.  Domains may also have power states which may preserve the
-context. The level of context preserved will depends on the level of power state.
+context. The level of context preserved depends on the level of power state.
 
 Power states for domains will be discovered via supported hardware description
 mechanisms where the values for ON and OFF are already fixed and known.
@@ -184,7 +184,7 @@ This service is used to query the attributes of a device power domain.
 
 [#table_devpower_getattrs_request_data]
 .Request Data
-[cols="1, 3, 1, 6", width=100%, align="center", options="header"]
+[cols="1, 3, 2, 6", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -263,9 +263,8 @@ This service is used to change the power state of a device power domain.
 | uint32
 | This field indicates the power state to which the power domain should
 transition. The specific power states and their meanings may vary depending on
-the implementation, but generally, they include values such as "ON", "OFF"
-and vendor specific power state. Refer <<section-power-state>>
-for more details.
+the implementation, but generally, they include values such as ON, OFF and
+vendor specific values. Refer <<section-power-state>> for more details.
 |===
 
 [#table_devpower_setstate_response_data]
@@ -353,6 +352,6 @@ This service is used to get the current power state of a device power domain.
 | uint32
 | This field indicates the current power state of the specified domain. The
 power state can be one of several predefined values, such as ON, OFF, or vendor
-specific implementation. Refer <<section-power-state>>
+specific values. Refer <<section-power-state>>
 for more details.
 |===

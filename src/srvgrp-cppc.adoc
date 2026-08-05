@@ -29,10 +29,10 @@ CPPC and is managed by the platform which is responsible for the conversion
 between the abstract performance level and the internal performance operating
 point.
 
-The platform may have multiple application processors that share the actual
-performance controls like clock, voltage regulator and others depending on the
-platform. In such cases a performance level change for one application processor
-will affect the entire the group sharing the controls. Its the responsibility of
+The platform may have multiple application processors that share actual
+performance controls, such as clocks and voltage regulators, depending on the
+platform. In such cases, a performance level change for one application processor
+will affect the entire group sharing the controls. It is the responsibility of
 the power and performance management software running on the application processor
 and the platform to coordinate and manage the group level performance changes.
 
@@ -96,19 +96,18 @@ and faster read of the performance feedback values supported over the
 fast-channel.
 
 The CPPC service group defines two types of fast-channel for each application
-processor. If fast-channels are supported then each application processor must
-be assigned both types fast-channel.
+processor. If fast-channels are supported, then each application processor must
+be assigned both types of fast-channel.
 
 ===== Performance Request Fast-channel
-In this fast-channel the application processor will either write
-the desired performance level in case of normal mode or the minimum
-and maximum performance level in case of Autonomous (CPPC2) mode in the
-fast-channel. Otherwise the application processor can call the service
-`CPPC_WRITE_REG` for the `DesiredPerformanceRegister` or
+In this fast-channel, the application processor will either write the desired
+performance level in case of normal mode or the minimum and maximum performance
+level in case of autonomous (CPPC2) mode. Otherwise, the application processor
+can call the `CPPC_WRITE_REG` service for the `DesiredPerformanceRegister` or
 `MinimumPerformanceRegister` and `MaximumPerformanceRegister`.
 
-The supported values in this fast-channel which depends on the CPPC mode, either
-normal or autonomous mode is discoverable through `CPPC_GET_FAST_CHANNEL_REGION`
+The supported values in this fast-channel, depending on the CPPC mode (either
+normal or autonomous), are discoverable through the `CPPC_GET_FAST_CHANNEL_REGION`
 service.
 
 The size of this fast-channel type is `8 bytes`.
@@ -120,7 +119,7 @@ The size of this fast-channel type is `8 bytes`.
 | CPPC Mode
 | Layout
 
-| Normal Mode
+| Normal mode
 |
 [cols="1,2a", options="header"]
 !===
@@ -148,12 +147,11 @@ The size of this fast-channel type is `8 bytes`.
 |===
 
 ===== Performance Feedback Fast-channel
-In this fast-channel the application processor will read the
-supported value for estimating the delivered performance as performance feedback
-for an application processor. The application processor current frequency (Hz)
-is used for performance feedback in this fast-channel. The platform
-microcontroller must write the frequency of an application processor in the
-fast-channel whenever it changes.
+In this fast-channel, the application processor will read the supported value
+for estimating the delivered performance as performance feedback for an
+application processor. The application processor's current frequency (Hz) is
+used for the performance feedback. The platform microcontroller must write the
+frequency of an application processor in the fast-channel whenever it changes.
 
 The size of this fast-channel type is `8 bytes`.
 
@@ -175,13 +173,13 @@ The size of this fast-channel type is `8 bytes`.
 The size of the shared memory region containing all the fast-channels for all the
 managed application processors must be a `power-of-2`. The `base-address` and `size`
 (bytes) of this shared memory region can be discovered using the
-service `CPPC_GET_FAST_CHANNEL_REGION`. The `base-address` of the shared memory
-region must be aligned to `8 bytes` which is maximum size of a fast-channel in
+`CPPC_GET_FAST_CHANNEL_REGION` service. The `base-address` of the shared memory
+region must be aligned to `8 bytes`, which is the maximum size of a fast-channel in
 both the types.
 
 The offsets of fast-channels of both types for an application processor are
 aligned to `8 bytes`. The offset of both fast-channel types in the shared memory
-region can be discovered through service `CPPC_GET_FAST_CHANNEL_OFFSET`. The
+region can be discovered through the `CPPC_GET_FAST_CHANNEL_OFFSET` service. The
 offsets discovered can be added to the `base-address` of the shared memory
 region to form the address of Performance Request fast-channel and Performance
 Feedback fast-channel for an application processor.
@@ -200,7 +198,7 @@ to trigger the doorbell interrupt.
 
 The width of the doorbell write value must be equal to the doorbell register width.
 
-NOTE: The write value may also contains other set bits which must persist on every
+NOTE: The write value may also contain other set bits, which must persist on every
 write to the doorbell register.
 
 [#cppc-notifications]
@@ -219,10 +217,10 @@ Refer to <<table_common_ennotification_request_data>> for Request Data and
 <<table_common_ennotification_response_data>> for Response Data.
 
 ==== Service: CPPC_PROBE_REG (SERVICE_ID: 0x02)
-This service is used to probe a CPPC register implementation status for a
-application processor. If the CPPC register `reg_id` is implemented then
+This service is used to probe a CPPC register implementation status for an
+application processor. If the CPPC register `reg_id` is implemented, then
 the length in bits is returned in `REG_LENGTH` field. If the register is not
-supported or invalid then the `REG_LENGTH` will be `0`.
+supported or invalid, then the `REG_LENGTH` will be `0`.
 
 [#table_cppc_probereg_request_data]
 .Request Data
@@ -257,7 +255,7 @@ supported or invalid then the `REG_LENGTH` will be `0`.
 | STATUS
 | int32
 | Return error code.
-[cols="5,5a", options="header"]
+[cols="6,5", options="header"]
 !===
 ! Error Code
 ! Description
@@ -285,7 +283,7 @@ supported, a read of the `DesiredPerformanceRegister` or
 `MinimumPerformanceRegister` and `MaximumPerformanceRegister` through this
 service will return the current desired performance level or
 minimum and maximum performance level limit depending on the CPPC mode from the
-fast-channel of a application processor.
+fast-channel of an application processor.
 
 [#table_cppc_readreg_request_data]
 .Request Data
@@ -351,12 +349,12 @@ length.
 ==== Service: CPPC_WRITE_REG (SERVICE_ID: 0x04)
 This service is used to write a CPPC register.
 
-If the fast-channels are supported the application processor must only write
-desired performance level in the fast-channel instead of writing into the
-`DesiredPerformanceRegister` through this service. Similarly, in case of the
-autonomous mode the application processor must write minimum and maximum limit
-levels into the fast-channel instead of calling this service for
-`MinimumPerformanceRegister` and `MaximumPerformanceRegister`. Otherwise the
+If the fast-channels are supported, the application processor must write only
+the desired performance level to the fast-channel, instead of writing to the
+`DesiredPerformanceRegister` through this service. Similarly, in autonomous
+mode, the application processor must write the minimum and maximum limit
+levels to the fast-channel instead of calling this service for the
+`MinimumPerformanceRegister` and `MaximumPerformanceRegister`. Otherwise,
 writes to these registers may be ignored.
 
 [#table_cppc_writereg_request_data]
@@ -440,7 +438,7 @@ used.
 
 [#table_cppc_getfastchanregion_response_data]
 .Response Data
-[cols="1, 4, 1, 7a", width=100%, align="center", options="header"]
+[cols="1, 3, 1, 7a", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -481,8 +479,7 @@ used.
 	Desired performance level for performance change.
 
 	0b01: Autonomous mode.
-	Performance limit change. Platform can choose the level in the requested
-	limit.
+	Performance limit change. Platform can choose the level in the requested limit.
 
 	0b10 - 0b11: Reserved.
 
@@ -545,7 +542,7 @@ memory region containing all the fast-channels.
 
 [#table_cppc_getfastchanoffset_request_data]
 .Request Data
-[cols="1, 2, 1, 7", width=100%, align="center", options="header"]
+[cols="1, 5, 1, 7", width=100%, align="center", options="header"]
 |===
 | Word
 | Name
@@ -613,9 +610,9 @@ This service retrieves the list of Hart IDs managed by this service group
 for performance control.
 
 If the number of words required for all available Hart IDs exceeds the number of
-words that can be returned in one acknowledgement message then the platform
+words that can be returned in one acknowledgement message, then the platform
 microcontroller will set the `REMAINING` and `RETURNED` fields accordingly and
-only return the Hart IDs which can be accommodated. The application processor
+return only the Hart IDs which can be accommodated. The application processor
 may need to call this service again with the appropriate `START_INDEX` until the
 `REMAINING` field returns `0`.
 
