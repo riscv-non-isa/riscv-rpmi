@@ -10,11 +10,14 @@
 | AP    | Application Processor
 | CPPC  | Collaborative Processor Performance Control
 | GHES  | Generic Hardware Error Source
+| GPIO  | General Purpose Input/Output
 | MSI   | Message Signaled Interrupt
 | P2A   | Platform Microcontroller to Application Processor
 | PMA   | Physical Memory Attributes
 | PMP   | Physical Memory Protection
 | PuC   | Platform Microcontroller
+| PWM   | Pulse Width Modulation
+| QSPI  | Quad Serial Peripheral Interface
 | RAS   | Reliability, Availability, and Serviceability
 | REE   | Rich Execution Environment
 | SBI   | Supervisor Binary Interface

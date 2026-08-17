@@ -1,0 +1,1815 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+===  Service Group - PIN_CONTROL (SERVICEGROUP_ID: 0x0011)
+This service group is used to discover and control the pins (or pads) of the
+system. Services defined in this group are used to enumerate pins, groups of
+pins, and pin functions, to select the function performed by a pin or a group
+of pins, and to set or get the electrical configuration of a pin or a group
+of pins.
+
+A pin is a physical interface of the system to the outside world. Since the
+number of pins in a system is limited, a pin is generally multiplexed and can
+perform one of several functions at a time. A function represents a specific
+role which a pin or a set of pins can perform, for example, the clock and data
+signals of an I2C interface or a general purpose input/output (GPIO).
+
+A function may provide GPIO capability which is indicated in the function
+attributes. Once a GPIO capable function is enabled on a pin or a group, the
+application processor can control the direction of a pin using the
+`INPUT_MODE` and `OUTPUT_MODE` configuration types, drive the pin level using
+the `OUTPUT_VALUE` configuration type, and read the pin level using the
+`INPUT_VALUE` configuration type. The configuration types are listed in
+<<pinctrl-config-types>>. The application processor can discover the GPIO
+capable functions of a pin by retrieving the functions of the pin through
+the `PINCTRL_GET_PIN_ASSOCIATIONS` service and then checking the GPIO
+capability flag of each function through the
+`PINCTRL_GET_FUNCTION_ATTRIBUTES` service.
+
+The platform may support access control for pins and groups through
+permissions and ownership. Permissions control which clients of the system
+are allowed to access a pin or a group. A client can read its own access
+permission through the `PINCTRL_GET_PERMISSIONS` service, and a trusted
+client can allow or deny access for the clients of the system through the
+`PINCTRL_SET_PERMISSIONS` service. Ownership provides exclusive control of a
+pin or a group at runtime. A client can claim exclusive control through the
+`PINCTRL_REQUEST` service and release it through the `PINCTRL_RELEASE`
+service. While a pin or a group is claimed, it is unavailable to all other
+clients. Permissions define whether a client may access a pin or a group,
+whereas ownership defines which client is currently using it.
+
+These services are optional. During initialization, the application
+processor must first discover the implemented services through the
+`PINCTRL_GET_ATTRIBUTES` service. It can then check its access permissions,
+claim exclusive control of the pins and the groups it needs, and configure
+them.
+
+[#pinctrl-pin-organization]
+==== Pin Organization
+Pins which together enable a specific function are arranged in a group. A
+group contains one or more pins, and the same function is enabled on all
+pins of a group at once. A group which contains only one pin is referred to
+as a single-pin group. A function which requires only a single pin and is
+enabled directly on individual pins without any group is referred to as a
+single-pin function. The single-pin property describes the number of pins
+which the function requires, and not the number of functions which a pin
+can perform.
+
+A platform may expose functions at two granularities. At the signal
+granularity, each function represents a single signal (for example
+`i2c0_sda` or `i2c0_scl`) and is a single-pin function which is enabled
+directly on a pin. The I2C interface requires both signals to operate, but
+each signal function requires only its own pin, which is what makes it a
+single-pin function. At the peripheral granularity, a function represents a
+complete peripheral interface (for example `i2c0`) and is enabled on a group
+which contains all pins of that peripheral. A platform may expose either
+granularity or both. For example, the pads `gpio0_0` and `gpio0_1` can form
+the group `i2c0`, where each pad individually performs the single-pin
+functions `i2c0_sda` and `i2c0_scl` respectively, and the platform may
+additionally expose the peripheral function `i2c0` which is enabled on the
+group `i2c0` to enable both signals in a single request. Irrespective of the
+function granularity, a group can always be used to discover its pins and to
+apply a configuration to all of its pins in a single request.
+
+A function may be supported by multiple groups, but a function must not be
+enabled through more than one group at a time. A pin may be part of multiple
+groups since a pin can serve multiple functions through multiplexing. The
+application processor must not request the platform microcontroller to enable
+different functions on overlapping groups, and the platform microcontroller
+must not enable a function on a group when one or more pins of that group are
+already in use by another function.
+
+A platform can expose the pin mapping of a function through two mechanisms.
+With fixed mapping, the function is enabled through groups, and each group
+is a fixed set of pins. With flexible mapping, each signal of the function
+is a single-pin function which can be enabled on any of its candidate pins.
+A platform may use either mechanism or both.
+
+For example, a QSPI interface which requires four data pins, one clock pin,
+and one chip enable pin is exposed as a function `qspi0` which is enabled
+through a group of six pins. If the platform can route the QSPI interface
+to two different sets of pads, then the platform exposes two groups, for
+example `qspi0_a` and `qspi0_b`, and the `PINCTRL_GET_FUNCTION_GROUPS`
+service returns both groups for the function `qspi0`. The application
+processor enables the function through the group of its choice.
+
+The platform does not need to define a group for every possible combination
+of pins. When the pin choices are flexible, for example when many pins can
+each select one of many functions, the platform exposes each signal as a
+single-pin function. The `PINCTRL_GET_FUNCTION_GROUPS` service returns the
+candidate pins of each single-pin function, the
+`PINCTRL_GET_PIN_ASSOCIATIONS` service returns the candidate functions of
+each pin, and the application processor enables each signal on the pin of
+its choice. Groups are recommended for fixed or common pin mappings, and
+single-pin functions are recommended for flexible pin mappings.
+
+Whether a function uses fixed or flexible mapping is indicated by the
+single-pin function flag returned by the `PINCTRL_GET_FUNCTION_ATTRIBUTES`
+service. For a single-pin function, the `PINCTRL_GET_FUNCTION_GROUPS`
+service returns pin IDs instead of group IDs, and the `PINCTRL_SET_FUNCTION`
+service enables the function on a pin instead of a group.
+
+Each pin is identified by a `PIN_ID`, each group by a `GROUP_ID`, and each
+function by a `FUNCTION_ID`. These are separate identifier spaces, and each
+identifier is a 32-bit integer which is sequential and starts from `0`.
+
+The services of this service group reference a pin, a group, or a function
+only through its numeric identifier. Pins, groups, and functions also have
+names which are NULL-terminated ASCII strings up to 32-bytes. Names are
+informational and implementation defined, and the platform may choose any
+naming scheme. The recommended naming convention is:
+
+* Pin names identify the physical pad of the system, for example the pad
+  name defined in the system datasheet such as `gpio0_0`, and should not
+  encode a function which the pin can perform.
+* Function names match the signal or the function performed. Signal level
+  functions are named after the signal, for example `i2c0_sda` or `uart0_tx`.
+  Peripheral level functions are named after the peripheral instance, for
+  example `i2c0`.
+* Group names match the peripheral instance whose pins they contain, for
+  example `i2c0` or `uart0`.
+* Function and group names which provide GPIO capability should include
+  `gpio` in the name, for example `gpio0_0`.
+
+The organization of pins into groups and functions is implementation
+defined. The recommended organization strategy is:
+
+* Define a group for each set of pins which operate together, such as the
+  pins of a peripheral interface. Define one group for each supported pin
+  mapping when the mappings are fixed.
+* Define single-pin functions for signals which can be routed to many pins,
+  instead of defining a group for every possible combination of pins.
+* Define a single-pin GPIO function for each pin which the application
+  processor can control directly.
+* Deny access to the pins and the groups which are reserved for the
+  platform through the access permissions.
+
+[#pinctrl-config-types]
+==== Pin Configuration Types
+The configuration of a pin or a group is expressed as a list of configuration
+type and configuration value pairs. The following table lists the standard
+configuration types and the encoding of their corresponding configuration
+values. The platform microcontroller must apply the configuration according
+to the configuration value. For configuration types with enable/disable
+semantics, the configuration value `0` must disable the configuration and the
+configuration value `1` must enable it.
+
+The supported values of a configuration type for a particular pin or a
+group are platform specific. The application processor can discover them
+through the optional `PINCTRL_GET_SUPPORTED_CONFIG_VALUES` service, or
+through hardware description mechanisms such as device tree or ACPI.
+
+[#table_pinctrl_config_types]
+.Pin Configuration Types
+[cols="2, 3, 5", width=100%, align="center", options="header"]
+|===
+| Value
+| Configuration Type
+| Configuration Value
+
+| 0x0
+| DEFAULT
+| Reserved for the implementation defined default configuration of a pin or
+  a group.
+
+| 0x1
+| BIAS_BUS_HOLD
+| `0`: Disable +
+  `1`: Enable
+
+| 0x2
+| BIAS_DISABLE
+| `0`: Disable +
+  `1`: Enable
+
+| 0x3
+| BIAS_HIGH_IMPEDANCE
+| `0`: Disable +
+  `1`: Enable
+
+| 0x4
+| BIAS_PULL_UP
+| Pull-up strength in ohms. +
+  `0`: Implementation defined default strength.
+
+| 0x5
+| BIAS_PULL_DEFAULT
+| `0`: Disable +
+  `1`: Enable
+
+| 0x6
+| BIAS_PULL_DOWN
+| Pull-down strength in ohms. +
+  `0`: Implementation defined default strength.
+
+| 0x7
+| DRIVE_OPEN_DRAIN
+| `0`: Disable +
+  `1`: Enable
+
+| 0x8
+| DRIVE_OPEN_SOURCE
+| `0`: Disable +
+  `1`: Enable
+
+| 0x9
+| DRIVE_PUSH_PULL
+| `0`: Disable +
+  `1`: Enable
+
+| 0xA
+| DRIVE_STRENGTH
+| Drive strength in microamperes (uA).
+
+| 0xB
+| INPUT_DEBOUNCE
+| Debounce time in microseconds (us).
+
+| 0xC
+| INPUT_MODE
+| `0`: Disable +
+  `1`: Enable
+
+| 0xD
+| PULL_MODE
+| `0`: Implementation defined default +
+  `1`: Pull-up +
+  `2`: Pull-down +
+  `3`: None
+
+| 0xE
+| INPUT_VALUE
+| `0`: Low +
+  `1`: High +
+  This configuration type is read-only and valid only with the
+  `PINCTRL_GET_CONFIG` service. The `PINCTRL_SET_CONFIG` service must fail
+  with `RPMI_ERR_INVALID_PARAM` if this configuration type is passed.
+
+| 0xF
+| INPUT_SCHMITT
+| `0`: Disable +
+  `1`: Enable
+
+| 0x10
+| LOW_POWER_MODE
+| `0`: Disable +
+  `1`: Enable
+
+| 0x11
+| OUTPUT_MODE
+| `0`: Disable +
+  `1`: Enable
+
+| 0x12
+| OUTPUT_VALUE
+| `0`: Low +
+  `1`: High
+
+| 0x13
+| POWER_SOURCE
+| Implementation defined power source selector.
+
+| 0x14
+| SLEW_RATE
+| Implementation defined slew rate value. +
+  `0`: Slowest implementation defined slew rate.
+
+| 0x15 - 0x7FFFFFFF
+| _Reserved_
+|
+
+| 0x80000000 - 0xFFFFFFFF
+| Implementation specific
+| Implementation defined.
+|===
+
+The following table lists the services in the PIN_CONTROL service group:
+
+[#table_pinctrl_services]
+.PIN_CONTROL Services
+[cols="1, 3, 2, 1", width=100%, align="center", options="header"]
+|===
+| Service ID
+| Service Name
+| Request Type
+| RPMI Version
+
+| 0x01
+| PINCTRL_ENABLE_NOTIFICATION
+| NORMAL_REQUEST
+| 2.0
+
+| 0x02
+| PINCTRL_GET_ATTRIBUTES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x03
+| PINCTRL_GET_PIN_ATTRIBUTES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x04
+| PINCTRL_GET_GROUP_ATTRIBUTES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x05
+| PINCTRL_GET_FUNCTION_ATTRIBUTES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x06
+| PINCTRL_GET_GROUP_PINS
+| NORMAL_REQUEST
+| 2.0
+
+| 0x07
+| PINCTRL_GET_FUNCTION_GROUPS
+| NORMAL_REQUEST
+| 2.0
+
+| 0x08
+| PINCTRL_GET_PIN_ASSOCIATIONS
+| NORMAL_REQUEST
+| 2.0
+
+| 0x09
+| PINCTRL_GET_PERMISSIONS
+| NORMAL_REQUEST
+| 2.0
+
+| 0x0A
+| PINCTRL_SET_PERMISSIONS
+| NORMAL_REQUEST
+| 2.0
+
+| 0x0B
+| PINCTRL_REQUEST
+| NORMAL_REQUEST
+| 2.0
+
+| 0x0C
+| PINCTRL_RELEASE
+| NORMAL_REQUEST
+| 2.0
+
+| 0x0D
+| PINCTRL_SET_FUNCTION
+| NORMAL_REQUEST
+| 2.0
+
+| 0x0E
+| PINCTRL_GET_SUPPORTED_CONFIG_VALUES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x0F
+| PINCTRL_GET_CONFIG
+| NORMAL_REQUEST
+| 2.0
+
+| 0x10
+| PINCTRL_SET_CONFIG
+| NORMAL_REQUEST
+| 2.0
+|===
+
+The services `PINCTRL_REQUEST`, `PINCTRL_RELEASE`, `PINCTRL_GET_PERMISSIONS`,
+and `PINCTRL_SET_PERMISSIONS` are optional. The application processor can
+discover whether these services are implemented through the `FLAGS` field
+returned by the `PINCTRL_GET_ATTRIBUTES` service.
+
+[#pinctrl-notifications]
+==== Notifications
+This service group does not support any events for notification.
+
+==== Service: PINCTRL_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
+This service allows the application processor to subscribe to `PIN_CONTROL`
+service group notifications. The platform may optionally support notifications
+for events that may occur. The platform microcontroller can send these
+notification messages to the application processor if they are implemented and
+the application processor has subscribed to them. The supported events are
+described in <<pinctrl-notifications>>.
+
+Refer to <<table_common_ennotification_request_data>> for Request Data and
+<<table_common_ennotification_response_data>> for Response Data.
+
+==== Service: PINCTRL_GET_ATTRIBUTES (SERVICE_ID: 0x02)
+This service is used to discover the number of pins, groups, and functions
+available in the system, and the optional services implemented by the
+platform microcontroller.
+
+[#table_pinctrl_getattrs_request_data]
+.Request Data
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
+
+[#table_pinctrl_getattrs_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+|
+[cols="1,5a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:3]
+! _Reserved_ and must be `0`.
+
+! [2]
+! Configuration value discovery service support.
+----
+0b0: PINCTRL_GET_SUPPORTED_CONFIG_VALUES service is not implemented.
+0b1: PINCTRL_GET_SUPPORTED_CONFIG_VALUES service is implemented.
+----
+
+! [1]
+! Permission services support.
+----
+0b0: PINCTRL_GET_PERMISSIONS and PINCTRL_SET_PERMISSIONS services are
+not implemented.
+0b1: PINCTRL_GET_PERMISSIONS and PINCTRL_SET_PERMISSIONS services are
+implemented.
+----
+
+! [0]
+! Ownership services support.
+----
+0b0: PINCTRL_REQUEST and PINCTRL_RELEASE services are not implemented.
+0b1: PINCTRL_REQUEST and PINCTRL_RELEASE services are implemented.
+----
+!===
+
+| 2
+| NUM_PINS
+| uint32
+| Number of pins available in the system.
+
+| 3
+| NUM_GROUPS
+| uint32
+| Number of groups available in the system.
+
+| 4
+| NUM_FUNCTIONS
+| uint32
+| Number of functions available in the system.
+|===
+
+==== Service: PINCTRL_GET_PIN_ATTRIBUTES (SERVICE_ID: 0x03)
+This service provides the attributes of a pin, including its name, represented
+as a 32-byte array of ASCII strings, and the physical location of its pad on
+the package.
+
+[#table_pinctrl_getpinattrs_request_data]
+.Request Data
+[cols="1, 3, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| PIN_ID
+| uint32
+| Pin ID.
+|===
+
+[#table_pinctrl_getpinattrs_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `PIN_ID` is invalid.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to access this pin.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| _Reserved_ and must be `0`.
+
+| 2:9
+| PIN_NAME
+| uint8[32]
+| Pin name, a NULL-terminated ASCII string up to 32-bytes.
+
+| 10:13
+| PAD_LOCATION
+| uint8[16]
+| Physical pad location of the pin on the package, a NULL-terminated ASCII
+  string up to 16-bytes, for example `5` for a numbered pin package or
+  `AE10` for a ball grid array package. An empty string implies the pad
+  location is not provided.
+|===
+
+==== Service: PINCTRL_GET_GROUP_ATTRIBUTES (SERVICE_ID: 0x04)
+This service provides the attributes of a group, including the number of pins
+in the group and its name, represented as a 32-byte array of ASCII strings.
+
+[#table_pinctrl_getgroupattrs_request_data]
+.Request Data
+[cols="1, 3, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| GROUP_ID
+| uint32
+| Group ID.
+|===
+
+[#table_pinctrl_getgroupattrs_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `GROUP_ID` is invalid.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to access this group.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| _Reserved_ and must be `0`.
+
+| 2
+| NUM_PINS
+| uint32
+| Number of pins in this group.
+
+| 3:10
+| GROUP_NAME
+| uint8[32]
+| Group name, a NULL-terminated ASCII string up to 32-bytes.
+|===
+
+==== Service: PINCTRL_GET_FUNCTION_ATTRIBUTES (SERVICE_ID: 0x05)
+This service provides the attributes of a function, including the number of
+groups which can enable the function and its name, represented as a 32-byte
+array of ASCII strings.
+
+If the function is a single-pin function, then the `NUM_GROUPS` field returns
+the number of pins which can enable the function directly.
+
+The single-pin function flag and the GPIO capability flag returned in the
+`FLAGS` field are independent attributes of a function. The single-pin
+function flag describes how the function is enabled, either directly on
+individual pins or through groups. The GPIO capability flag describes
+whether the application processor can control the direction and the level of
+the pins once the function is enabled. All combinations of the two flags are
+valid. The <<table_pinctrl_function_flags_examples>> below shows an example
+for each combination.
+
+[#table_pinctrl_function_flags_examples]
+.Function Flags Examples
+[cols="2, 2, 7", width=100%, align="center", options="header"]
+|===
+| Single-Pin Function
+| GPIO Capability
+| Example
+
+| 0b1
+| 0b1
+| The function `gpio0_0` which provides GPIO on one pin. It is enabled
+  directly on the pin, and the application processor can drive and read the
+  pin.
+
+| 0b1
+| 0b0
+| The function `pwm0` which outputs a PWM signal on one pin. The pin is
+  driven by the PWM peripheral and not by the application processor.
+
+| 0b0
+| 0b1
+| A GPIO port function which is enabled on a group. The application
+  processor can drive and read all pins of the group.
+
+| 0b0
+| 0b0
+| The function `i2c0` which is enabled on a group. The pins are driven by
+  the I2C peripheral.
+|===
+
+[#table_pinctrl_getfuncattrs_request_data]
+.Request Data
+[cols="1, 3, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| FUNCTION_ID
+| uint32
+| Function ID.
+|===
+
+[#table_pinctrl_getfuncattrs_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `FUNCTION_ID` is invalid.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to access this function.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+|
+[cols="1,5a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:2]
+! _Reserved_ and must be `0`.
+
+! [1]
+! Single-pin function.
+----
+0b0: Function is enabled through groups.
+0b1: Function is a single-pin function which is enabled directly on
+individual pins and is not supported by any group.
+----
+
+! [0]
+! GPIO capability.
+----
+0b0: Function does not provide GPIO capability.
+0b1: Function provides GPIO capability.
+----
+!===
+
+| 2
+| NUM_GROUPS
+| uint32
+| Number of groups which can enable this function, or the number of pins
+  which can enable this function directly if the function is a single-pin
+  function.
+
+| 3:10
+| FUNCTION_NAME
+| uint8[32]
+| Function name, a NULL-terminated ASCII string up to 32-bytes.
+|===
+
+==== Service: PINCTRL_GET_GROUP_PINS (SERVICE_ID: 0x06)
+This service is used to get the list of pins in a group. The message can pass
+the `PIN_INDEX` which is the index to the first pin ID to be described in the
+returned pin ID array. If all pin IDs are required, then this index value can
+be `0`.
+
+If the total number of words required to store all pin IDs of the group
+exceeds the available words in the message DATA field, then the platform
+microcontroller will return the pin IDs which can be accommodated in one
+message and set the `RETURNED` field to the number of pin IDs returned and
+the `REMAINING` field to the number of remaining pin IDs.
+
+When the `REMAINING` field is not `0`, the application processor must call
+this service again with the appropriate `PIN_INDEX` set to get the remaining
+pin IDs.
+
+[#table_pinctrl_getgrouppins_request_data]
+.Request Data
+[cols="1, 3, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| GROUP_ID
+| uint32
+| Group ID.
+
+| 1
+| PIN_INDEX
+| uint32
+| Index of the first pin ID to be returned in the pin ID array.
+|===
+
+[#table_pinctrl_getgrouppins_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `GROUP_ID` or `PIN_INDEX` is invalid.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to access this group.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| _Reserved_ and must be `0`.
+
+| 2
+| REMAINING
+| uint32
+| Remaining number of pin IDs.
+
+| 3
+| RETURNED
+| uint32
+| Number of pin IDs returned, which is `N`.
+
+| 4
+| PIN_ID[N]
+| uint32[N]
+| Pin IDs of the pins in this group, in numerically increasing order.
+|===
+
+==== Service: PINCTRL_GET_FUNCTION_GROUPS (SERVICE_ID: 0x07)
+This service is used to get the list of groups which can enable a function.
+If the function is a single-pin function, then this service returns the list
+of pin IDs which can enable the function directly instead of group IDs.
+
+The message can pass the `GROUP_INDEX` which is the index to the first group
+ID (or pin ID for a single-pin function) to be described in the returned
+array. If all IDs are required, then this index value can be `0`.
+
+If the total number of words required to store all IDs exceeds the available
+words in the message DATA field, then the platform microcontroller will
+return the IDs which can be accommodated in one message and set the
+`RETURNED` field to the number of IDs returned and the `REMAINING` field to
+the number of remaining IDs.
+
+When the `REMAINING` field is not `0`, the application processor must call
+this service again with the appropriate `GROUP_INDEX` set to get the
+remaining IDs.
+
+[#table_pinctrl_getfuncgroups_request_data]
+.Request Data
+[cols="1, 3, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| FUNCTION_ID
+| uint32
+| Function ID.
+
+| 1
+| GROUP_INDEX
+| uint32
+| Index of the first group ID (or pin ID for a single-pin function) to be
+  returned in the array.
+|===
+
+[#table_pinctrl_getfuncgroups_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `FUNCTION_ID` or `GROUP_INDEX` is invalid.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to access this function.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| _Reserved_ and must be `0`.
+
+| 2
+| REMAINING
+| uint32
+| Remaining number of group IDs (or pin IDs for a single-pin function).
+
+| 3
+| RETURNED
+| uint32
+| Number of group IDs (or pin IDs for a single-pin function) returned,
+  which is `N`.
+
+| 4
+| GROUP_ID[N]
+| uint32[N]
+| Group IDs of the groups which can enable this function, in numerically
+  increasing order. If the function is a single-pin function, then this
+  array contains the pin IDs of the pins which can enable this function
+  directly.
+|===
+
+==== Service: PINCTRL_GET_PIN_ASSOCIATIONS (SERVICE_ID: 0x08)
+This service is used to get the list of functions which a pin can perform,
+along with the group through which each function is enabled. Each entry in
+the returned array is a pair of `FUNCTION_ID` and `GROUP_ID` words. If the
+function is a single-pin function which is enabled directly on the pin, then
+the `GROUP_ID` word of the pair is set to `0xFFFFFFFF`.
+
+For example, if the pin `gpio0_0` can perform the single-pin function
+`pwm0` directly and the peripheral function `i2c0` through the group
+`i2c0`, then this service returns two pairs: one with the function ID of
+`pwm0` and the `GROUP_ID` word set to `0xFFFFFFFF`, and one with the
+function ID of `i2c0` and the group ID of the group `i2c0`.
+
+The message can pass the `ASSOCIATION_INDEX` which is the index to the first
+pair to be described in the returned array. If all pairs are required, then
+this index value can be `0`.
+
+If the total number of words required to store all pairs exceeds the
+available words in the message DATA field, then the platform microcontroller
+will return the pairs which can be accommodated in one message and set the
+`RETURNED` field to the number of pairs returned and the `REMAINING` field to
+the number of remaining pairs.
+
+When the `REMAINING` field is not `0`, the application processor must call
+this service again with the appropriate `ASSOCIATION_INDEX` set to get the
+remaining pairs.
+
+[#table_pinctrl_getpinassoc_request_data]
+.Request Data
+[cols="1, 3, 2, 7", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| PIN_ID
+| uint32
+| Pin ID.
+
+| 1
+| ASSOCIATION_INDEX
+| uint32
+| Index of the first function and group ID pair to be returned in the array.
+|===
+
+[#table_pinctrl_getpinassoc_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `PIN_ID` or `ASSOCIATION_INDEX` is invalid.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to access this pin.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| _Reserved_ and must be `0`.
+
+| 2
+| REMAINING
+| uint32
+| Remaining number of function and group ID pairs.
+
+| 3
+| RETURNED
+| uint32
+| Number of function and group ID pairs returned, which is `N`.
+
+| 4
+| ASSOCIATION[N]
+| uint32[2 * N]
+| Array of `N` pairs where each pair is composed of two words in the
+  following format:
+
+`PAIR[0]`: `FUNCTION_ID`, the function ID of a function which this pin can
+perform.
+
+`PAIR[1]`: `GROUP_ID`, the group ID of the group through which the function
+is enabled on this pin, or `0xFFFFFFFF` if the function is a single-pin
+function which is enabled directly on this pin.
+|===
+
+==== Service: PINCTRL_GET_PERMISSIONS (SERVICE_ID: 0x09)
+This service is used to get the access permission of the calling client for
+a pin or a group.
+
+This service is optional. The application processor can discover whether this
+service is implemented through the `FLAGS` field returned by the
+`PINCTRL_GET_ATTRIBUTES` service.
+
+[#table_pinctrl_getperms_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SELECTOR_TYPE
+| uint32
+| The type of the identifier passed in the `SELECTOR_ID` field.
+----
+0x0: Pin.
+0x1: Group.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+
+| 1
+| SELECTOR_ID
+| uint32
+| Pin ID if `SELECTOR_TYPE` is pin, or group ID if `SELECTOR_TYPE` is group.
+|===
+
+[#table_pinctrl_getperms_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SELECTOR_TYPE` or `SELECTOR_ID` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! This service is not implemented.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| PERMISSION
+| uint32
+| Access permission of the calling client for the pin or the group.
+----
+0x0: Access denied.
+0x1: Access allowed.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+|===
+
+==== Service: PINCTRL_SET_PERMISSIONS (SERVICE_ID: 0x0A)
+This service is used to allow or deny access to a pin or a group for the
+clients of the system. Only trusted clients of the system should be allowed
+to invoke this service. The default access permissions of the pins and the
+groups at system boot are implementation defined.
+
+This service is optional. The application processor can discover whether this
+service is implemented through the `FLAGS` field returned by the
+`PINCTRL_GET_ATTRIBUTES` service.
+
+[#table_pinctrl_setperms_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SELECTOR_TYPE
+| uint32
+| The type of the identifier passed in the `SELECTOR_ID` field.
+----
+0x0: Pin.
+0x1: Group.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+
+| 1
+| SELECTOR_ID
+| uint32
+| Pin ID if `SELECTOR_TYPE` is pin, or group ID if `SELECTOR_TYPE` is group.
+
+| 2
+| PERMISSION
+| uint32
+| Access permission to be set for the pin or the group.
+----
+0x0: Deny access.
+0x1: Allow access.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+|===
+
+[#table_pinctrl_setperms_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SELECTOR_TYPE`, `SELECTOR_ID`, or `PERMISSION` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! This service is not implemented.
+
+! RPMI_ERR_DENIED
+! The calling client is not allowed to set the permissions of this pin
+or group.
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+==== Service: PINCTRL_REQUEST (SERVICE_ID: 0x0B)
+This service is used to request exclusive control of a pin or a group. On
+success, the pin or the group becomes unavailable to any other client until
+it is released through the `PINCTRL_RELEASE` service.
+
+This service is optional. The application processor can discover whether this
+service is implemented through the `FLAGS` field returned by the
+`PINCTRL_GET_ATTRIBUTES` service.
+
+[#table_pinctrl_request_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SELECTOR_TYPE
+| uint32
+| The type of the identifier passed in the `SELECTOR_ID` field.
+----
+0x0: Pin.
+0x1: Group.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+
+| 1
+| SELECTOR_ID
+| uint32
+| Pin ID if `SELECTOR_TYPE` is pin, or group ID if `SELECTOR_TYPE` is group.
+|===
+
+[#table_pinctrl_request_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Exclusive control of the pin or group granted successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SELECTOR_TYPE` or `SELECTOR_ID` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! This service is not implemented.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to request this pin or group.
+
+! RPMI_ERR_ALREADY
+! The pin or group is already under exclusive control of another client.
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+==== Service: PINCTRL_RELEASE (SERVICE_ID: 0x0C)
+This service is used to release exclusive control of a pin or a group which
+was previously acquired through the `PINCTRL_REQUEST` service. The platform
+microcontroller must fail this service with `RPMI_ERR_DENIED` if the calling
+client does not have exclusive control of the pin or the group.
+
+This service is optional. The application processor can discover whether this
+service is implemented through the `FLAGS` field returned by the
+`PINCTRL_GET_ATTRIBUTES` service.
+
+[#table_pinctrl_release_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SELECTOR_TYPE
+| uint32
+| The type of the identifier passed in the `SELECTOR_ID` field.
+----
+0x0: Pin.
+0x1: Group.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+
+| 1
+| SELECTOR_ID
+| uint32
+| Pin ID if `SELECTOR_TYPE` is pin, or group ID if `SELECTOR_TYPE` is group.
+|===
+
+[#table_pinctrl_release_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Pin or group released successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SELECTOR_TYPE` or `SELECTOR_ID` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! This service is not implemented.
+
+! RPMI_ERR_DENIED
+! The calling client does not have exclusive control of this pin or
+group.
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+==== Service: PINCTRL_SET_FUNCTION (SERVICE_ID: 0x0D)
+This service is used to select the function to be enabled on a pin or a
+group. The `SELECTOR_TYPE` field must be pin only if the function passed in
+the `FUNCTION_ID` field is a single-pin function.
+
+The platform microcontroller must fail this service with `RPMI_ERR_ALREADY`
+if one or more pins of the group are already in use by another function.
+
+[#table_pinctrl_setfunction_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SELECTOR_TYPE
+| uint32
+| The type of the identifier passed in the `SELECTOR_ID` field.
+----
+0x0: Pin.
+0x1: Group.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+
+| 1
+| SELECTOR_ID
+| uint32
+| Pin ID if `SELECTOR_TYPE` is pin, or group ID if `SELECTOR_TYPE` is group.
+
+| 2
+| FUNCTION_ID
+| uint32
+| Function ID of the function to be enabled on the pin or the group. A value
+  `0xFFFFFFFF` implies no function to be enabled on the pin or the group.
+|===
+
+[#table_pinctrl_setfunction_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SELECTOR_TYPE`, `SELECTOR_ID`, or `FUNCTION_ID` is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! The function is not supported by the pin or the group.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to set the function of this
+pin or group.
+
+! RPMI_ERR_ALREADY
+! One or more pins of the group are already in use by another function,
+or the pin or group is currently in exclusive use by another client.
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+==== Service: PINCTRL_GET_SUPPORTED_CONFIG_VALUES (SERVICE_ID: 0x0E)
+This service is used to get the values of a configuration type which are
+supported by a pin or a group. For example, this service can return the
+drive strength values supported by a pin.
+
+This service is optional. The application processor can discover whether
+this service is implemented through the `FLAGS` field returned by the
+`PINCTRL_GET_ATTRIBUTES` service. If this service is not implemented, then
+the supported values must be discovered through hardware description
+mechanisms such as device tree or ACPI.
+
+The supported values are returned either as a discrete list of values or
+as a linear range. The linear range is returned as three words which are
+the minimum value, the maximum value, and the step between two successive
+values. The value format flag in the `FLAGS` field of the response
+indicates the format of the returned values.
+
+The message can pass the `VALUE_INDEX` which is the index to the first
+value to be described in the returned array. If all values are required,
+then this index value can be `0`. For the linear range format, the
+`VALUE_INDEX` must be `0`.
+
+If the total number of words required to store all values exceeds the
+available words in the message DATA field, then the platform
+microcontroller will return the values which can be accommodated in one
+message and set the `RETURNED` field to the number of values returned and
+the `REMAINING` field to the number of remaining values.
+
+[#table_pinctrl_getsuppconfigvals_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SELECTOR_TYPE
+| uint32
+| The type of the identifier passed in the `SELECTOR_ID` field.
+----
+0x0: Pin.
+0x1: Group.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+
+| 1
+| SELECTOR_ID
+| uint32
+| Pin ID if `SELECTOR_TYPE` is pin, or group ID if `SELECTOR_TYPE` is group.
+
+| 2
+| CONFIG_TYPE
+| uint32
+| Configuration type as listed in <<table_pinctrl_config_types>>.
+
+| 3
+| VALUE_INDEX
+| uint32
+| Index of the first supported value to be described in the returned
+  array.
+|===
+
+[#table_pinctrl_getsuppconfigvals_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Supported values returned successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SELECTOR_TYPE`, `SELECTOR_ID`, `CONFIG_TYPE`, or `VALUE_INDEX` is
+invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! The configuration type is not supported by the pin or the group.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to access this pin or group.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+|
+[cols="1,5a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:1]
+! _Reserved_ and must be `0`.
+
+! [0]
+! Value format.
+----
+0b0: Discrete list of values.
+0b1: Linear range.
+----
+!===
+
+| 2
+| REMAINING
+| uint32
+| Remaining number of supported values to be returned.
+
+| 3
+| RETURNED
+| uint32
+| Number of supported values returned in this request, which is `N`. For
+  the linear range format, this field is `3`.
+
+| 4
+| VALUE[N]
+| uint32[N]
+| Array of `N` supported values in numerically increasing order for the
+  discrete list format, or three words which are the minimum value, the
+  maximum value, and the step for the linear range format.
+|===
+
+==== Service: PINCTRL_GET_CONFIG (SERVICE_ID: 0x0F)
+This service is used to get the configuration of a pin or a group, and the
+function currently enabled on the pin or the group.
+
+The `MODE` field selects the data to be returned. If `MODE` is `0`, then only
+the configuration value of the configuration type passed in the
+`CONFIG_TYPE` field is returned and the `RETURNED` field is set to `1`. If
+`MODE` is `1`, then the configuration values of all configuration types
+supported by the pin or the group are returned in numerically increasing
+configuration type order. If `MODE` is `2`, then no configuration values are
+returned and only the `SELECTED_FUNCTION` field is valid, with the
+`RETURNED` field set to `0`.
+
+If `MODE` is `1` and the total number of words required to store all
+configuration type and value pairs exceeds the available words in the message
+DATA field, then the platform microcontroller will return the pairs which can
+be accommodated in one message and set the `RETURNED` field to the number of
+pairs returned and the `REMAINING` field to the number of remaining pairs.
+When the `REMAINING` field is not `0`, the application processor must call
+this service again with the appropriate `CONFIG_INDEX` set to get the
+remaining pairs.
+
+[#table_pinctrl_getconfig_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SELECTOR_TYPE
+| uint32
+| The type of the identifier passed in the `SELECTOR_ID` field.
+----
+0x0: Pin.
+0x1: Group.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+
+| 1
+| SELECTOR_ID
+| uint32
+| Pin ID if `SELECTOR_TYPE` is pin, or group ID if `SELECTOR_TYPE` is group.
+
+| 2
+| MODE
+| uint32
+| The data to be returned.
+----
+0x0: Return only the configuration value of the configuration type
+passed in the CONFIG_TYPE field.
+0x1: Return the configuration values of all supported configuration
+types.
+0x2: Return only the currently enabled function.
+0x3 - 0xFFFFFFFF: Reserved.
+----
+
+| 3
+| CONFIG_TYPE
+| uint32
+| Configuration type whose value is to be returned as listed in
+  <<table_pinctrl_config_types>>. This field is only valid if `MODE` is
+  `0`, otherwise this field is ignored.
+
+| 4
+| CONFIG_INDEX
+| uint32
+| Index of the first configuration type and value pair to be returned in
+  the array. This field is only valid if `MODE` is `1`, otherwise this
+  field is ignored.
+|===
+
+[#table_pinctrl_getconfig_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SELECTOR_TYPE`, `SELECTOR_ID`, `MODE`, `CONFIG_TYPE`, or `CONFIG_INDEX`
+is invalid.
+
+! RPMI_ERR_NOT_SUPPORTED
+! The configuration type passed in `CONFIG_TYPE` is not supported by the
+pin or the group.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to get the configuration of
+this pin or group.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| SELECTED_FUNCTION
+| uint32
+| Function ID of the function currently enabled on the pin or the group, or
+  `0xFFFFFFFF` if no function is currently enabled.
+
+| 2
+| REMAINING
+| uint32
+| Remaining number of configuration type and value pairs.
+
+| 3
+| RETURNED
+| uint32
+| Number of configuration type and value pairs returned, which is `N`.
+
+| 4
+| CONFIG[N]
+| uint32[2 * N]
+| Array of `N` pairs sorted in numerically increasing configuration type
+  order where each pair is composed of two words in the following format:
+
+`PAIR[0]`: `CONFIG_TYPE`, the configuration type as listed in
+<<table_pinctrl_config_types>>.
+
+`PAIR[1]`: `CONFIG_VALUE`, the configuration value.
+|===
+
+==== Service: PINCTRL_SET_CONFIG (SERVICE_ID: 0x10)
+This service is used to set the configuration of a pin or a group. The
+service allows multiple configurations to be set in a single request through
+an array of configuration type and value pairs.
+
+If the total number of words required to store all configuration type and
+value pairs exceeds the available words in the message DATA field, then the
+application processor must send multiple requests. The `FLAGS` field must
+have the final request flag set to `1` in the last request of such a sequence
+and set to `0` in all preceding requests. If all pairs fit in a single
+request, then the final request flag must be set to `1`.
+
+If this service fails, then the configurations already applied by previous
+requests of the sequence and by the preceding pairs of the failing request
+remain applied. The platform microcontroller does not revert previously
+applied configurations.
+
+[#table_pinctrl_setconfig_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| SELECTOR_TYPE
+| uint32
+| The type of the identifier passed in the `SELECTOR_ID` field.
+----
+0x0: Pin.
+0x1: Group.
+0x2 - 0xFFFFFFFF: Reserved.
+----
+
+| 1
+| SELECTOR_ID
+| uint32
+| Pin ID if `SELECTOR_TYPE` is pin, or group ID if `SELECTOR_TYPE` is group.
+
+| 2
+| FLAGS
+| uint32
+|
+[cols="1,5a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:1]
+! _Reserved_ and must be `0`.
+
+! [0]
+! Final request.
+----
+0b0: More configuration requests for this pin or group will follow.
+0b1: This is the final configuration request for this pin or group.
+----
+!===
+
+| 3
+| NUM_CONFIGS
+| uint32
+| Number of configuration type and value pairs in this request, which is
+  `N`.
+
+| 4
+| CONFIG[N]
+| uint32[2 * N]
+| Array of `N` pairs sorted in numerically increasing configuration type
+  order where each pair is composed of two words in the following format:
+
+`PAIR[0]`: `CONFIG_TYPE`, the configuration type as listed in
+<<table_pinctrl_config_types>>.
+
+`PAIR[1]`: `CONFIG_VALUE`, the configuration value.
+|===
+
+[#table_pinctrl_setconfig_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6,5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `SELECTOR_TYPE`, `SELECTOR_ID`, `NUM_CONFIGS`, or a configuration type
+or value is invalid, including the read-only `INPUT_VALUE` configuration
+type.
+
+! RPMI_ERR_NOT_SUPPORTED
+! One or more configuration types are not supported by the pin or the
+group.
+
+! RPMI_ERR_DENIED
+! The application processor is not allowed to set the configuration of
+this pin or group.
+
+! RPMI_ERR_ALREADY
+! The pin or group is currently in exclusive use by another client.
+!===
+- Other errors <<table_error_codes>>.
+|===
