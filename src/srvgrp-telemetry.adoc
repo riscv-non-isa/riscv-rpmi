@@ -1,0 +1,1070 @@
+:path: src/
+:imagesdir: ../images
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+===  Service Group - Telemetry (SERVICEGROUP_ID: 0x0011)
+
+In general, telemetry refers to the automated collection of various on-chip and
+on-board metrics from distributed/remote sources and their transmission to a
+central system for monitoring and analysis of system health and usage,
+troubleshooting system issues and optimization of performance/resources.
+
+The RPMI Telemetry service group aims to assist system-level telemetry. It
+defines a set of services that allow application processors to obtain various
+system-level data from platform microcontrollers.
+
+==== Introduction
+
+This section introduces a few terms/concepts and associated details that are
+used within the RPMI Telemetry service group, as follows:
+
+===== Telemetry Data Element
+
+An independent measurable property of a platform or system is captured by an
+entity termed as a Telemetry Data Element (abbreviated as TDE).
+
+Each TDE is identified by a 32-bit integer value in the range `[0, N - 1]`,
+where `N` is the number of TDEs supported by the RPMI Telemetry service group,
+as reported by the `TELEMETRY_GET_ATTRIBUTES` service. The description of
+various attributes of a TDE can be obtained iteratively using the
+`TELEMETRY_GET_TDE_ATTRIBUTES` service.
+
+For example, CPU temperature, GPU voltage, NPU power, Memory size are different
+TDEs. The value of some TDEs can come from an associated physical sensor, while
+the value of other TDEs can be runtime register values, software counters, or
+aggregated values.
+
+===== Telemetry Data Element Component and Type
+
+Every TDE is associated with a Component in the platform and measures a certain
+property called its Type. The Component and Type are defined by 16-bit
+identifiers as mentioned in the following tables -
+
+[#table_tde_component]
+.TDE Component
+[cols="2, 3, 2, 3", width=100%, align="center", options="header"]
+|===
+| Component ID | Description | Component ID | Description
+
+| 0x0000 | Unspecified | 0x000A | CPU
+| 0x0001 | SoC | 0x000B | GPU
+| 0x0002 | Chiplet | 0x000C | NPU
+| 0x0003 | Cluster | 0x000D | L1 Cache
+| 0x0004 | System | 0x000E | L2 Cache
+| 0x0005 | Package | 0x000F | L3 Cache
+| 0x0006 | Board | 0x0010 | Last Level Cache
+| 0x0007 | Storage | 0x0011 | System Cache
+| 0x0008 | Memory | 0x0012 - 0x0FFF | Reserved for future use
+| 0x0009 | Battery | 0x1000 - 0xFFFF | Implementation defined
+|===
+
+[#table_tde_type]
+.TDE Type
+[cols="2, 3, 2, 3", width=100%, align="center", options="header"]
+|===
+| Type | Description | Type | Description
+
+| 0x0000 | Unspecified | 0x000A | Reset Count
+| 0x0001 | Current | 0x000B | Throttling State
+| 0x0002 | Voltage | 0x000C | Throttling Count
+| 0x0003 | Power | 0x000D | Speed
+| 0x0004 | Temperature | 0x000E | Area
+| 0x0005 | Energy | 0x000F | Volume
+| 0x0006 | Bandwidth | 0x0010 | Resistance
+| 0x0007 | Frequency | 0x0011 | Error Count
+| 0x0008 | Storage/ Memory Capacity | 0x0012 - 0x0FFF | Reserved for future use
+| 0x0009 | Storage/ Memory Usage | 0x1000 - 0xFFFF | Implementation defined
+|===
+
+- Component and Type can further have instances where an instance is a
+  sequentially increasing number starting from `0`. When there is only 1
+  instance available for a Component/Type, its instance value is fixed to `0`.
+- For a multi-CPU system, CPU instances hence are `0`, `1`, etc. Each CPU can
+  measure different entities, such as voltage and temperature, which can be
+  captured at multiple physical points.
+- For example, consider a platform with multiple CPU instances, where CPU
+  instance `2` has two voltage sensing points, each represented as a separate
+  Telemetry Data Element (TDE). Both TDEs have `Component` set to `CPU` and
+  `Type` set to `Voltage`. Component Instance `2` identifies CPU2, while Type
+  Instance values `0` and `1` distinguish the individual voltage sensing
+  points.
+
+===== Telemetry Data Capture Mode
+
+Each TDE will capture its telemetry data in one of the mode listed in the
+following table:
+
+[#table-data-capture-mode]
+.Data Capture Mode
+[cols="2, 4, 7a", width=100%, align="center", options="header"]
+|===
+| Value | Description | Comments
+
+| 0x00 | Unspecified | -
+| 0x01 | Cumulative | Successive additive value since the data capture started
+| 0x02 | Continuous | Instantaneous value obtained at each sampling frequency
+| 0x03 | Average | Average of all the values since the data capture started
+| 0x04 | State | ON/ OFF or active/ inactive
+| 0x05 | Counter | Sequential count value since the data capture started
+| 0x06-0x7F | Reserved for future use | -
+| 0x80-0xFF | OEM or Implementation defined | -
+|===
+
+===== Telemetry Shared Memory Region
+
+The size of the Telemetry shared memory region including all the TDEs must be a
+multiple of 4KB. The `size` (in bytes) and `base-address` of this region can be
+discovered using the `TELEMETRY_GET_ATTRIBUTES` service. The `base-address`
+must also be aligned to 4KB.
+
+The offset of the TDEs and their respective size in the shared memory region
+can be discovered using the `TELEMETRY_GET_TDE_ATTRIBUTES` service. The offsets
+of different TDEs in the shared memory must be aligned to 4 bytes. The TDE's
+offset when added to the `base-address` of the Telemetry shared memory region
+gives the address from where a particular TDE area begins.
+
+The Telemetry shared memory region is owned by the platform microcontroller.
+The telemetry data producer (i.e., the platform microcontroller) will be the
+one writing this region with telemetry data, while the application processor
+will be the consumer reading telemetry data from the shared memory region.
+
+===== Telemetry Data Element Data Unit
+
+A TDE's telemetry data value as per its Type will be in some unit like `Watts`,
+`Ampere`, etc. and this unit can be derived from the formula
+
+====
+[stem]
+++++
+dataUnit = baseUnit \times 10^{unitModifier} rateUnit
+++++
+====
+
+The baseUnit can be chosen from Table 75 - Sensor Units enumeration as defined
+in the DMTF DSP0248 (Platform Level Data Model for Platform Monitoring and
+Control Specification) cite:[DMTF].
+
+For example, if baseUnit is `Volts` and the unitModifier is `-6`, then unit of
+the data value returned is `microvolts`. unitModifier's or exponent's value is
+in two's complement format and acts as the power-of-10 multiplier. If the
+rateUnit property is set to a value other than None, the units are further
+qualified as rate units. In the preceding example, if rateUnit is set to `per
+second`, then the value returned is in `microvolts/second`.
+
+[#tde-data-format]
+===== Telemetry Data Element Data Format
+
+The `TELEMETRY_GET_ATTRIBUTES` service indicates whether the RPMI Telemetry
+group supports timestamps via the `TS_CTR_FREQ` value. A TDE further indicates
+its timestamp support via the `TELEMETRY_GET_TDE_ATTRIBUTES` service. There can
+be scenarios in which the Telemetry group supports timestamps, but not all TDEs
+provide timestamped telemetry data values.
+
+Accordingly, a TDE's shared memory content will be as per one of the following
+data formats:
+
+[#table-tde-data-format-without-timestamp]
+[cols="1, 3, 2, 7", options="header"]
+.Format without Timestamp
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDE_DATA_SEQ_CTR
+| uint32
+| TDE's Data Sequence Counter.
+
+  The RPMI implementation MUST increment this field to an odd value before
+  writing the TDE's data, and increment it again to an even value after
+  the data has been written (i.e., an odd value indicates an in-progress
+  update). The RPMI implementation SHOULD ensure that the TDE's Data Sequence
+  Counter remains odd only for very short periods of time. An increased even
+  value therefore means a real change in the TDE's data.
+
+  The client MUST verify that the TDE's Data Sequence Counter value is even
+  before reading its data and wait if it is odd. It MUST also verify that the
+  counter value is unchanged before and after the read, and repeat the read if
+  the value differs.
+
+| 1:(N-1)
+| TDE_DATA[ ]
+| uint32
+| TDE's data words. +
+  N here is the TDE's shared memory area size in words, and this area will have
+  padding bytes (`0x00`) at the end if required.
+|===
+
+[#table-tde-data-format-with-timestamp]
+[cols="1, 3, 2, 7", options="header"]
+.Format with Timestamp
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDE_DATA_SEQ_CTR
+| uint32
+| TDE's Data Sequence Counter.
+  Refer <<table-tde-data-format-without-timestamp>> for details.
+
+| 1
+| TS_CTR_LOW
+| uint32
+| Lower 32-bit value of the free running timestamp counter.
+
+| 2
+| TS_CTR_HIGH
+| uint32
+| Upper 32-bit value of the free running timestamp counter.
+
+| 3:(N-1)
+| TDE_DATA[ ]
+| uint32
+| TDE's data words. +
+  N here is the TDE's shared memory area size in words, and this area will have
+  padding bytes (`0x00`) at the end if required.
+|===
+
+NOTE: The RPMI specification recommends sourcing timestamps from a system-wide
+monotonic time base, such as mtime.
+
+===== Telemetry Data Group
+
+For common control and configuration, different TDEs which can be sampled at
+common rate, can be clubbed together inside a data collection group called
+Telemetry Data Group (abbreviated as TDG).
+
+Each TDG is identified by a 32-bit integer value in the range `[0, M - 1]`,
+where `M` is the number of TDGs supported by the RPMI Telemetry service group,
+as reported by the `TELEMETRY_GET_ATTRIBUTES` service. The description of
+various attributes of a TDG can be iteratively obtained using the
+`TELEMETRY_GET_TDG_ATTRIBUTES` service.
+
+Each TDE MUST be a part of one and only one TDG.
+
+[#sampling-rate-format-section]
+===== Sampling Rate Format
+
+Sampling rate of a TDG is the rate at which the data for all its constituent
+TDEs can be sampled and is represented by the formula
+====
+[stem]
+++++
+samplingRate = baseVal \times 10^{unitModifier}
+++++
+====
+
+Here, baseVal is a value in `seconds` and unitModifier's or exponent's value is
+in two's complement format and acts as the power-of-10 multiplier. So, a
+sampling rate is a word/32-bit value defined as follows:
+
+[#table-sampling-rate-word]
+.Sampling Rate Word
+[cols="1, 4", options="header"]
+|===
+| Bits
+| Description
+
+| [31:24]
+| Must be `0`.
+
+| [23:8]
+| Base value in `seconds`.
+
+| [7:0]
+| Unit modifier's value in two's complement format.
+|===
+
+====== Discrete Format
+
+A set of discrete sampling rates arranged in a sequence, starting from the
+lowest value at the lowest index and sequentially increasing to higher value.
+The following table shows the structure of the discrete sampling rate format:
+
+```c
+[sampling_rate0, sampling_rate1, sampling_rate2, ... , sampling_rate(N-1)]
+
+where:
+sampling_rate0 < sampling_rate1 < sampling_rate2 < ... < sampling_rate(N-1)
+```
+
+[#sampling-rate-format-discrete]
+.Discrete Sampling Format Structure
+[cols="1, 3, 5" width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Description
+
+| 0
+| SAMPLING_RATE
+| Sampling rate in `seconds`. Refer <<table-sampling-rate-word>> for details.
+|===
+
+[#sampling-rate-format-linear]
+====== Linear Range Format
+
+A linear range of sampling rates represented by minimum and maximum sampling
+rate and a constant step size. The following table shows the fixed structure
+of the linear range format for sampling rates:
+
+```c
+[sampling_rate_min, sampling_rate_max, sampling_step]
+```
+
+.Linear Range Format Structure
+[cols="1, 3, 5" width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Description
+
+| 0
+| SAMPLING_RATE_MIN
+| Minimum sampling rate in `seconds`.
+
+| 1
+| SAMPLING_RATE_MAX
+| Maximum sampling rate in `seconds`.
+
+| 2
+| SAMPLING_RATE_STEP
+| Step size between two successive sampling rates in `seconds`.
+|===
+
+A TDG may also support sampling rates which can be represented by multiple
+linear ranges. For example,
+```c
+[sampling_rate_min0, sampling_rate_max0, sampling_rate_step0],
+[sampling_rate_min1, sampling_rate_max1, sampling_rate_step1],
+ ...,
+[sampling_rate_min(N-1), sampling_rate_max(N-1), sampling_rate_step(N-1)]
+```
+The linear ranges must be packed sequentially such that
+`sampling_rate_max0 < sampling_rate_min1`,
+`sampling_rate_max1 < sampling_rate_min2` and so on.
+
+==== Telemetry Group Services
+
+The following table lists the services provided by the TELEMETRY service group:
+
+[#table_telemetry_services]
+.TELEMETRY Services
+[cols="1, 3, 2, 1", width=100%, align="center", options="header"]
+|===
+| Service ID
+| Service Name
+| Request Type
+| RPMI Version
+
+| 0x01
+| TELEMETRY_ENABLE_NOTIFICATION
+| NORMAL_REQUEST
+| 2.0
+
+| 0x02
+| TELEMETRY_GET_ATTRIBUTES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x03
+| TELEMETRY_GET_TDE_ATTRIBUTES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x04
+| TELEMETRY_GET_TDG_ATTRIBUTES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x05
+| TELEMETRY_GET_TDG_SAMPLING_RATES
+| NORMAL_REQUEST
+| 2.0
+
+| 0x06
+| TELEMETRY_TDG_START
+| NORMAL_REQUEST
+| 2.0
+
+| 0x07
+| TELEMETRY_TDG_REFRESH
+| NORMAL_REQUEST
+| 2.0
+
+| 0x08
+| TELEMETRY_TDG_STOP
+| NORMAL_REQUEST
+| 2.0
+|===
+
+[#telemetry-notifications]
+==== Notifications
+
+This service group does not support any events for notification.
+
+==== Service: TELEMETRY_ENABLE_NOTIFICATION (SERVICE_ID: 0x01)
+
+This service allows the consumer to subscribe to RPMI Telemetry service group
+notifications. The platform may optionally support notifications for events
+that may occur. The provider can send notification messages to the consumer if
+they are implemented and the consumer has subscribed to them.
+
+The supported events are described in <<telemetry-notifications>>.
+
+Refer to <<table_common_ennotification_request_data>> for Request Data and
+<<table_common_ennotification_response_data>> for Response Data.
+
+==== Service: TELEMETRY_GET_ATTRIBUTES (SERVICE_ID: 0x02)
+
+This service provides the RPMI Telemetry service group level shared memory
+details, the supported number of TDEs and TDGs, the timestamp counter's
+frequency and its maximum value.
+
+[#table_telemetry_get_attr_request_data]
+.Request Data
+[cols="1", width=100%, align="center", options="header"]
+|===
+| NA
+|===
+
+[#table_telemetry_get_attr_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+[cols="6, 5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| TSHMEM_ADDR_LOW
+| uint32
+| Lower 32-bit of the Telemetry shared memory region physical address.
+
+| 2
+| TSHMEM_ADDR_HIGH
+| uint32
+| Upper 32-bit of the Telemetry shared memory region physical address.
+
+| 3
+| TSHMEM_SIZE
+| uint32
+| Telemetry shared memory region size in bytes.
+
+| 4
+| NUM_TDE
+| uint32
+| Number of supported Telemetry Data Elements.
+
+| 5
+| NUM_TDG
+| uint32
+| Number of supported Telemetry Data Groups.
+
+| 6
+| TS_CTR_FREQ
+| uint32
+| Timestamp counter's frequency in `Hz`.
+
+| 7
+| TS_CTR_MAX_VALUE
+| uint32
+| For an `n`-bit free running counter, this field value will be `n`
+  (stem:[n \le 64]), which means that timestamp counter's maximum value would
+  be (stem:[2^n - 1]). Thus, it reflects the value that the timestamp counter
+  ends with immediately before it rolls over. This field is ignored if
+  timestamps are not supported.
+
+| 8:13
+| FLAGS
+| uint32[6]
+| _Reserved_ and must be `0`.
+|===
+
+NOTE: A `TS_CTR_FREQ` value of `0` means timestamps are not supported, in which
+      case the `TS_CTR_MAX_VALUE` has no significance.
+
+==== Service: TELEMETRY_GET_TDE_ATTRIBUTES (SERVICE_ID: 0x03)
+
+This service provides a description of the TDE's attributes, i.e., the shared
+memory region offset and size where the telemetry data associated with the TDE
+is provided; the TDE's component and its instance; the TDE's type and its
+instance; the TDE's data capture mode and data unit; the Telemetry Data Group
+it belongs to; its flags, including whether it supports timestamped telemetry
+data values; and the TDE's name.
+
+[#table_telemetry_get_tde_attr_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDE_INDEX
+| uint32
+| Index of a Telemetry Data Element.
+|===
+
+[#table_telemetry_get_tde_attr_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+[cols="6, 5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `TDE_INDEX` is invalid.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1:11
+| ATTR_DESC
+| uint32[11]
+| TDE's attributes description. Refer <<tde-attr-desc-format>> for details.
+|===
+
+[#tde-attr-desc-format]
+.TDE Attributes Description Format
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDE_SHMEM_OFFSET
+| uint32
+| TDE's offset in Telemetry shared memory region.
+
+| 1
+| TDE_SHMEM_SIZE
+| uint32
+| TDE's size in Telemetry shared memory region.
+
+| 2
+| TDE_COMP_INFO
+| uint32
+| TDE's Component and its instance.
+[cols="1, 6a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:16]
+! TDE's Component. Refer <<table_tde_component>> for details.
+
+! [15:0]
+! TDE's Component instance.
+!===
+
+| 3
+| TDE_TYPE_INFO
+| uint32
+| TDE's Type and its instance.
+[cols="1, 6a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:16]
+! TDE's Type. Refer <<table_tde_type>> for details.
+
+! [15:0]
+! TDE's Type instance.
+!===
+
+| 4
+| TDE_DCMODE_DUNIT
+| uint32
+| TDE's data capture mode and data unit.
+[cols="1, 6a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:24]
+! TDE's data capture mode. Refer <<table-data-capture-mode>> for details.
+
+! [23:16]
+! TDE's data base unit.
+
+! [15:8]
+! TDE's data unit modifier or exponent.
+
+! [7:0]
+! TDE's data rate unit.
+!===
+
+| 5
+| TDE_TDG_INDEX
+| uint32
+| TDE's Telemetry Data Group index.
+
+| 6
+| TDE_FLAGS
+| uint32
+| TDE's Flags.
+[cols="1, 6a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:1]
+! _Reserved_ and must be `0`.
+
+! [0]
+! Timestamp support.
+----
+0b0: Timestamp not supported.
+0b1: Timestamp supported.
+----
+!===
+
+| 7:10
+| TDE_NAME
+| uint8[16]
+| TDE's name, a NULL-terminated ASCII string up to 16-bytes.
+|===
+
+For any two different TDEs, at least one of the following fields MUST have a
+different value: +
+{nbsp}{nbsp}{nbsp}{nbsp}{nbsp}{nbsp}{nbsp}{nbsp}Component, Component Instance,
+Type, Type Instance, Data Capture Mode.
+
+NOTE: TDE's timestamp support has no meaning unless the
+`TELEMETRY_GET_ATTRIBUTES` service reflects `TS_CTR_FREQ` as some non-zero
+value. There may be scenarios where some TDEs may not reflect a timestamp
+support, while other TDEs can.
+
+==== Service: TELEMETRY_GET_TDG_ATTRIBUTES (SERVICE_ID: 0x04)
+
+This service provides a description of the Telemetry Data Group's attributes,
+i.e., the number of supported sampling rates, the TDG's name, TDG's flags
+such as sampling rate format and the number of implementation-specific
+configuration words.
+
+[#table_telemetry_get_tdg_attr_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDG_INDEX
+| uint32
+| Index of a Telemetry Data Group.
+|===
+
+[#table_telemetry_get_tdg_attr_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+[cols="6, 5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `TDG_INDEX` is invalid.
+!===
+- Other errors <<table_error_codes>>.
+
+| 1:6
+| ATTR_DESC
+| uint32[6]
+| TDG's attributes description. Refer <<tdg-attr-desc-format>> for details.
+|===
+
+[#tdg-attr-desc-format]
+.TDG Attributes Description Format
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDG_FLAGS
+| uint32
+| TDG's Flags.
+[cols="1, 6a", options="header"]
+!===
+! Bits
+! Description
+
+! [31:5]
+! _Reserved_ and must be `0`.
+
+! [4:2]
+! Number of implementation-specific configuration words.
+
+! [1:0]
+! Sampling Rate format. Refer <<sampling-rate-format-section>> for details.
+----
+0b00: Discrete format.
+0b01: Linear range format.
+0b10 - 0b11: Reserved.
+----
+!===
+
+| 1
+| TDG_NUM_SRATES
+| uint32
+| The number of TDG discrete sampling rates if the format is discrete, or the
+  number of linear ranges if the format is linear range.
+
+| 2:5
+| TDG_NAME
+| uint8[16]
+| TDG's name, a NULL-terminated ASCII string up to 16-bytes.
+|===
+
+==== Service: TELEMETRY_GET_TDG_SAMPLING_RATES (SERVICE_ID: 0x05)
+
+This service is used to get the sampling rates supported by a TDG. The
+cumulative number of sampling rates and their format returned depend on the
+corresponding values reported by the `TELEMETRY_GET_TDG_ATTRIBUTES` service.
+
+If the format is discrete, the message can pass the `SRATE_INDEX`, which is the
+index of the first sampling rate value to be described in the returned sampling
+rate array. Similarly, if the format is linear range, then `SRATE_INDEX` is the
+index of the first linear range to be described in the returned sampling rate
+linear range list. To obtain all supported discrete sampling rate values or
+linear ranges, the first index value has to be `0`.
+
+The total number of words required for the number of discrete sampling rates or
+linear ranges according to the format in one message must not exceed the total
+words available in a message DATA field. If the format is linear range and a
+TDG supports multiple linear ranges, then only complete linear ranges must be
+returned as per the data format of the linear range described in
+<<sampling-rate-format-section>>.
+
+If the total number of words required to store all supported discrete sampling
+rates exceed the available words in message DATA field, then `REMAINING` and
+`RETURNED` fields must be set accordingly. If the format is discrete, then the
+platform microcontroller will set the `RETURNED` field to number of discrete
+sampling rates that can be accommodated in one message and the `REMAINING`
+field is set to the remaining number of discrete sampling rates. Similarly, if
+the format is linear, the `RETURNED` field is set to the number of linear
+ranges that can be accommodated in one message and the `REMAINING` field is set
+to the remaining number of linear ranges.
+
+The application processor, must call this service again and again with
+appropriate `SRATE_INDEX` set to get the discrete sampling rates or linear
+ranges till the `REMAINING` field is not `0`.
+
+[#table_sampling_get_supp_rates_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDG_INDEX
+| uint32
+| Index of a Telemetry Data Group.
+
+| 1
+| SRATE_INDEX
+| uint32
+| Sampling rate index.
+|===
+
+[#table_sampling_get_supp_rates_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+
+[cols="6, 5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `TDG_INDEX` or `SRATE_INDEX` is invalid.
+
+!===
+- Other errors <<table_error_codes>>.
+
+| 1
+| FLAGS
+| uint32
+| _Reserved_ and must be `0`.
+
+| 2
+| REMAINING
+| uint32
+| The remaining number of discrete sampling rates if the format is discrete
+  type, or the remaining number of linear ranges if the format is linear range.
+
+| 3
+| RETURNED
+| uint32
+| The number of discrete sampling rates returned if the format is discrete
+  type, or the number of linear ranges returned if the format is linear range.
+
+| 4
+| SAMPLING_RATES[ ]
+| uint32 or
+  uint32[3]
+| Sampling rates. +
+  The sampling rate data structure & its packing is according to the supported
+  format. Refer <<sampling-rate-format-section>> for details.
+|===
+
+==== Service: TELEMETRY_TDG_START (SERVICE_ID: 0x06)
+
+This service is used to initiate or start the capture of TDG's telemetry data
+as per the desired configuration. The offsets in shared memory where telemetry
+data for the constituent TDEs is provided are the same as those reported by the
+`TELEMETRY_GET_TDE_ATTRIBUTES` service for those TDEs. It is the client's
+responsibility to provide the correct number of implementation-specific
+configuration words and their values via this service.
+
+When this service is invoked, the Data Sequence Counter of the constituent TDEs
+begins with `0` and it continues to flow normally thereafter as per subsequent
+updates. In a continuous data capture scenario, any wraparound of a TDE's Data
+Sequence Counter is expected to be handled by the client.
+
+NOTE: As long as a TDE's Data Sequence Counter remains at its initial value of
+      `0`, it means there is no data yet for that TDE. This does not apply in
+      the case of a wraparound. Refer <<tde-data-format>> for details.
+
+[#table_telemetry_tdg_start_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDG_INDEX
+| uint32
+| Index of a TDG for which to start telemetry data capture.
+
+| 1
+| SAMPLING_RATE
+| uint32
+| The sampling rate to apply on the TDG.
+
+| 2:(N+1)
+| IMPL_CFG_WORDS
+| uint32[N]
+| Implementation-specific N configuration words, where N shall match the
+  corresponding value reported by the `TELEMETRY_GET_TDG_ATTRIBUTES` service.
+|===
+
+[#table_telemetry_tdg_start_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+[cols="6, 5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `TDG_INDEX` is invalid or number of implementation-specific configuration words
+  or their values are invalid.
+
+! RPMI_ERR_ALREADY
+! TDG started earlier.
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+==== Service: TELEMETRY_TDG_REFRESH (SERVICE_ID: 0x07)
+
+This service allows the client to make infrequent on-demand sampling requests
+to the platform microcontroller, thereby obtaining the latest telemetry data
+for the TDG. If a real data-value update occurs for a TDE due to this refresh
+call, its Data Sequence Counter also gets incremented to the next even value.
+
+[#table_telemetry_tdg_refresh_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDG_INDEX
+| uint32
+| Index of a TDG for which to refresh the telemetry data.
+|===
+
+[#table_telemetry_tdg_refresh_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+[cols="6, 5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `TDG_INDEX` is invalid.
+
+! RPMI_ERR_INVALID_STATE
+! TDG not started earlier.
+!===
+- Other errors <<table_error_codes>>.
+|===
+
+==== Service: TELEMETRY_TDG_STOP (SERVICE_ID: 0x08)
+
+This service is used to terminate or stop the capture of telemetry data
+corresponding to a TDG.
+
+The Data Sequence Counter of the constituent TDEs will no longer be updated
+after this service call returns to the client. All constituent TDEs data will
+remain at their most recent values.
+
+[#table_telemetry_tdg_stop_request_data]
+.Request Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| TDG_INDEX
+| uint32
+| Index of a TDG for which to stop telemetry data capture.
+|===
+
+[#table_telemetry_tdg_stop_response_data]
+.Response Data
+[cols="1, 3, 2, 7a", width=100%, align="center", options="header"]
+|===
+| Word
+| Name
+| Type
+| Description
+
+| 0
+| STATUS
+| int32
+| Return error code.
+[cols="6, 5", options="header"]
+!===
+! Error Code
+! Description
+
+! RPMI_SUCCESS
+! Service completed successfully.
+
+! RPMI_ERR_INVALID_PARAM
+! `TDG_INDEX` is invalid.
+
+! RPMI_ERR_INVALID_STATE
+! TDG not started earlier.
+!===
+- Other errors <<table_error_codes>>.
+|===

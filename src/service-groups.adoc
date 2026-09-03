@@ -137,7 +137,12 @@ RPMI service groups defined by this specification.
 | TEE
 | M-mode, S-mode
 
-| 0x0011 - 0x7BFF
+| 0x0011
+| 2.0
+| TELEMETRY
+| M-mode, S-mode
+
+| 0x0012 - 0x7BFF
 |
 | _Reserved for Future Use_
 |
