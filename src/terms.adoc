@@ -18,5 +18,7 @@
 | RAS   | Reliability, Availability, and Serviceability
 | REE   | Rich Execution Environment
 | SBI   | Supervisor Binary Interface
+| TDE   | Telemetry Data Element
+| TDG   | Telemetry Data Group
 | TEE   | Trusted Execution Environment
 |===
