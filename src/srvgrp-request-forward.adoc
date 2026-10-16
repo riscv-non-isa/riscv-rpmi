@@ -32,7 +32,7 @@ service group:
 | Service ID
 | Service Name
 | Request Type
-| RPMI Version
+| Introduced in RPMI Version
 
 | 0x01
 | REQFWD_ENABLE_NOTIFICATION

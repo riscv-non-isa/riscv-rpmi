@@ -30,7 +30,7 @@ The following table lists the services in the HART_STATE_MANAGEMENT service grou
 | Service ID
 | Service Name
 | Request Type
-| RPMI Version
+| Introduced in RPMI Version
 
 | 0x01
 | HSM_ENABLE_NOTIFICATION
