@@ -19,10 +19,19 @@ levels of application processors that can access it. For example, the
 clock service group can be accessed from M-mode and S-mode, but the HSM service
 group can be only accessed from M-mode.
 
-All RPMI service groups except the BASE service group are optional. If
-the `BASE_PROBE_SERVICE_GROUP` service indicates that a service group is
-implemented then the RPMI service group version must conform to the RPMI
-specification version returned by the `BASE_GET_SPEC_VERSION` service.
+All RPMI service groups except the BASE service group are optional. In this
+section, the RPMI specification version returned by the `BASE_GET_SPEC_VERSION`
+service is referred to as the implemented RPMI specification version. If the
+`BASE_PROBE_SERVICE_GROUP` service indicates that a service group is
+implemented then:
+
+* The RPMI service group version returned by the `BASE_PROBE_SERVICE_GROUP`
+service must be equal to the implemented RPMI specification version that the
+implemented RPMI service group complies with.
+* All RPMI services of the RPMI service group introduced in the implemented
+RPMI specification version or in an earlier RPMI specification version must
+conform to their definition in the implemented RPMI specification version.
+
 All implemented RPMI service groups must satisfy the following requirements:
 
 . The RPMI service group must be accessible from the RISC-V privilege
@@ -34,6 +43,17 @@ services partially only if it also defines a mechanism to discover supported
 RPMI services.
 . The RPMI service group must implement a dedicated RPMI service with
 `SERVICE_ID = 0x01` to subscribe for event notifications.
+
+The RPMI version listed for each RPMI service group in
+<<table_service_groups>>, and for each RPMI service in the services table
+of an RPMI service group, is the RPMI specification version in which
+the RPMI service group or the RPMI service was introduced. It is not updated
+when a later RPMI specification version adds RPMI services to an RPMI service
+group or clarifies the definition of existing RPMI services. The application
+processor determines the RPMI services available in an implemented RPMI
+service group by comparing the RPMI service group version returned by the
+`BASE_PROBE_SERVICE_GROUP` service with the RPMI version listed for each RPMI
+service of the RPMI service group.
 
 NOTE: The RPMI services listed within each RPMI service group do not have
 a specific order. Additionally, the sequence in which services are defined
@@ -53,7 +73,7 @@ RPMI service groups defined by this specification.
 [cols="2, 2, 4, 3", width=100%, align="center", options="header"]
 |===
 | Service Group ID
-| RPMI Version (Major:Minor)
+| Introduced in RPMI Version (Major:Minor)
 | Service Group Name
 | Allowed RISC-V Privilege Levels on Application Processors
 

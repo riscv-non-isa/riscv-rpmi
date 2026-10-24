@@ -30,7 +30,7 @@ The following table lists the services in the BASE service group:
 | Service ID
 | Service Name
 | Request Type
-| RPMI Version
+| Introduced in RPMI Version
 
 | 0x01
 | BASE_ENABLE_NOTIFICATION

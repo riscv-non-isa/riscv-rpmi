@@ -77,7 +77,7 @@ service group:
 | Service ID
 | Service Name
 | Request Type
-| RPMI Version
+| Introduced in RPMI Version
 
 | 0x01
 | SYSMSI_ENABLE_NOTIFICATION

@@ -214,6 +214,13 @@ first 4-byte word of the message data containing an error code defined in
 the <<Possible Error Codes>>. An RPMI service where the response data exceeds
 the maximum message data size can use multi-part RPMI acknowledgement messages.
 
+If an RPMI request message of type `NORMAL_REQUEST` specifies a service group
+ID which is not implemented, or a service ID which is not implemented in an
+implemented RPMI service group, then the recipient must send an RPMI
+acknowledgement message with the `STATUS` field set to `RPMI_ERR_NOT_SUPPORTED`.
+If an RPMI request message of type `POSTED_REQUEST` specifies such a service
+group ID or service ID, then the recipient must ignore the request.
+
 If a physical address is passed in the message data of any message type, then it
 refers to the physical address space of the application processor.
 
