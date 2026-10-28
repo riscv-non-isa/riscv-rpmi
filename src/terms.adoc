@@ -15,9 +15,11 @@
 | PMA   | Physical Memory Attributes
 | PMP   | Physical Memory Protection
 | PuC   | Platform Microcontroller
+| RERI  | RAS Error Record Register Interface
 | RAS   | Reliability, Availability, and Serviceability
 | REE   | Rich Execution Environment
 | SBI   | Supervisor Binary Interface
+| SSE   | Supervisor Software Events
 | TDE   | Telemetry Data Element
 | TDG   | Telemetry Data Group
 | TEE   | Trusted Execution Environment
