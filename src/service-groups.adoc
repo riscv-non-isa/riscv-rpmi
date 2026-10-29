@@ -162,7 +162,12 @@ RPMI service groups defined by this specification.
 | TELEMETRY
 | M-mode, S-mode
 
-| 0x0012 - 0x7BFF
+| 0x0012
+| 2.0
+| PIN_CONTROL
+| M-mode, S-mode
+
+| 0x0013 - 0x7BFF
 |
 | _Reserved for Future Use_
 |
