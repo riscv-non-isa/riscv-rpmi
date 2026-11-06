@@ -175,7 +175,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -224,7 +224,7 @@ This service is used to discover attributes of the system MSI service group.
 ! Service completed successfully.
 
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | SYS_NUM_MSI
@@ -286,7 +286,7 @@ This service is used to discover attributes of a particular system MSI.
 ! RPMI_ERR_INVALID_PARAM
 ! `SYS_MSI_INDEX` value is greater than `SYS_NUM_MSI`.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS0
@@ -372,7 +372,7 @@ read-only bits of the system MSI state are not updated by this service.
  `SYS_MSI_STATE` value is reserved or invalid.
 
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 
@@ -420,7 +420,7 @@ This service is used to get the current state of a system MSI.
 ! RPMI_ERR_INVALID_PARAM
 ! `SYS_MSI_INDEX` value is greater than `SYS_NUM_MSI`.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | SYS_MSI_STATE
@@ -491,7 +491,7 @@ This service is used to configure the target address and data of a system MSI.
 ! RPMI_ERR_INVALID_ADDR
 ! MSI target address is invalid or it is not `4-byte` aligned.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 
@@ -539,7 +539,7 @@ This service is used to get the current target address and data of a system MSI.
 ! RPMI_ERR_INVALID_PARAM
 ! `SYS_MSI_INDEX` value is greater than `SYS_NUM_MSI`.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | SYS_MSI_ADDRESS_LOW

@@ -196,7 +196,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -245,7 +245,7 @@ system.
 ! RPMI_SUCCESS
 ! Service completed successfully.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | NUM_DOMAINS
@@ -303,7 +303,7 @@ voltage formats can be accommodated in the future if required.
 ! RPMI_ERR_INVALID_PARAM
 ! `DOMAIN_ID` is invalid.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS
@@ -415,7 +415,7 @@ range tuple if the format is linear range.
 ! `VOLTAGE_LEVEL_INDEX` is invalid.
 
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 | 1
 | FLAGS
 | uint32
@@ -509,7 +509,7 @@ Voltage supply control.
 ! Voltage `DOMAIN_ID` or `CONFIG` is invalid.
 
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 ==== Service: VOLT_GET_CONFIG (SERVICE_ID: 0x06)
@@ -556,7 +556,7 @@ This service is used to get the configuration of a voltage domain.
 ! Voltage `DOMAIN_ID` not found.
 
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 | 1
 | CONFIG
 | uint32
@@ -630,7 +630,7 @@ This service is used to set the voltage level in microvolts of a voltage domain.
 
 !===
 
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 
@@ -680,7 +680,7 @@ voltage domain.
 ! Voltage `DOMAIN_ID` not found.
 
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | VOLTAGE_LEVEL

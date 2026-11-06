@@ -6,6 +6,7 @@ nav:
 
 asciidoc:
   attributes:
+    xref-base: ''
     page-group: platform-software
     page-card-description: 'Platform management services and messaging definitions.'
     page-release-date: 'July 2025'

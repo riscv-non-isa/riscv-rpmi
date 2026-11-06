@@ -113,7 +113,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -162,7 +162,7 @@ version, MM shared memory location, etc.
 ! RPMI_SUCCESS
 ! Service completed successfully.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | MM_VERSION
@@ -268,7 +268,7 @@ the MM shared memory.
 ! RPMI_ERR_DENIED
 ! Denied due to no permission.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | MM_COMM_RETURN_DATA_SIZE

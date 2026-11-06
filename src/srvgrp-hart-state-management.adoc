@@ -152,7 +152,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -214,7 +214,7 @@ in the `STATUS` field.
 ! RPMI_ERR_INVALID_STATE
 ! Hart is in invalid state.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | HART_STATE
@@ -272,7 +272,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 ! RPMI_ERR_INVALID_PARAM
 ! `START_INDEX` is invalid.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | REMAINING
@@ -345,7 +345,7 @@ items.
 ! RPMI_ERR_INVALID_PARAM
 ! `START_INDEX` is invalid.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | REMAINING
@@ -433,7 +433,7 @@ Refer <<section-hart-suspend-types>> for more details.
 ! RPMI_ERR_INVALID_PARAM
 ! `SUSPEND_TYPE` is invalid.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS
@@ -539,7 +539,7 @@ that the hart has started execution from the specified start address.
 ! Failed due to hardware fault.
 
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 ==== Service: HSM_HART_STOP (SERVICE_ID: 0x07)
@@ -602,7 +602,7 @@ Once the hart is stopped, it can only be restarted by explicitly invoking the
 ! RPMI_ERR_HW_FAULT
 ! Failed due to hardware failure.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 ==== Service: HSM_HART_SUSPEND (SERVICE_ID: 0x08)
@@ -677,5 +677,5 @@ Only used for non-retentive suspend types.
 ! RPMI_ERR_INVALID_PARAM
 ! `HART_ID` or `SUSPEND_TYPE` is invalid.
 !===
-- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
