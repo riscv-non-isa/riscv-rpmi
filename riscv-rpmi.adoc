@@ -3,6 +3,9 @@
 // Prefix so cross-page xrefs (xref:{xref-base}page.adoc#id[]) resolve as internal
 // links in this single-document build; antora.yml sets it to empty for Antora.
 :xref-base: src/
+// Antora resolves {partialsdir} to partial$; here the srvgrp-* files are included
+// by src/service-groups.adoc, relative to src/.
+:partialsdir:
 :docgroup: RISC-V RPMI Task Group
 :description: RISC-V Platform Management Interface Specification Document (RPMI)
 :company: RISC-V.org
@@ -73,32 +76,6 @@ include::src/transport.adoc[]
 include::src/message-protocol.adoc[]
 
 include::src/service-groups.adoc[]
-
-include::src/srvgrp-base.adoc[]
-
-include::src/srvgrp-system-msi.adoc[]
-
-include::src/srvgrp-system-reset.adoc[]
-
-include::src/srvgrp-system-suspend.adoc[]
-
-include::src/srvgrp-hart-state-management.adoc[]
-
-include::src/srvgrp-cppc.adoc[]
-
-include::src/srvgrp-voltage.adoc[]
-
-include::src/srvgrp-clock.adoc[]
-
-include::src/srvgrp-device-power.adoc[]
-
-include::src/srvgrp-performance.adoc[]
-
-include::src/srvgrp-management.adoc[]
-
-include::src/srvgrp-ras-agent.adoc[]
-
-include::src/srvgrp-request-forward.adoc[]
 
 include::src/rpmi-mpxy.adoc[]
 
