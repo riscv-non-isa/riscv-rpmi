@@ -207,7 +207,7 @@ management task.
 
 The message data format for RPMI request message and RPMI acknowledgement
 message is defined separately for each RPMI service. The message data format
-for RPMI notification message is defined in the <<Notifications>>.
+for RPMI notification message is defined in the <<sec_notifications,Notifications>>.
 
 An RPMI acknowledgement message must have a signed `STATUS` field as the
 first 4-byte word of the message data containing an error code defined in
@@ -217,6 +217,7 @@ the maximum message data size can use multipart RPMI acknowledgement messages.
 If a physical address is passed in the message data of any message type, then it
 refers to the physical address space of the application processor.
 
+[[sec_notifications]]
 === Notifications
 The platform microcontroller can use RPMI notification message to notify
 application processors about system events which are also referred to as
