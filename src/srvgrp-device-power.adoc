@@ -182,7 +182,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -233,7 +233,7 @@ the actual number of domains present on the platform.
 ! Service completed successfully.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | NUM_DOMAINS
@@ -285,7 +285,7 @@ This service is used to query the attributes of a device power domain.
 ! RPMI_ERR_INVALID_PARAM
 ! `DOMAIN_ID` is invalid.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS
@@ -362,7 +362,7 @@ for more details.
 ! RPMI_ERR_HW_FAULT
 ! Failed due to hardware error.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 ==== Service: DPWR_GET_STATE (SERVICE_ID: 0x05)
@@ -409,7 +409,7 @@ This service is used to get the current power state of a device power domain.
 ! `DOMAIN_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | POWER_STATE

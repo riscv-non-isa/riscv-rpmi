@@ -25,7 +25,7 @@ The RPMI communication via the SBI MPXY extension must satisfy the following
 requirements:
 
 . The SBI MPXY channel must correspond to a single RPMI service group which is
-allowed in S-mode except BASE and CPPC service groups. The <<table_service_groups>>
+allowed in S-mode except BASE and CPPC service groups. The xref:service-groups.adoc#table_service_groups[RPMI Service Groups]
 list the RPMI service groups allowed in S-mode.
 
 . The SBI MPXY channel corresponding to the RPMI SYSTEM_MSI service group must not

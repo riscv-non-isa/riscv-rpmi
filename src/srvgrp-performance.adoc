@@ -337,7 +337,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -393,7 +393,7 @@ important for optimizing system performance and power consumption.
 ! Service completed successfully.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | NUM_DOMAINS
@@ -449,7 +449,7 @@ level.
 ! `DOMAIN_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS
@@ -604,7 +604,7 @@ levels.
 ! `DOMAIN_ID` or `PERF_LEVEL_INDEX` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS
@@ -675,7 +675,7 @@ performance domain in the system.
 ! `DOMAIN_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | LEVEL
@@ -740,7 +740,7 @@ performance domain in the system.
 ! Operation failed due to hardware error.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 
@@ -789,7 +789,7 @@ performance domain in the system.
 ! `DOMAIN_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | MAX_PERF_LEVEL
@@ -891,7 +891,7 @@ application processor.
 ! Operation failed due to hardware error.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 
@@ -933,7 +933,7 @@ block of memory to ease the configuration of memory region protection.
 ! Fast-channel is not implemented.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes]
 
 | 1
 | REGION_PHYS_ADDR_LOW
@@ -1011,7 +1011,7 @@ specific performance domain and performance service.
 ! Fast-channel is not implemented.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS

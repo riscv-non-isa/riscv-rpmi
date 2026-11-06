@@ -211,7 +211,7 @@ for RPMI notification message is defined in the <<Notifications>>.
 
 An RPMI acknowledgement message must have a signed `STATUS` field as the
 first 4-byte word of the message data containing an error code defined in
-the <<Possible Error Codes>>. An RPMI service where the response data exceeds
+the <<sec_possible_error_codes,Possible Error Codes>>. An RPMI service where the response data exceeds
 the maximum message data size can use multipart RPMI acknowledgement messages.
 
 If a physical address is passed in the message data of any message type, then it
@@ -305,6 +305,7 @@ type.
 .Event Header
 image::event-header.png[800,800, align="center"]
 
+[[sec_possible_error_codes]]
 === Possible Error Codes
 The <<table_error_codes>> below lists the error codes which can be returned
 by an RPMI service in the `STATUS` field of the RPMI acknowledgement message.

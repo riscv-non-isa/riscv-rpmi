@@ -226,7 +226,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes]
 
 | 1
 | CURRENT_STATE
@@ -277,7 +277,7 @@ called `CLOCK_ID`.
 ! Service completed successfully.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | NUM_CLOCKS
@@ -336,7 +336,7 @@ will return the number of linear ranges supported.
 ! `CLOCK_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS
@@ -457,7 +457,7 @@ remaining discrete clock rates or linear ranges.
 ! `CLOCK_ID` or `CLOCK_RATE_INDEX` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS
@@ -548,7 +548,7 @@ This service is used to configure a clock domain.
 ! `CLOCK_ID` or `CONFIG` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 
@@ -596,7 +596,7 @@ This service is used to get the configuration of a clock domain.
 ! `CLOCK_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes]
 
 | 1
 | CONFIG
@@ -697,7 +697,7 @@ In Auto mode the platform can autonomously chooses a supported rate closest to t
 ! `CLOCK_ID` or clock rate is invalid or the flags passed are invalid or reserved.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 ==== Service: CLK_GET_RATE (SERVICE_ID: 0x08)
@@ -744,7 +744,7 @@ This service is used to get the current clock rate.
 ! `CLOCK_ID` is invalid.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CLOCK_RATE_LOW
