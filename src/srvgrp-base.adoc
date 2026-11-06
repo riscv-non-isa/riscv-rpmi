@@ -172,7 +172,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -221,7 +221,7 @@ the `MAJOR` and `MINOR` version numbers.
 ! RPMI_SUCCESS
 ! RPMI implementation version returned successfully.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | IMPL_VERSION
@@ -276,7 +276,7 @@ unique and listed in the <<table_base_rpmi_impl_id>>.
 ! RPMI_SUCCESS
 ! RPMI implementation ID returned successfully.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | IMPL_ID
@@ -318,7 +318,7 @@ version returned is a 32-bit composite number containing the `MAJOR` and
 ! RPMI_SUCCESS
 ! RPMI specification version returned successfully.
 !===
-- Other errors <<table_error_codes>>
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes]
 
 | 1
 | SPEC_VERSION
@@ -370,7 +370,7 @@ This service is used to get additional platform information if available.
 ! RPMI_SUCCESS
 ! Platform information returned successfully.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | PLATFORM_ID_LEN
@@ -433,7 +433,7 @@ version is returned in the `SERVICE_GROUP_VERSION` field. Otherwise it returns
 ! RPMI_SUCCESS
 ! Service probed successfully.
 !===
-- Other errors <<table_error_codes>>
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes]
 
 | 1
 | SERVICE_GROUP_VERSION
@@ -485,7 +485,7 @@ service group.
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS0

@@ -263,7 +263,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -332,7 +332,7 @@ supported or invalid then the `REG_LENGTH` will be `0`.
 ! RPMI_ERR_NOT_SUPPORTED
 ! `REG_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | REG_LENGTH
@@ -395,7 +395,7 @@ fast-channel of a application processor.
 ! RPMI_ERR_NOT_SUPPORTED
 ! `REG_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | DATA_LOW
@@ -480,7 +480,7 @@ writes to these registers may be ignored.
 ! RPMI_ERR_DENIED
 ! `REG_ID` is read only.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===
 
 ==== Service: CPPC_GET_FAST_CHANNEL_REGION (SERVICE_ID: 0x05)
@@ -523,7 +523,7 @@ used.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Fast-channels not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 | 1
 | FLAGS
 | uint32
@@ -646,7 +646,7 @@ memory region containing all the fast-channels.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Fast-channels not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | PERF_REQUEST_OFFSET_LOW
@@ -719,7 +719,7 @@ may need to call this service again with the appropriate `START_INDEX` until the
 ! RPMI_ERR_INVALID_PARAM
 ! `START_INDEX` is invalid.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | REMAINING

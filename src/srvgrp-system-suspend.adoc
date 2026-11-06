@@ -116,7 +116,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -175,7 +175,7 @@ Refer <<section-suspend-types>> for more details.
 ! RPMI_SUCCESS
 ! Attributes returned successfully.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | FLAGS
@@ -285,5 +285,5 @@ Refer <<section-suspend-types>> for more details.
 ! RPMI_ERR_INVALID_ADDR
 ! Resume address is invalid.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 |===

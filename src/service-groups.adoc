@@ -138,6 +138,9 @@ RPMI service groups defined by this specification.
 |
 |===
 
+// The per-group files are included directly by riscv-rpmi.adoc for the
+// single-document build; only Antora pulls them in here.
+ifdef::site-gen-antora[]
 include::partial$srvgrp-base.adoc[]
 
 include::partial$srvgrp-system-msi.adoc[]
@@ -163,3 +166,4 @@ include::partial$srvgrp-management.adoc[]
 include::partial$srvgrp-ras-agent.adoc[]
 
 include::partial$srvgrp-request-forward.adoc[]
+endif::site-gen-antora[]

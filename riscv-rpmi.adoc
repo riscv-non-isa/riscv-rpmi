@@ -1,5 +1,8 @@
 = RISC-V Platform Management Interface Specification (RPMI)
 :rootpath: ./
+// Prefix so cross-page xrefs (xref:{xref-base}page.adoc#id[]) resolve as internal
+// links in this single-document build; antora.yml sets it to empty for Antora.
+:xref-base: src/
 :docgroup: RISC-V RPMI Task Group
 :description: RISC-V Platform Management Interface Specification Document (RPMI)
 :company: RISC-V.org

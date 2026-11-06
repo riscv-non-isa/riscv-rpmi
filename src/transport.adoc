@@ -18,7 +18,7 @@ microcontroller (PuC). It provides bi-directional communication between a
 RISC-V privilege-level of application processors and a platform microcontroller.
 The application processors can have multiple RPMI transport instances with a
 platform microcontroller. Also, a platform can also have multiple microcontrollers
-each with its own RPMI transport instance as shown in the <<fig_intro_trans_topology>>
+each with its own RPMI transport instance as shown in the xref:{xref-base}intro.adoc#fig_intro_trans_topology[Transport for M-Mode and S-Mode]
 below.
 
 An RPMI transport instance consists of two logical bi-directional channels for
@@ -285,12 +285,12 @@ doorbell register.
 
 ==== Integration with RPMI Message Protocol
 If the doorbell interrupts are supported and enabled, the shared memory transport
-uses `FLAGS[3]` bit in the <<table_message_header,message header>> of
-<<messaging_message_types_table,RPMI normal request>> as
+uses `FLAGS[3]` bit in the xref:{xref-base}message-protocol.adoc#table_message_header[message header] of
+xref:{xref-base}message-protocol.adoc#messaging_message_types_table[RPMI normal request] as
 a **doorbell interrupt request** flag. This flag represents if the doorbell
 interrupt is requested to notify about the response of a request message.
 
-The sender of the <<messaging_message_types_table,RPMI normal request>> type
+The sender of the xref:{xref-base}message-protocol.adoc#messaging_message_types_table[RPMI normal request] type
 message can set the `FLAGS[3]` bit to `1` to inform the service provider to ring
 the doorbell after sending the response message back. If the `FLAGS[3]` bit is `0`,
 it means that the sender is going to poll for the response message in the queue

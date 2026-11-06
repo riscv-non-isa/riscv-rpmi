@@ -64,7 +64,7 @@ defined by the REQUEST_FORWARD service group.
 | REQFWD_NEW_MESSAGE
 | An array of `N` bytes representing the first `N` bytes of the current forwarded
 RPMI request message. The value `N` is specified by the `EVENT_DATALEN` field of
-the RPMI notification event as shown in <<table_notification_message_format>>.
+the RPMI notification event as shown in xref:{xref-base}message-protocol.adoc#table_notification_message_format[Event Format].
 | This RPMI notification event represents the arrival of a new forwarded RPMI
 request message when there were no other pending forwarded RPMI request message
 in the queue.
@@ -134,7 +134,7 @@ for future use.
 ! RPMI_ERR_NOT_SUPPORTED
 ! Notification for the `EVENT_ID` is not supported.
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | CURRENT_STATE
@@ -201,7 +201,7 @@ bytes.
 ! No forwarded RPMI request message available.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 
 | 1
 | REMAINING
@@ -280,7 +280,7 @@ the overall size of the `REQFWD_COMPLETE_CURRENT_MESSAGE` service message.
 ! No forwarded request message retrieved.
 
 !===
-- Other errors <<table_error_codes>>.
+- Other errors xref:{xref-base}message-protocol.adoc#table_error_codes[RPMI Error Codes].
 | 1
 | NUM_MESSAGES
 | uint32
