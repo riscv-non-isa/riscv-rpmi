@@ -625,7 +625,7 @@ levels.
 | LEVEL[]
 | uint32[4]
 | List of performance levels attributes. +
-Refer to <<section-perf-attribute>> for the complete structure of performance
+Refer to <<section-perf-level-attribute>> for the complete structure of performance
 level attributes.
 |===
 
