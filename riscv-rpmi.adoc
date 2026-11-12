@@ -106,6 +106,8 @@ include::src/srvgrp-tee.adoc[]
 
 include::src/srvgrp-telemetry.adoc[]
 
+include::src/srvgrp-pin-control.adoc[]
+
 include::src/rpmi-mpxy.adoc[]
 
 // The index must precede the bibliography
